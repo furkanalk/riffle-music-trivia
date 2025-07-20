@@ -53,7 +53,7 @@
     <h1 class="text-5xl font-extrabold text-white text-center mb-8">Riffle</h1>
     <div class="max-w-5xl mx-auto grid gap-4 grid-cols-1 md:grid-cols-2">
       <!-- Card: Solo Marathon -->
-      <a href="categories.html?mode=marathon" class="bg-black bg-opacity-50 rounded-lg shadow-xl overflow-hidden hover:scale-105 transform transition">
+      <a href="public/categories.html?mode=marathon" class="bg-black bg-opacity-50 rounded-lg shadow-xl overflow-hidden hover:scale-105 transform transition">
         <div class="p-1 flex flex-col items-center">
           <div class="relative w-full aspect-[16/9] border-2 border-purple-600 rounded-lg cursor-pointer transition shadow-lg overflow-hidden">
             <img src="src/img/Marathon.png" alt="Marathon" class="w-full h-full object-cover marathon-image" data-mode="marathon"/>
@@ -63,7 +63,7 @@
         </div>
       </a>
       <!-- Card: Coop -->
-      <a href="categories.html?mode=coop" class="bg-black bg-opacity-50 rounded-lg shadow-xl overflow-hidden hover:scale-105 transform transition">
+      <a href="public/categories.html?mode=coop" class="bg-black bg-opacity-50 rounded-lg shadow-xl overflow-hidden hover:scale-105 transform transition">
         <div class="p-1 flex flex-col items-center">
           <div class="relative w-full aspect-[16/9] border-2 border-purple-600 rounded-lg cursor-pointer transition shadow-lg overflow-hidden">
             <img src="src/img/Coop.png" alt="Coop" class="w-full h-full object-cover coop-image" data-mode="coop"/>
@@ -73,7 +73,7 @@
         </div>
       </a>
       <!-- Card: Solo VS -->
-      <a href="categories.html?mode=versus" class="bg-black bg-opacity-50 rounded-lg shadow-xl overflow-hidden hover:scale-105 transform transition">
+      <a href="public/categories.html?mode=versus" class="bg-black bg-opacity-50 rounded-lg shadow-xl overflow-hidden hover:scale-105 transform transition">
         <div class="p-1 flex flex-col items-center">
           <div class="relative w-full aspect-[16/9] border-2 border-purple-600 rounded-lg cursor-pointer transition shadow-lg overflow-hidden">
             <img src="src/img/Solo.png" alt="Solo VS" class="w-full h-full object-cover solo-image" data-mode="versus"/>
@@ -83,7 +83,7 @@
         </div>
       </a>
       <!-- Card: Team VS -->
-      <a href="categories.html?mode=team" class="bg-black bg-opacity-50 rounded-lg shadow-xl overflow-hidden hover:scale-105 transform transition">
+      <a href="public/categories.html?mode=team" class="bg-black bg-opacity-50 rounded-lg shadow-xl overflow-hidden hover:scale-105 transform transition">
         <div class="p-1 flex flex-col items-center">
           <div class="relative w-full aspect-[16/9] border-2 border-purple-600 rounded-lg cursor-pointer transition shadow-lg overflow-hidden">
             <img src="src/img/Team VS.png" alt="Team VS" class="w-full h-full object-cover" data-mode="team"/>
@@ -92,7 +92,7 @@
         </div>
       </a>
       <!-- Card: Chaos -->
-      <a href="categories.html?mode=chaos" class="bg-black bg-opacity-50 rounded-lg shadow-xl overflow-hidden hover:scale-105 transform transition">
+      <a href="public/categories.html?mode=chaos" class="bg-black bg-opacity-50 rounded-lg shadow-xl overflow-hidden hover:scale-105 transform transition">
         <div class="p-1 flex flex-col items-center">
           <div class="relative w-full aspect-[16/9] border-2 border-purple-600 rounded-lg cursor-pointer transition shadow-lg overflow-hidden">
             <img src="https://via.placeholder.com/400x250" alt="Chaos" class="w-full h-full object-cover" data-mode="chaos"/>
@@ -101,7 +101,7 @@
         </div>
       </a>
       <!-- Card: Custom -->
-      <a href="categories.html?mode=custom" class="bg-black bg-opacity-50 rounded-lg shadow-xl overflow-hidden hover:scale-105 transform transition">
+      <a href="public/categories.html?mode=custom" class="bg-black bg-opacity-50 rounded-lg shadow-xl overflow-hidden hover:scale-105 transform transition">
         <div class="p-1 flex flex-col items-center">
           <div class="relative w-full aspect-[16/9] border-2 border-purple-600 rounded-lg cursor-pointer transition shadow-lg overflow-hidden">
             <img src="src/img/Custom.png" alt="Custom" class="w-full h-full object-cover custom-image" data-mode="custom"/>
@@ -114,38 +114,5 @@
   </main>
 
   <script type="module" src="src/js/script.js"></script>
-  <script type="module">
-    // Game mode hover effects for videos
-    document.addEventListener('DOMContentLoaded', () => {
-      const gameModesWithVideos = ['marathon', 'coop', 'versus', 'custom'];
-      
-      gameModesWithVideos.forEach(mode => {
-        const image = document.querySelector(`.${mode}-image`);
-        const video = document.querySelector(`.${mode}`);
-        
-        if (image && video) {
-          const parent = image.closest('a');
-          
-          parent.addEventListener('mouseenter', () => {
-            image.style.opacity = '0';
-            video.style.opacity = '1';
-            video.classList.remove('hidden');
-            video.play();
-          });
-          
-          parent.addEventListener('mouseleave', () => {
-            image.style.opacity = '1';
-            video.style.opacity = '0';
-            video.pause();
-            setTimeout(() => {
-              if (document.querySelector(':hover') !== parent) {
-                video.classList.add('hidden');
-              }
-            }, 300);
-          });
-        }
-      });
-    });
-  </script>
 </body>
 </html>

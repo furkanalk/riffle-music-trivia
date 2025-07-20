@@ -3,7 +3,7 @@
 // Albümden rastgele parça bilgisi al
 export async function getRandomTrackFromAlbum(albumId) {
   try {
-    console.log('Fetching tracks for album:', albumId);
+    // Fetching tracks for album
     
     // Deezer'dan albüm parçalarını al
     const tracksRes = await fetch(`/api/album/${albumId}/tracks`);
@@ -30,11 +30,7 @@ export async function getRandomTrackFromAlbum(albumId) {
       throw new Error('Geçersiz track verisi.');
     }
 
-    console.log('Track selected:', { 
-      id: track.id, 
-      name: track.title,
-      artist: track.artist.name 
-    });
+    // Track selected with ID, name and artist
 
     // Preview URL'i al
     try {
@@ -43,7 +39,7 @@ export async function getRandomTrackFromAlbum(albumId) {
       // Check if response is HTML
       const previewContentType = previewRes.headers.get('content-type');
       if (previewContentType && previewContentType.includes('text/html')) {
-        throw new Error('Preview endpoint yanıt vermiyor. Sunucuyu kontrol edin.');
+        throw new Error('Preview endpoint not responding. Check the server.');
       }
 
       const previewData = await previewRes.json();

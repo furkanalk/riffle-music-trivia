@@ -43,10 +43,14 @@ npm start
 - [x] Make music categories horizontally scrollable with navigation buttons
 - [x] Add selection summary panel showing game mode and selected categories
 - [x] Auto-add album covers
+- [x] Remove music playing indicator text
+- [x] Add audio visualizer in disk center that animates with music
+- [x] Add music duration bar above album cover
+- [x] Ensure music continues playing when answers are selected
+- [x] Clean code and translate comments to English
 ### Pending
 - [ ] add valid playlists
 - [ ] Improve question variety
-- [ ] Redesign buttons
 - [ ] Add guest mode
 - [ ] Profile in top right
   - [ ] Recent match history

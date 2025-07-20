@@ -1,4 +1,4 @@
 // src/modes/Coop.js
 export function startCoop() {
-  console.log('Coop modu henüz uygulanmadı.');
+  // Coop mode not yet implemented.
 }

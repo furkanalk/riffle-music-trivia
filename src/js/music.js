@@ -6,7 +6,7 @@ let playedTrackIds = [];
 // Reset played tracks history (call this when starting a new game)
 export function resetPlayedTracks() {
   playedTrackIds = [];
-  console.log('Track history reset');
+  // Track history reset
 }
 
 // Get a random track from playlist (avoiding already played tracks)
@@ -26,7 +26,7 @@ export async function getRandomTrackFromPlaylist(playlistId) {
   
   // If all tracks have been played or very few remain, reset the history
   if (availableTracks.length < 3) {
-    console.log('Running out of new tracks, resetting play history');
+    // Running out of new tracks, resetting play history
     playedTrackIds = [];
     return tracks[Math.floor(Math.random() * tracks.length)];
   }
@@ -52,7 +52,7 @@ const GENRE_PLAYLISTS = {
   // Metal categories (by decade)
   'metal_60s': '7276244344', // 60's Metal & Hard Rock
   'metal_70s': '9504053062', // 70's Metal
-  'metal_80s': '1362516565', // 80's Metal
+  'metal_80s': '1294679255', // 80's Metal // done
   'metal_90s': '1266971131', // 90's Metal
   'metal_00s': '1256268491', // 2000's Metal
   

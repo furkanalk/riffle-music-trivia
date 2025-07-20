@@ -28,6 +28,16 @@
       transform: translateY(-2px);
     }
     
+    /* Duration bar styling */
+    #music-duration-bar {
+      background: rgba(0, 0, 0, 0.5);
+      box-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+    }
+    
+    #music-progress {
+      transition: width 0.1s linear;
+    }
+    
     .answer-btn.selected {
       transform: translateY(1px);
     }
@@ -53,6 +63,72 @@
     @keyframes fadeAndMove {
       0% { transform: translateY(0) rotate(0); opacity: 1; }
       100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+    }
+    
+    /* Music playback animations */
+    @keyframes musicBarAnimation {
+      0% { height: 5px; opacity: 0.7; }
+      50% { height: 20px; opacity: 1; }
+      100% { height: 5px; opacity: 0.7; }
+    }
+    
+    @keyframes audioBarAnimation {
+      0% { height: 5px; }
+      50% { height: 15px; }
+      100% { height: 5px; }
+    }
+    
+    .audio-bars-container {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+    }
+    
+    .audio-bar {
+      width: 3px;
+      height: 5px;
+      background: linear-gradient(to top, #9333ea, #6366f1);
+      border-radius: 1px;
+      transition: height 0.1s ease;
+    }
+    
+    .audio-bar.active {
+      animation: audioBarAnimation 0.5s ease-in-out infinite;
+      box-shadow: 0 0 5px rgba(139, 92, 246, 0.7);
+    }
+    
+    /* Audio visualizer styles */
+    .visualizer-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 40px;
+      width: 100%;
+      margin-top: 10px;
+    }
+    
+    .visualizer-bar {
+      width: 4px;
+      height: 20px;
+      margin: 0 2px;
+      background: linear-gradient(to top, #6366f1, #a855f7);
+      border-radius: 2px;
+      transition: height 0.2s ease;
+    }
+    
+    /* Music playback indicator */
+    #music-playing-indicator {
+      margin-top: 12px;
+      padding: 8px 12px;
+      border-radius: 20px;
+      background-color: rgba(0, 0, 0, 0.3);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      backdrop-filter: blur(5px);
     }
   </style>
 </head>
@@ -124,19 +200,19 @@
     <!-- Album Art & Visualizer -->
     <div class="mb-10 relative">
       <div class="w-48 h-48 md:w-64 md:h-64 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 flex items-center justify-center pulse-animation">
-        <div class="w-24 h-24 md:w-32 md:h-32 rounded-full bg-black flex items-center justify-center">
-          <svg id="play-icon" xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-white" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
-          </svg>
-          <svg id="pause-icon" xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-white hidden" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
-          </svg>
+        <div class="w-24 h-24 md:w-32 md:h-32 rounded-full bg-black flex items-center justify-center overflow-hidden">
+          <!-- Audio Bar Visualizer -->
+          <div id="music-visualizer" class="w-full h-full flex items-center justify-center">
+            <div class="audio-bars-container flex items-center justify-center space-x-1 h-16">
+              <!-- Audio bars will be created dynamically with JavaScript -->
+            </div>
+          </div>
         </div>
       </div>
       
-      <!-- Audio Visualizer Bars -->
-      <div id="visualizer" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full flex items-center justify-center -z-10">
-        <!-- Visualizer bars will be created dynamically -->
+      <!-- Duration Bar - Above the Disk (Higher position) -->
+      <div id="music-duration-bar" class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-12 w-48 h-3 z-20 flex justify-center items-center rounded-full overflow-hidden shadow-lg">
+        <div id="music-progress" class="h-full bg-gradient-to-r from-purple-500 to-indigo-500" style="width: 100%"></div>
       </div>
     </div>
 
@@ -292,7 +368,7 @@
 
   <!-- Game Logic -->
   <script type="module">
-    import { getAllGenres, getRandomTrackFromGenre, resetPlayedTracks } from "./src/js/music.js";
+    import { getAllGenres, getRandomTrackFromGenre, resetPlayedTracks } from "../src/js/music.js";
     
     // Game variables
     let score = 0;
@@ -306,6 +382,7 @@
     let currentTrack = null;
     let gameMode = '';
     let players = [];
+    let answerSelected = false; // Track if an answer was selected during the current round
     let settings = {
       categories: [],
       questionType: 'mixed',
@@ -316,11 +393,34 @@
     // DOM elements
     const musicPlayer = document.getElementById('music-player');
     const timerBar = document.getElementById('timer-bar');
-    const playIcon = document.getElementById('play-icon');
-    const pauseIcon = document.getElementById('pause-icon');
+    // Removed references to play/pause icons since they're no longer in the DOM
     const answerButtons = document.querySelectorAll('.answer-btn');
     
     // Initialize game
+    // Function to initialize audio API in the browser before use
+    async function initializeAudio() {
+      try {
+        // Create and start a temporary audio context
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        
+        // Try to resume if 'suspended'
+        if (audioContext.state === 'suspended') {
+          await audioContext.resume();
+        }
+        
+        // Play a temporary silent sound - very short
+        const silentBuffer = audioContext.createBuffer(1, 1, 22050);
+        const source = audioContext.createBufferSource();
+        source.buffer = silentBuffer;
+        source.connect(audioContext.destination);
+        source.start(0);
+        
+        return audioContext;
+      } catch (e) {
+        return null;
+      }
+    }
+    
     document.addEventListener('DOMContentLoaded', async () => {
       // Get game mode and settings
       gameMode = new URLSearchParams(window.location.search).get('mode') || 'solo';
@@ -331,6 +431,9 @@
       
       // Set up UI based on game mode
       setupGameMode();
+      
+      // Try to initialize the audio system in advance
+      await initializeAudio();
       
       // Simulate loading
       simulateLoading().then(() => {
@@ -495,6 +598,15 @@
       });
     }
     
+    // Function to clean song titles (remove "Remastered" and similar tags)
+    function cleanSongTitle(title) {
+      if (!title) return title;
+      // Remove (Remastered), (Remastered yyyy), [Remastered], etc.
+      return title.replace(/\s*[\(\[](?:Remastered|Re-?master|Re-?issue).*?[\)\]]/gi, '')
+                  .replace(/\s{2,}/g, ' ')  // Replace multiple spaces with a single space
+                  .trim();  // Remove any leading/trailing spaces
+    }
+    
     // Start a new round
     async function startNewRound() {
       // Check if we've reached the round limit
@@ -502,6 +614,12 @@
         // Game is complete, show the final results
         showGameOverScreen();
         return;
+      }
+      
+      // Remove any "Continue" buttons from previous rounds
+      const timeoutBtn = document.getElementById('timeout-next-btn');
+      if (timeoutBtn && timeoutBtn.parentNode) {
+        timeoutBtn.parentNode.removeChild(timeoutBtn);
       }
       
       currentRound++;
@@ -546,7 +664,9 @@
         
         if (questionType === 'song') {
           questionText.textContent = 'Which song is this?';
-          correctAnswer = track.title;
+          // Clean the title before setting it as the correct answer
+          track.cleanTitle = cleanSongTitle(track.title);
+          correctAnswer = track.cleanTitle;
         } else if (questionType === 'artist') {
           questionText.textContent = 'Which artist/band performs this track?';
           correctAnswer = track.artist;
@@ -560,14 +680,42 @@
         // Generate answer options
         generateAnswerOptions();
         
-        // Play the music preview after a short delay
+        // Start music automatically in each round and enhance with visual effects
+        // Start music with a short delay
         setTimeout(() => {
+          // First show preparation effect
+          const pulseEffect = document.createElement('div');
+          pulseEffect.className = 'fixed inset-0 bg-purple-900 bg-opacity-10 z-20';
+          document.body.appendChild(pulseEffect);
+          
+          // Show and remove effect
+          pulseEffect.animate([
+            { opacity: 0.2 },
+            { opacity: 0 }
+          ], {
+            duration: 800,
+            easing: 'ease-out'
+          }).onfinish = () => pulseEffect.remove();
+          
+          // Then start the music
           playMusic();
+          
+          // Highlight album
+          const albumContainer = document.querySelector('.pulse-animation');
+          if (albumContainer) {
+            albumContainer.classList.add('z-10');
+            albumContainer.style.boxShadow = '0 0 30px rgba(139, 92, 246, 0.5)';
+          }
+          
+          // Create music playback indicator
+          // Note: Music playback indicator is created in the playMusic function
+          // No need to create a separate indicator in this section
           
           // Start timer for VS modes
           if (gameMode !== 'solo') {
             startTimer();
           }
+          // Start music duration timer (for all modes)
         }, 1000);
         
       } catch (error) {
@@ -608,7 +756,7 @@
       };
       
       const questionType = settings.questionType === 'mixed' ? 
-        (correctAnswer === currentTrack.title ? 'song' : 'artist') : settings.questionType;
+        (correctAnswer === (currentTrack.cleanTitle || currentTrack.title) ? 'song' : 'artist') : settings.questionType;
       
       // Determine the era and genre based on current track
       let era = '80s'; // Default era if we can't determine
@@ -664,13 +812,33 @@
     
     // Reset UI for new round
     function resetUI() {
+      // Eski round'dan kalan timeout'u temizle
+      if (window.riffleTimeout) {
+        clearTimeout(window.riffleTimeout);
+        window.riffleTimeout = null;
+      }
+      // Eski round'dan kalan timeout'u temizle
+      if (window.riffleTimeout) {
+        clearTimeout(window.riffleTimeout);
+        window.riffleTimeout = null;
+      }
+      // Prevent double timeout logic
+      window.timeoutHandled = false;
+      // Reset answer selection tracking
+      answerSelected = false;
+      
       // Reset timer
-      if (timer) clearInterval(timer);
+      if (timer) {
+        clearInterval(timer);
+        timer = null;
+      }
       timerBar.style.width = '100%';
+      timerBar.style.backgroundColor = '';
+      timerBar.textContent = '';
       
       // Reset buttons
       answerButtons.forEach(btn => {
-        btn.classList.remove('correct', 'wrong', 'selected');
+        btn.classList.remove('correct', 'wrong', 'selected', 'timeout-correct');
         btn.disabled = false;
       });
       
@@ -678,106 +846,338 @@
       musicPlayer.pause();
       musicPlayer.currentTime = 0;
       
-      // Reset icons
-      playIcon.classList.remove('hidden');
-      pauseIcon.classList.add('hidden');
+      // Reset duration bar
+      const musicProgress = document.getElementById('music-progress');
+      if (musicProgress) {
+        musicProgress.style.width = '100%';
+      }
       
-      // Create visualizer
-      createVisualizer();
+      // Clear existing timer
+      if (window.musicProgressTimer) {
+        clearInterval(window.musicProgressTimer);
+        window.musicProgressTimer = null;
+      }
+      
+      // Create music visualizer (but don't start it yet)
+      createMusicVisualizer();
+      stopMusicVisualizer();
     }
     
     // Start timer for VS modes
     function startTimer() {
+      window.timeoutHandled = false;
       let timeLeft = timeLimit;
       timerBar.style.width = '100%';
-      
+      timerBar.style.backgroundColor = '';
+      timerBar.textContent = '';
+
+      // Clear any existing timer to prevent multiple timers running
+      if (timer) {
+        clearInterval(timer);
+        timer = null;
+      }
+
       timer = setInterval(() => {
         timeLeft -= 0.1;
         const percentage = (timeLeft / timeLimit) * 100;
         timerBar.style.width = `${percentage}%`;
-        
+        timerBar.textContent = '';
+
         if (timeLeft <= 0) {
           clearInterval(timer);
-          handleTimeout();
+          timerBar.style.width = '100%';
+          timerBar.style.backgroundColor = '#ef4444';
+          timerBar.textContent = 'Süre Bitti';
+          if (!answerSelected) handleTimeout(true); // Sadece şık seçilmediyse
         }
       }, 100);
     }
     
     // Handle timeout (no answer selected)
     function handleTimeout() {
-      musicPlayer.pause();
-      
-      // Highlight correct answer
+      // Prevent double execution (e.g. from timer and music preview timeout)
+      if (window.timeoutHandled || answerSelected) return;
+      window.timeoutHandled = true;
+      // The user didn't select an answer in time, count it as wrong
+      // Show the correct answer with a special styling
+
+      // First, add the special style for timeout-correct if not exists
+      if (!document.getElementById('timeout-correct-style')) {
+        const style = document.createElement('style');
+        style.id = 'timeout-correct-style';
+        style.textContent = `
+          .timeout-correct {
+            background: repeating-linear-gradient(
+              45deg,
+              rgba(74, 222, 128, 0.6),
+              rgba(74, 222, 128, 0.6) 10px,
+              rgba(74, 222, 128, 0.8) 10px,
+              rgba(74, 222, 128, 0.8) 20px
+            ) !important;
+            color: #111 !important;
+            font-weight: bold !important;
+            border: 2px dashed #22c55e !important;
+            animation: pulse-border 2s infinite;
+          }
+          @keyframes pulse-border {
+            0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+          }
+        `;
+        document.head.appendChild(style);
+      }
+
+      // Disable all buttons
       answerButtons.forEach(btn => {
         btn.disabled = true;
-        if (btn.dataset.answer === correctAnswer) {
-          btn.classList.add('correct');
+        // Sadece hiç şık seçilmediyse ve timeout'tan gelindiyse çizgili yeşil göster
+        if (!answerSelected && btn.dataset.answer === correctAnswer) {
+          btn.classList.add('timeout-correct');
+        } else if (btn.classList.contains('timeout-correct')) {
+          // Eğer kullanıcı şık seçtiyse ve bu class yanlışlıkla kaldıysa temizle
+          btn.classList.remove('timeout-correct');
         }
       });
-      
-      // Wait a moment and continue
-      setTimeout(checkGameProgress, 2000);
+
+      // For Marathon mode, decrease lives if applicable - same as wrong answer
+      if (gameMode === 'solo' && lives !== Infinity) {
+        remainingLives--;
+        document.getElementById('lives-count').textContent = remainingLives;
+      }
+
+      // Süre bittiğinde round hemen bitsin, bar 1.2sn kalsın sonra round ekranı gelsin
+      setTimeout(() => {
+        timerBar.style.width = '100%';
+        timerBar.style.backgroundColor = '';
+        timerBar.textContent = '';
+        checkGameProgress();
+      }, 1200);
     }
     
     // Play music preview
     function playMusic() {
-      musicPlayer.play();
-      playIcon.classList.add('hidden');
-      pauseIcon.classList.remove('hidden');
+      // Add visual effects before music starts
+      // We're using createVisualizer and animateVisualizer functions for the visualizer
+      // no need to create a separate one here
       
-      // Stop after preview length
-      setTimeout(() => {
-        if (!musicPlayer.paused) {
-          musicPlayer.pause();
-          playIcon.classList.remove('hidden');
-          pauseIcon.classList.add('hidden');
+      // Add enhanced effect to album cover
+      const albumCover = document.querySelector('.album-cover');
+      if (albumCover) {
+        // Add glowing border effect
+        albumCover.style.transition = 'all 0.5s ease-in-out';
+        albumCover.style.transform = 'scale(1.05)';
+        albumCover.style.boxShadow = '0 0 20px rgba(139, 92, 246, 0.7)';
+        
+        setTimeout(() => {
+          albumCover.style.transform = 'scale(1)';
+          albumCover.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.5)';
+        }, 500);
+      }
+      
+      // A more robust approach to start music playback
+      
+      // Create an audio channel and play (usually requires permission)
+      const attemptAutoplay = async () => {
+        try {
+          // First try muted playback - usually allowed by browsers
+          musicPlayer.muted = true;
+          await musicPlayer.play();
+          
+          // Success, we can unmute now
+          setTimeout(() => {
+            musicPlayer.muted = false;
+          }, 100);
+          
+          // Start duration bar
+          startMusicDurationBar();
+          
+          // Start music visualizer
+          startMusicVisualizer();
+        } catch (e) {
+          // Alternative solution: wait for user interaction on the page
+          const handlePageInteraction = () => {
+            musicPlayer.muted = false;
+            musicPlayer.play();
+            
+            // Remove event listeners
+            document.removeEventListener('click', handlePageInteraction);
+            document.removeEventListener('keydown', handlePageInteraction);
+          };
+          
+          // Listen for any interaction on the page
+          document.addEventListener('click', handlePageInteraction);
+          document.addEventListener('keydown', handlePageInteraction);
+        }
+      };
+      
+      // Try autoplay
+      attemptAutoplay();
+      
+      // Start the duration bar
+      startMusicDurationBar();
+      
+      // Start music visualizer
+      startMusicVisualizer();
+      
+      // After preview length, indicate that preview time is up
+      window.riffleTimeout = setTimeout(() => {
+        if (!answerSelected && !window.timeoutHandled) {
+          handleTimeout();
         }
       }, settings.previewLength * 1000);
+      
+      // For VS mode we need an extra button for navigation
+      if (gameMode !== 'solo') {
+        setTimeout(() => {
+          if (!answerSelected) {
+            // Add a 'Next' button to allow moving forward without auto-showing the round completion screen
+            const questionContainer = document.querySelector('.question-container');
+            if (questionContainer && !document.getElementById('manual-next-btn')) {
+              const nextBtn = document.createElement('button');
+              nextBtn.id = 'manual-next-btn';
+              nextBtn.className = 'bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded mt-4 transition duration-300';
+              nextBtn.textContent = 'Continue';
+              nextBtn.onclick = () => {
+                if (nextBtn.parentNode) {
+                  nextBtn.parentNode.removeChild(nextBtn);
+                }
+                showRoundCompletionScreen(false);
+              };
+              questionContainer.appendChild(nextBtn);
+            }
+          }
+        }, settings.previewLength * 1000 + 100); // Add slight delay after the first timeout
+      }
     }
     
-    // Toggle play/pause
+    // Toggle play/pause - Updated version for autoplay
     function togglePlayPause() {
       if (musicPlayer.paused) {
-        musicPlayer.play();
-        playIcon.classList.add('hidden');
-        pauseIcon.classList.remove('hidden');
+        playMusic(); // Use enhanced playMusic function
       } else {
         musicPlayer.pause();
-        playIcon.classList.remove('hidden');
-        pauseIcon.classList.add('hidden');
+        
+        // Stop music visualizer
+        stopMusicVisualizer();
       }
     }
     
-    // Create audio visualizer
-    function createVisualizer() {
-      const visualizer = document.getElementById('visualizer');
-      visualizer.innerHTML = '';
+    // Audio bar visualizer creation function
+    function createMusicVisualizer() {
+      const container = document.getElementById('music-visualizer');
+      if (!container) return;
       
-      const barCount = 24;
+      // Get the audio-bars-container inside the container
+      let barsContainer = container.querySelector('.audio-bars-container');
+      if (!barsContainer) {
+        barsContainer = document.createElement('div');
+        barsContainer.className = 'audio-bars-container flex items-center justify-center space-x-1';
+        container.appendChild(barsContainer);
+      }
       
+      // Clear the container
+      barsContainer.innerHTML = '';
+      
+      // Number of bars
+      const barCount = 7;
+      
+      // Create bars
       for (let i = 0; i < barCount; i++) {
         const bar = document.createElement('div');
-        bar.className = 'bg-purple-500 opacity-70 mx-0.5';
-        bar.style.width = '4px';
-        bar.style.height = `${Math.random() * 40 + 10}px`;
-        bar.style.transform = `rotate(${(i * (360 / barCount))}deg) translateY(-80px)`;
-        visualizer.appendChild(bar);
+        bar.className = 'audio-bar';
+        barsContainer.appendChild(bar);
       }
     }
     
-    // Animate visualizer with mock data
-    function animateVisualizer() {
-      const bars = document.querySelectorAll('#visualizer div');
+    // Start audio bar visualizer animation
+    function startMusicVisualizer() {
+      const bars = document.querySelectorAll('.audio-bar');
+      if (!bars.length) return;
       
-      bars.forEach(bar => {
-        if (!musicPlayer.paused) {
-          const height = Math.random() * 40 + 10;
-          bar.style.height = `${height}px`;
-          bar.style.opacity = 0.5 + (height / 100);
-        }
+      bars.forEach((bar, index) => {
+        bar.classList.add('active');
+        // Different animation delay for each bar
+        bar.style.animationDelay = `${index * 0.1}s`;
       });
       
-      requestAnimationFrame(animateVisualizer);
+      // ID for animation frame
+      if (window.audioAnimationFrameId) {
+        cancelAnimationFrame(window.audioAnimationFrameId);
+      }
+      
+      // Real audio visualizer effect with random heights
+      const animateBars = () => {
+        if (musicPlayer.paused) return;
+        
+        bars.forEach(bar => {
+          if (Math.random() > 0.5) {
+            const height = Math.random() * 10 + 5; // 5px - 15px
+            bar.style.height = `${height}px`;
+          }
+        });
+        
+        window.audioAnimationFrameId = requestAnimationFrame(animateBars);
+      };
+      
+      window.audioAnimationFrameId = requestAnimationFrame(animateBars);
+    }
+    
+    // Stop audio bar visualizer animation
+    function stopMusicVisualizer() {
+      if (window.audioAnimationFrameId) {
+        cancelAnimationFrame(window.audioAnimationFrameId);
+      }
+      
+      const bars = document.querySelectorAll('.audio-bar');
+      if (!bars.length) return;
+      
+      bars.forEach(bar => {
+        bar.classList.remove('active');
+        bar.style.animation = '';
+        bar.style.height = '5px'; // Set to short state
+      });
+    }
+    
+    // Function for the duration bar
+    function startMusicDurationBar() {
+      const musicProgress = document.getElementById('music-progress');
+      musicProgress.style.width = '100%';
+      
+      // Timer for music playback duration
+      let musicDuration = settings.previewLength || 10; // Default 10 seconds
+      let timeElapsed = 0;
+      
+      // Clear existing timer if any
+      if (window.musicProgressTimer) {
+        clearInterval(window.musicProgressTimer);
+      }
+      
+      window.musicProgressTimer = setInterval(() => {
+        if (!musicPlayer.paused) {
+          timeElapsed += 0.1;
+          const percentage = 100 - ((timeElapsed / musicDuration) * 100);
+          
+          // Update duration bar
+          if (musicProgress) {
+            musicProgress.style.width = `${percentage}%`;
+          }
+          
+          // Has time expired?
+          if (timeElapsed >= musicDuration) {
+            clearInterval(window.musicProgressTimer);
+            // Keep music playing but set progress bar to 100%
+            if (musicProgress) {
+              musicProgress.style.width = '100%';
+            }
+            // Do not stop music or visualizer
+            // We'll let the user make their selection at their own pace
+          }
+        }
+      }, 100);
+      
+      // Return timer reference
+      return window.musicProgressTimer;
     }
     
     // Handle answer selection
@@ -785,8 +1185,17 @@
       const selectedButton = e.currentTarget;
       const selectedAnswer = selectedButton.dataset.answer;
       
+      // Mark that an answer was selected
+      answerSelected = true;
+      window.timeoutHandled = true; // Kullanıcı şık seçtiyse timeout asla çalışmasın
+      
       // Stop timer
       if (timer) clearInterval(timer);
+      
+      // Stop duration bar timer
+      if (window.musicProgressTimer) {
+        clearInterval(window.musicProgressTimer);
+      }
       
       // Mark button as selected
       selectedButton.classList.add('selected');
@@ -830,10 +1239,8 @@
         }
       }
       
-      // Stop music
-      musicPlayer.pause();
-      playIcon.classList.remove('hidden');
-      pauseIcon.classList.add('hidden');
+      // Music continues playing, we no longer stop it
+      // Visualizer will also continue to work
       
       // Update player score in multiplayer
       if (['versus', 'team', 'coop'].includes(gameMode)) {
@@ -872,8 +1279,14 @@
       showRoundCompletionScreen();
     }
     
-    // Show the round completion screen with current standings
+    // Show the round completion screen with current standings - Improved and faster version
     function showRoundCompletionScreen(isGameOver = false) {
+      // Allow music to continue playing
+      // We only stop visualizer if music has naturally ended
+      if (musicPlayer.paused) {
+        stopMusicVisualizer();
+      }
+      
       const roundCompletion = document.getElementById('round-completion');
       const roundResult = document.getElementById('round-result');
       const roundMessage = document.getElementById('round-message');
@@ -882,20 +1295,44 @@
       const albumCoverDisplay = document.getElementById('album-cover-display');
       const songInfo = document.getElementById('song-info');
       
+      // No confetti effect for round completion screen (only on final results)
+      
       // Display album cover and song info if available
       if (currentTrack && currentTrack.album && currentTrack.album.cover_medium) {
         albumCoverDisplay.src = currentTrack.album.cover_medium;
-        songInfo.textContent = `${currentTrack.title} by ${currentTrack.artist}`;
+        const displayTitle = currentTrack.cleanTitle || cleanSongTitle(currentTrack.title);
+        songInfo.textContent = `${displayTitle} by ${currentTrack.artist}`;
       } else if (currentTrack) {
         // Fallback if no album cover
         albumCoverDisplay.src = "https://via.placeholder.com/200/6D28D9/FFFFFF?text=Riffle";
-        songInfo.textContent = `${currentTrack.title} by ${currentTrack.artist}`;
+        const displayTitle = currentTrack.cleanTitle || cleanSongTitle(currentTrack.title);
+        songInfo.textContent = `${displayTitle} by ${currentTrack.artist}`;
       }
       
       // Set result message based on the last answer
-      const lastAnswerCorrect = document.querySelector('.answer-btn.correct.selected') !== null;
+      // Check if the user actually selected an answer
+      const selectedAnswer = document.querySelector('.answer-btn.selected');
+      const lastAnswerCorrect = selectedAnswer && selectedAnswer.classList.contains('correct');
+      const timeoutOccurred = document.querySelector('.timeout-correct') !== null;
       
-      if (lastAnswerCorrect) {
+      if (!selectedAnswer && timeoutOccurred) {
+        // No answer was selected and time expired - show special styling
+        roundResult.textContent = 'Time\'s Up!';
+        roundMessage.textContent = 'You didn\'t select an answer in time.';
+        roundResult.classList.remove('text-yellow-400', 'text-blue-400');
+        
+        // Add text color without background styling
+        roundResult.classList.add('text-red-400');
+        // Remove any existing style
+        roundResult.style.background = '';
+        roundResult.style.padding = '';
+        roundResult.style.borderRadius = '';
+      } else if (lastAnswerCorrect) {
+        // Reset any special styling
+        roundResult.style.background = '';
+        roundResult.style.padding = '';
+        roundResult.style.borderRadius = '';
+        
         roundResult.textContent = 'Correct!';
         
         // Different messages based on performance
@@ -909,14 +1346,20 @@
         
         roundResult.classList.remove('text-red-400');
         roundResult.classList.add('text-yellow-400');
-      } else {
-        roundResult.textContent = 'Wrong Answer!';
-        roundMessage.textContent = 'Better luck on the next one!';
-        roundResult.classList.remove('text-yellow-400');
-        roundResult.classList.add('text-red-400');
-      }
-      
-      // Update the score table
+        } else if (selectedAnswer) {
+          // User selected an incorrect answer
+          // Reset any special styling
+          roundResult.style.background = '';
+          roundResult.style.padding = '';
+          roundResult.style.borderRadius = '';
+          
+          roundResult.textContent = 'Wrong Answer!';
+          roundMessage.textContent = 'Better luck on the next one!';
+          roundResult.classList.remove('text-yellow-400', 'text-blue-400');
+          roundResult.classList.add('text-red-400');
+        }
+        // The case where no answer was selected is handled above
+              // Update the score table
       scoreTable.innerHTML = '';
       
       if (['versus', 'team', 'coop'].includes(gameMode)) {
@@ -937,8 +1380,47 @@
           `;
           scoreTable.appendChild(row);
         });
+      } else if (gameMode === 'marathon' || gameMode === 'solo') {
+        // Marathon mode - enhanced display for single player
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td class="py-2">
+            <div class="flex items-center">
+              <div class="h-6 w-6 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 p-0.5 mr-2">
+                <img src="src/img/avatars/${settings.avatar || localStorage.getItem('selectedAvatar') || 'avatar1'}.png" alt="Your Avatar" class="rounded-full">
+              </div>
+              You
+            </div>
+          </td>
+          <td class="py-2 text-center">${score}</td>
+          <td class="py-2 text-right">
+            ${lastAnswerCorrect ? '+1' : (timeoutOccurred && !selectedAnswer) ? 
+            '<span class="bg-yellow-800 text-xs px-2 py-1 rounded-full">Missed</span>' : '+0'}
+          </td>
+        `;
+        scoreTable.appendChild(row);
+        
+        // Add a second row with additional Marathon mode info
+        const infoRow = document.createElement('tr');
+        infoRow.innerHTML = `
+          <td class="py-2 text-sm text-gray-400">Streak</td>
+          <td class="py-2 text-center">
+            ${lastAnswerCorrect 
+              ? (currentRound > 1 ? 'Continues!' : 'Started!') 
+              : (timeoutOccurred && !selectedAnswer) ? 'Timed Out!' : 'Broken!'}
+          </td>
+          <td class="py-2 text-right">
+            <span class="inline-flex items-center bg-gray-800 rounded-full px-3 py-1 text-sm">
+              <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"></path>
+              </svg>
+              ${remainingLives}
+            </span>
+          </td>
+        `;
+        scoreTable.appendChild(infoRow);
       } else {
-        // Solo mode - just show player score
+        // Other solo modes - standard display
         const row = document.createElement('tr');
         row.innerHTML = `
           <td class="py-2">You</td>
@@ -953,6 +1435,11 @@
         nextRoundBtn.textContent = 'See Final Results';
         
         if (isGameOver && gameMode === 'solo' && lives !== Infinity) {
+          // Reset any special styling
+          roundResult.style.background = '';
+          roundResult.style.padding = '';
+          roundResult.style.borderRadius = '';
+          
           roundResult.textContent = 'Game Over!';
           roundMessage.textContent = 'You ran out of lives!';
           roundResult.classList.remove('text-yellow-400');
@@ -966,6 +1453,16 @@
       nextRoundBtn.onclick = function() {
         roundCompletion.classList.add('hidden');
         
+        // Now we stop the music as we transition
+        musicPlayer.pause();
+        stopMusicVisualizer();
+        
+        // Remove any "Continue" buttons that might still be present
+        const timeoutBtn = document.getElementById('timeout-next-btn');
+        if (timeoutBtn && timeoutBtn.parentNode) {
+          timeoutBtn.parentNode.removeChild(timeoutBtn);
+        }
+        
         // Check if game should end or continue
         if (isGameOver || (settings.rounds !== 'unlimited' && currentRound >= totalRounds)) {
           endGame();
@@ -974,14 +1471,35 @@
         }
       };
       
-      // Show the round completion screen with a slight delay
-      setTimeout(() => {
-        roundCompletion.classList.remove('hidden');
-      }, 500);
+      // Show round completion modal with faster fade-in effect
+      roundCompletion.classList.remove('hidden');
+      
+      // Apply a faster animation
+      roundCompletion.style.animation = 'quickFadeIn 0.3s forwards';
+      
+      // Set focus on next round button for keyboard users
+      nextRoundBtn.focus();
+      
+      // Add quick fade-in animation if not already present
+      if (!document.getElementById('quick-fade-in-style')) {
+        const style = document.createElement('style');
+        style.id = 'quick-fade-in-style';
+        style.textContent = `
+          @keyframes quickFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+          }
+        `;
+        document.head.appendChild(style);
+      }
     }
     
     // End the game and show results
     function endGame() {
+      // Make sure music is stopped for the final results screen
+      musicPlayer.pause();
+      stopMusicVisualizer();
+      
       const finalScore = document.getElementById('final-score');
       const scoreMessage = document.getElementById('score-message');
       const resultsModal = document.getElementById('results-modal');
@@ -1133,7 +1651,7 @@
                     <div class="flex items-center">
                       <span class="text-gray-400 text-sm mr-2">${i + 1}.</span>
                       <div>
-                        <p class="font-medium">${track.artist_name} - ${track.title}</p>
+                        <p class="font-medium">${track.artist_name} - ${track.cleanTitle || cleanSongTitle(track.title)}</p>
                         <p class="text-sm text-gray-400">${track.album ? track.album.title : 'Unknown Album'}</p>
                       </div>
                     </div>
@@ -1192,40 +1710,182 @@
       }
     }
     
-    // Create confetti effect
+    // Create confetti effect - Improved and faster version
     function createConfetti() {
-      const confettiCount = 100;
-      const container = document.body;
-      const colors = ['#f00', '#0f0', '#00f', '#ff0', '#0ff', '#f0f'];
+      // Quick flash effect
+      const flash = document.createElement('div');
+      flash.style.position = 'fixed';
+      flash.style.top = '0';
+      flash.style.left = '0';
+      flash.style.width = '100vw';
+      flash.style.height = '100vh';
+      flash.style.backgroundColor = 'rgba(255, 255, 255, 0.3)';
+      flash.style.zIndex = '999';
+      flash.style.pointerEvents = 'none';
+      document.body.appendChild(flash);
       
+      // Faster flash animation
+      flash.animate([
+        { opacity: 0.3 },
+        { opacity: 0 }
+      ], {
+        duration: 400, // Reduced from 800ms
+        easing: 'ease-out'
+      }).onfinish = () => flash.remove();
+      
+      const confettiCount = 150; // Optimized count for better performance
+      const confettiContainer = document.createElement('div');
+      confettiContainer.className = 'confetti-container';
+      confettiContainer.style.position = 'fixed';
+      confettiContainer.style.top = '0';
+      confettiContainer.style.left = '0';
+      confettiContainer.style.width = '100%';
+      confettiContainer.style.height = '100%';
+      confettiContainer.style.overflow = 'hidden';
+      confettiContainer.style.zIndex = '1000';
+      confettiContainer.style.pointerEvents = 'none';
+      document.body.appendChild(confettiContainer);
+      
+      // Clean up confetti faster
+      setTimeout(() => {
+        if (confettiContainer.parentNode) {
+          confettiContainer.remove();
+        }
+      }, 3000); // Reduced from 8000ms for faster cleanup
+      
+      // Bright and vibrant colors
+      const colors = [
+        '#FF1493', '#00BFFF', '#FFD700', '#32CD32', '#FF4500', '#9400D3', 
+        '#FF69B4', '#1E90FF', '#FFFF00', '#00FF7F', '#FF6347', '#8A2BE2',
+        '#FF00FF', '#00FFFF', '#FFA500', '#7FFF00', '#FF0000', '#0000FF'
+      ];
+      
+      // Simpler shapes for better performance
+      const shapes = ['circle', 'square', 'triangle', 'star'];
+      
+      // Create confetti pieces
       for (let i = 0; i < confettiCount; i++) {
         const confetti = document.createElement('div');
         confetti.className = 'confetti';
-        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        
+        // Mostly come from top for better visual effect
         confetti.style.left = `${Math.random() * 100}vw`;
-        confetti.style.top = '50vh';
-        confetti.style.animation = `fadeAndMove ${Math.random() * 3 + 1}s forwards`;
-        confetti.style.opacity = Math.random();
-        confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+        confetti.style.top = `${Math.random() * 30 - 20}vh`;
         
-        container.appendChild(confetti);
+        // Random shape and color
+        const shape = shapes[Math.floor(Math.random() * shapes.length)];
+        const color = colors[Math.floor(Math.random() * colors.length)];
         
-        // Remove after animation
-        setTimeout(() => {
-          confetti.remove();
-        }, 3000);
+        // Randomized size
+        const size = Math.random() * 10 + 5;
+        
+        // Define shapes
+        switch(shape) {
+          case 'circle':
+            confetti.style.width = `${size}px`;
+            confetti.style.height = `${size}px`;
+            confetti.style.backgroundColor = color;
+            confetti.style.borderRadius = '50%';
+            break;
+          case 'square':
+            confetti.style.width = `${size}px`;
+            confetti.style.height = `${size}px`;
+            confetti.style.backgroundColor = color;
+            break;
+          case 'triangle':
+            confetti.style.width = '0';
+            confetti.style.height = '0';
+            confetti.style.backgroundColor = 'transparent';
+            confetti.style.borderLeft = `${size}px solid transparent`;
+            confetti.style.borderRight = `${size}px solid transparent`;
+            confetti.style.borderBottom = `${size * 1.5}px solid ${color}`;
+            break;
+          case 'star':
+            confetti.style.width = `${size * 1.5}px`;
+            confetti.style.height = `${size * 1.5}px`;
+            confetti.style.backgroundColor = color;
+            confetti.style.clipPath = 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)';
+            break;
+        }
+        
+        // Faster animations
+        const duration = Math.random() * 2 + 1; // 1-3 seconds (reduced from 3-8)
+        const delay = Math.random() * 0.5; // Reduced delay for quicker start
+        
+        // Physics calculations
+        const vx = Math.random() * 10 - 5;
+        const vy = Math.random() * 10 + 15; // Falling effect
+        const spin = Math.random() * 360 - 180;
+        
+        confetti.style.position = 'absolute';
+        confetti.style.zIndex = '1001';
+        confetti.style.pointerEvents = 'none';
+        confetti.style.boxShadow = `0 0 ${Math.random() * 3 + 1}px ${color}`;
+        confetti.style.opacity = Math.random() * 0.5 + 0.5;
+        
+        // Set CSS variables for animation
+        confetti.style.setProperty('--vx', `${vx}`);
+        confetti.style.setProperty('--vy', `${vy}`);
+        confetti.style.setProperty('--spin', `${spin}`);
+        
+        // Apply animation
+        confetti.style.animation = `confettiFall ${duration}s ${delay}s ease-in forwards`;
+        
+        confettiContainer.appendChild(confetti);
       }
+      
+      // Add animation style if not already present
+      if (!document.getElementById('confetti-style')) {
+        const style = document.createElement('style');
+        style.id = 'confetti-style';
+        style.textContent = `
+          @keyframes confettiFall {
+            0% {
+              transform: translateY(0) translateX(0) rotate(0deg);
+              opacity: 1;
+            }
+            25% {
+              opacity: 1;
+            }
+            100% {
+              transform: translateY(calc(var(--vy) * 50px)) 
+                         translateX(calc(var(--vx) * 20px)) 
+                         rotate(calc(var(--spin) * 1deg));
+              opacity: 0;
+            }
+          }
+        `;
+        document.head.appendChild(style);
+      }
+      
+      // No victory sounds as requested
     }
     
     // Set up event listeners
     function setupEventListeners() {
-      // Play/pause button
-      document.querySelector('.pulse-animation').addEventListener('click', togglePlayPause);
-      
-      // Answer buttons
+      // Answer buttons only - removed music control click handlers
       answerButtons.forEach(btn => {
         btn.addEventListener('click', handleAnswerClick);
       });
+      
+      // Müzik başlatmaya yardımcı olmak için tüm sayfa etkileşimlerini dinle
+      const pageInteractionHandler = () => {
+        // Sayfa etkileşimi algılandı, müziği başlatmayı dene
+        if (musicPlayer.paused && musicPlayer.src) {
+          musicPlayer.muted = false; // Ses açık
+          musicPlayer.play().catch(e => {/* Autoplay attempt error handled silently */});
+        }
+        
+        // Bu handler'ı tek kullanımlık yap
+        document.removeEventListener('click', pageInteractionHandler);
+        document.removeEventListener('touchstart', pageInteractionHandler);
+        document.removeEventListener('keydown', pageInteractionHandler);
+      };
+      
+      // Sayfa etkileşimi eventlerini dinle
+      document.addEventListener('click', pageInteractionHandler);
+      document.addEventListener('touchstart', pageInteractionHandler);
+      document.addEventListener('keydown', pageInteractionHandler);
       
       // Results modal buttons
       document.getElementById('replay-btn').addEventListener('click', () => {
@@ -1233,11 +1893,8 @@
       });
       
       document.getElementById('menu-btn').addEventListener('click', () => {
-        window.location.href = 'index.html';
+        window.location.href = '../index.html';
       });
-      
-      // Start visualizer animation
-      animateVisualizer();
     }
     
     // Utility: Shuffle array randomly
@@ -1257,10 +1914,10 @@
       const mainMenuBtn = document.getElementById('mainMenuBtn');
       if (mainMenuBtn) {
         mainMenuBtn.addEventListener('click', function() {
-          console.log('Main menu button clicked');
-          window.location.href = 'index.html';
+          // Main menu button clicked handler
+          window.location.href = '../index.html';
         });
-        console.log('Main menu button handler initialized');
+        // Main menu button handler initialized
       } else {
         console.error('Main menu button not found');
       }
