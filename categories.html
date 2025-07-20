@@ -1,7 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"    .category-check.bg-purple-500 {
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Riffle - Options</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet"/>
+  <style>
+    .category-check.bg-purple-500 {
       box-shadow: 0 0 20px rgba(139, 92, 246, 0.8);
     }
     
@@ -56,14 +64,25 @@
     }
     
     /* Custom scrollbar styling */
-    ::-webkit-scrollbar { <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Riffle - Category Selection</title>
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet"/>
-  <style>
-    body { 
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(139, 92, 246, 0.5);
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(139, 92, 246, 0.8);
+    }
+
+    body {
       font-family: 'Montserrat', sans-serif;
       background-size: 200% 200%;
       animation: gradientAnimation 15s ease infinite;
@@ -169,6 +188,12 @@
     ::-webkit-scrollbar-thumb:hover {
       background: rgba(139, 92, 246, 0.8);
     }
+
+    .disabled-select {
+    pointer-events: none;          /* tıklanamaz */
+    opacity: .45;                  /* soluk göster */
+    cursor: not-allowed;           /* imleç değişsin */
+  }
   </style>
 </head>
 <body class="bg-gradient-to-br from-gray-900 via-purple-900 to-black min-h-screen relative">
@@ -248,7 +273,7 @@
       <!-- Header & Settings/Chat Toggle -->
       <div class="flex flex-col md:flex-row justify-between items-center mb-4">
         <div class="relative mb-3 md:mb-0">
-          <h1 class="text-4xl font-extrabold text-white relative z-10">Category Selection</h1>
+          <h1 class="text-4xl font-extrabold text-white relative z-10">Options</h1>
           <div class="absolute -bottom-3 left-0 w-full h-3 bg-purple-700 opacity-30 rounded-full blur-sm"></div>
         </div>
         
@@ -284,13 +309,19 @@
           
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             <!-- Round Count Selection -->
-            <div class="mb-4 bg-black bg-opacity-30 p-4 rounded-xl border border-purple-700 border-opacity-30 transform transition-transform hover:scale-[1.02]">
+            <div class="mb-4 bg-black bg-opacity-30 p-4 rounded-xl border border-purple-700 border-opacity-30 transform transition-transform hover:scale-[1.02]" id="round-count-container">
+              <!-- Marathon mode badge - will only be visible in Marathon mode -->
+              <div id="marathon-badge" class="hidden absolute top-0 right-0 transform translate-x-2 -translate-y-2 bg-purple-600 text-white text-xs px-2 py-1 rounded-md shadow-lg">
+                Marathon Mode
+              </div>
               <div class="flex items-center mb-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-purple-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" />
                 </svg>
                 <label for="round-count" class="block text-sm font-medium text-purple-200">Number of Questions</label>
+                <!-- Marathon: Unlimited göstergesini kaldırdım -->
               </div>
+              <!-- For non-Marathon modes -->
               <select id="round-count" class="w-full bg-gray-900 border border-purple-700 border-opacity-40 text-white py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600 shadow-inner">
                 <option value="5">5 Questions</option>
                 <option value="10" selected>10 Questions</option>
@@ -298,10 +329,22 @@
                 <option value="20">20 Questions</option>
                 <option value="unlimited">Unlimited (Marathon Only)</option>
               </select>
+              
+              <!-- For Marathon mode only - empty display area to replace dropdown -->
+              <div id="marathon-unlimited-display" class="hidden w-full bg-transparent py-3 px-4 rounded-lg">
+                <span class="text-purple-300">Unlimited Questions</span>
+              </div>
+              
+              <!-- Hidden field to ensure the value is always set -->
+              <input type="hidden" id="marathon-round-count-hidden" value="unlimited">
             </div>
             
             <!-- Lives Setting (Only for Marathon mode) -->
             <div class="mb-4 bg-black bg-opacity-30 p-4 rounded-xl border border-purple-700 border-opacity-30 transform transition-transform hover:scale-[1.02]" id="lives-container">
+              <!-- Marathon mode badge - will only be visible in Marathon mode -->
+              <div id="marathon-badge-lives" class="hidden absolute top-0 right-0 transform translate-x-2 -translate-y-2 bg-purple-600 text-white text-xs px-2 py-1 rounded-md shadow-lg">
+                Marathon Mode
+              </div>
               <div class="flex items-center mb-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-purple-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
@@ -349,7 +392,7 @@
             </div>
             
             <!-- Answer Visibility (Only for multiplayer modes) -->
-            <div class="mb-4 bg-black bg-opacity-30 p-4 rounded-xl border border-purple-700 border-opacity-30 transform transition-transform hover:scale-[1.02]" id="answer-visibility-container">
+            <div class="mb-4 bg-black bg-opacity-30 p-4 rounded-xl border border-purple-700 border-opacity-30 transform transition-transform hover:scale-[1.02] hidden" id="answer-visibility-container">
               <div class="flex items-center mb-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-purple-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -606,7 +649,31 @@
 
     // Variables
     let selectedCategories = [];
-    let gameMode = new URLSearchParams(window.location.search).get('mode') || 'solo';
+    // URL'den mode değerini al ve detaylı log
+    console.log('SAYFA YÜKLEME - URL ANALİZİ');
+    console.log('Tam URL:', window.location.href);
+    console.log('URL parametreleri:', window.location.search);
+    
+    // URLSearchParams nesnesini oluştur
+    const urlParams = new URLSearchParams(window.location.search);
+    console.log('URLSearchParams nesnesi:', urlParams);
+    
+    // 'mode' parametresini getir
+    const modeParam = urlParams.get('mode');
+    console.log('Okunan mode parametresi:', modeParam);
+    
+    // Marathon/solo eşleştirmesi ve son gameMode değerini belirle
+    // NOT: Marathon URL'de 'marathon', kod içinde 'solo' olarak kullanılıyor
+    let gameMode = modeParam || 'solo';
+    
+    // URL'de 'marathon' yazıyorsa, kodumuzda bunu 'solo' olarak kullan
+    if (modeParam === 'marathon') {
+        gameMode = 'solo';
+        console.log('URL parametresi "marathon" olduğu için gameMode "solo" olarak ayarlandı');
+    }
+    
+    // Son gameMode değerini göster
+    console.log('FİNAL GAME MODE DEĞERİ:', gameMode);
     
     // Game mode title function removed as the element is no longer displayed
     
@@ -623,13 +690,32 @@
     // Don't update DOM element as it's removed
     // document.getElementById('game-mode-title').textContent = modeTitles[gameMode] || 'Riffle';
     
+    console.log('Current game mode title:', modeTitles[gameMode] || 'Unknown mode');
+    
     // Update selections panel when mode changes
     updateSelectionsSummary();
 
     // Initialize UI
     document.addEventListener('DOMContentLoaded', () => {
-      // Configure UI based on game mode
+      console.log('DOM loaded, setting up for game mode:', gameMode);
+      
+      // Manuel olarak elementlerin durumunu kontrol et
+      console.log('DOM YÜKLENDİ - ELEMENT KONTROLÜ:');
+      console.log('answerVisibilityContainer:', document.getElementById('answer-visibility-container'));
+      console.log('livesContainer:', document.getElementById('lives-container'));
+      console.log('Mod:', gameMode);
+      
+      // Configure UI based on game mode - setup all game mode settings in one place
       setupGameModeSettings();
+      
+      // 500ms sonra tekrar kontrol et - geç yüklenen elementler için
+      setTimeout(() => {
+        console.log('GECİKMELİ KONTROL:');
+        console.log('answerVisibilityContainer görünürlük:', 
+          document.getElementById('answer-visibility-container')?.style.display);
+        console.log('livesContainer görünürlük:',
+          document.getElementById('lives-container')?.style.display);
+      }, 500);
       
       // Tab switching
       document.getElementById('tab-settings').addEventListener('click', () => switchTab('settings'));
@@ -639,7 +725,11 @@
       loadCategories();
       
       // Start button event
-      document.getElementById('start-game').addEventListener('click', startGame);
+      const startGameButton = document.getElementById('start-game');
+      startGameButton.addEventListener('click', startGame);
+      
+      // Start button should be disabled initially until a category is selected
+      startGameButton.disabled = true;
       
       // Category horizontal scroll buttons
       document.getElementById('scroll-left').addEventListener('click', () => {
@@ -722,59 +812,125 @@
     
     // Configure UI settings based on game mode
     function setupGameModeSettings() {
-      // Show/hide relevant settings based on game mode
-      const answerVisibilityContainer = document.getElementById('answer-visibility-container');
-      const livesContainer = document.getElementById('lives-container');
-      
-      if (gameMode === 'solo') { // Marathon mode
-        // Get the round count container and select
-        const roundCountContainer = document.getElementById('round-count').parentElement;
-        const roundCountSelect = document.getElementById('round-count');
-        
-        // Set the container to indicate it's disabled for Marathon mode
-        roundCountContainer.classList.add('opacity-50');
-        
-        // Add Marathon-specific option if not exists
-        if (!Array.from(roundCountSelect.options).some(opt => opt.value === 'unlimited')) {
-          const unlimitedOption = document.createElement('option');
-          unlimitedOption.value = 'unlimited';
-          unlimitedOption.textContent = 'Unlimited (Marathon Mode)';
-          roundCountSelect.appendChild(unlimitedOption);
-        }
-        
-        // Set to unlimited for Marathon mode and disable the select
-        roundCountSelect.value = 'unlimited';
-        roundCountSelect.disabled = true;
-        
-        // Hide answer visibility for solo mode
-        answerVisibilityContainer.classList.add('hidden');
-        
-        // Show lives setting for Marathon mode
-        livesContainer.classList.remove('hidden');
-        
-      } else if (['versus', 'team', 'coop'].includes(gameMode)) {
-        // Show answer visibility for multiplayer modes
-        answerVisibilityContainer.classList.remove('hidden');
-        
-        // Enable round count selection for non-marathon modes
-        const roundCountSelect = document.getElementById('round-count');
-        roundCountSelect.disabled = false;
-        
-        // Remove unlimited option for non-marathon modes
-        for (let i = 0; i < roundCountSelect.options.length; i++) {
-          if (roundCountSelect.options[i].value === 'unlimited') {
-            roundCountSelect.removeChild(roundCountSelect.options[i]);
-            break;
-          }
-        }
-        
-        // Hide lives setting for multiplayer modes
-        livesContainer.classList.add('hidden');
-      }
-      
-      // Load saved settings for this mode if exists
-      loadSavedModeSettings();
+  console.log('setupGameModeSettings() çalışıyor, mevcut mod:', gameMode);
+  
+  // Kontrol için URL parametresini tekrar okuyalım
+  const currentUrlMode = new URLSearchParams(window.location.search).get('mode');
+  console.log('URL parametresi kontrol:', currentUrlMode);
+  
+  const answerVisibilityContainer = document.getElementById('answer-visibility-container');
+  const livesContainer          = document.getElementById('lives-container');
+  const roundCountSelect        = document.getElementById('round-count');
+  const marathonDisplay         = document.getElementById('marathon-unlimited-display');
+  const marathonBadge           = document.getElementById('marathon-badge');
+  const marathonBadgeLives      = document.getElementById('marathon-badge-lives');
+  
+  // Element varlığını kontrol et
+  console.log('answerVisibilityContainer mevcut:', !!answerVisibilityContainer);
+  console.log('livesContainer mevcut:', !!livesContainer);
+
+  console.log('Mod kontrolü: gameMode =', gameMode);
+  
+  if (gameMode === 'solo' || gameMode === 'marathon') {   // ====== MARATHON ======
+    /* 1. Select’i devre dışı bırak */
+    if (roundCountSelect) {
+      roundCountSelect.value    = 'unlimited';
+      roundCountSelect.disabled = true;
+      roundCountSelect.classList.add('disabled-select');   // görsel
+      roundCountSelect.style.display = 'none';  // Açıkça gizle
+      roundCountSelect.removeEventListener('change', updateSelectionsSummary);
     }
+
+    /* 2. Görünürlük kontrolleri */
+    if (marathonDisplay) {
+      marathonDisplay.classList.remove('hidden');
+      marathonDisplay.style.display = 'block';  // Açıkça göster
+      marathonDisplay.style.visibility = 'visible';
+    }
+    if (marathonBadge)      marathonBadge.classList.remove('hidden');
+    if (marathonBadgeLives) marathonBadgeLives.classList.remove('hidden');
+
+    if (answerVisibilityContainer) {
+      answerVisibilityContainer.classList.add('hidden');
+      answerVisibilityContainer.style.display = 'none';
+      answerVisibilityContainer.style.visibility = 'hidden';
+      answerVisibilityContainer.style.position = 'absolute';
+      answerVisibilityContainer.style.pointerEvents = 'none';
+      answerVisibilityContainer.style.opacity = '0';
+      console.log("✓ MARATHON MODU: Answer visibility başarıyla gizlendi!");
+    } else {
+      console.error("✗ HATA: answerVisibilityContainer bulunamadı!");
+    }
+    
+    // Can hakkını göster
+    if (livesContainer) {
+      livesContainer.classList.remove('hidden');
+      livesContainer.style.display = 'block';
+      livesContainer.style.visibility = 'visible';
+      livesContainer.style.opacity = '1';
+      livesContainer.style.pointerEvents = 'auto';
+      console.log("✓ MARATHON MODU: Can hakkı başarıyla gösterildi!");
+      
+      // Lives için marathon badge'i göster
+      if (marathonBadgeLives) {
+        marathonBadgeLives.classList.remove('hidden');
+        console.log("✓ MARATHON MODU: Lives için Marathon badge gösterildi");
+      }
+    } else {
+      console.error("✗ HATA: livesContainer bulunamadı!");
+    }
+
+  } else {                   // ====== DİĞER MODLAR ======
+    /* 3. Select’i tekrar etkinleştir */
+    if (roundCountSelect) {
+      roundCountSelect.disabled = false;
+      roundCountSelect.classList.remove('disabled-select');
+      roundCountSelect.style.display = 'block';  // Açıkça göster
+      // Varsayılan değere dönsün (10) veya sakladığınız ayar neyse onu bırakın
+      if (roundCountSelect.value === 'unlimited') {
+        roundCountSelect.value = '10';
+      }
+      // Dinleyiciyi tekrar ekle (bir kere ekle-çek kontrolü!)
+      if (!roundCountSelect.hasAttribute('data-listener')) {
+        roundCountSelect.addEventListener('change', updateSelectionsSummary);
+        roundCountSelect.setAttribute('data-listener', 'true');
+      }
+    }
+
+    if (marathonDisplay) {
+      marathonDisplay.classList.add('hidden');
+      marathonDisplay.style.display = 'none';
+      marathonDisplay.style.visibility = 'hidden';
+    }
+    if (marathonBadge)      marathonBadge.classList.add('hidden');
+    if (marathonBadgeLives) marathonBadgeLives.classList.add('hidden');
+
+    // Cevap görünürlük ayarını göster
+    if (answerVisibilityContainer) {
+      answerVisibilityContainer.classList.remove('hidden');
+      answerVisibilityContainer.style.display = 'block';
+      answerVisibilityContainer.style.visibility = 'visible';
+      answerVisibilityContainer.style.position = 'static';
+      answerVisibilityContainer.style.pointerEvents = 'auto';
+      answerVisibilityContainer.style.opacity = '1';
+      console.log("✓ DİĞER MODLAR: Answer visibility başarıyla gösterildi!");
+    } else {
+      console.error("✗ HATA: answerVisibilityContainer bulunamadı!");
+    }
+    
+    // Lives ayarını gizle
+    if (livesContainer) {
+      livesContainer.classList.add('hidden');
+      livesContainer.style.display = 'none';
+      livesContainer.style.visibility = 'hidden';
+      console.log("✓ DİĞER MODLAR: Can hakkı başarıyla gizlendi!");
+    } else {
+      console.error("✗ HATA: livesContainer bulunamadı!");
+    }
+  }
+
+  loadSavedModeSettings();   // mevcut satırınız aynen kalsın
+}
     
     // Load saved settings for the current game mode
     function loadSavedModeSettings() {
@@ -787,7 +943,13 @@
           if (settings.rounds) {
             // For Marathon mode (solo), always use unlimited questions
             if (gameMode === 'solo') {
-              document.getElementById('round-count').value = 'unlimited';
+              // Set the hidden input instead of the dropdown
+              document.getElementById('marathon-round-count-hidden').value = 'unlimited';
+              // Make sure the marathon display is shown and dropdown is hidden
+              const roundCountSelect = document.getElementById('round-count');
+              const marathonDisplay = document.getElementById('marathon-unlimited-display');
+              if (roundCountSelect) roundCountSelect.classList.add('hidden');
+              if (marathonDisplay) marathonDisplay.classList.remove('hidden');
             } else {
               document.getElementById('round-count').value = settings.rounds;
             }
@@ -1069,9 +1231,9 @@
         return;
       }
       
-      // Get answer visibility setting
-      const answerVisibility = document.getElementById('answer-visibility') ? 
-        document.getElementById('answer-visibility').value : 'visible';
+      // Get answer visibility setting (not needed for Marathon mode)
+      const answerVisibility = (gameMode === 'solo') ? 
+        'visible' : (document.getElementById('answer-visibility') ? document.getElementById('answer-visibility').value : 'visible');
       
       // Get selected avatar
       const selectedAvatarElement = document.querySelector('.avatar-option.selected');
@@ -1084,8 +1246,8 @@
       const gameSettings = {
         mode: gameMode,
         categories: selectedCategories,
-        // For Marathon mode (solo), always use unlimited rounds regardless of the dropdown
-        rounds: gameMode === 'solo' ? 'unlimited' : document.getElementById('round-count').value,
+        // For Marathon mode (solo), always use the hidden input value to ensure it's unlimited
+        rounds: gameMode === 'solo' ? 'unlimited' : roundCountSelect.value,
         questionType: document.getElementById('question-type').value,
         timeLimit: parseInt(document.getElementById('time-limit').value),
         answerVisibility: answerVisibility,
@@ -1168,8 +1330,13 @@
       // Update the question count
       const questionsDisplay = document.getElementById('selection-questions');
       if (questionsDisplay) {
-        const roundCount = document.getElementById('round-count').value;
-        questionsDisplay.textContent = roundCount === 'unlimited' ? 'Unlimited Questions' : `${roundCount} Questions`;
+        // Always show Unlimited Questions for Marathon mode, otherwise use the selected value
+        if (gameMode === 'solo') {
+          questionsDisplay.textContent = 'Unlimited Questions (Marathon Mode)';
+        } else {
+          const roundCount = document.getElementById('round-count').value;
+          questionsDisplay.textContent = roundCount === 'unlimited' ? 'Unlimited Questions' : `${roundCount} Questions`;
+        }
       }
       
       // Update answer time
@@ -1197,9 +1364,11 @@
       const visibilityDisplay = document.getElementById('selection-visibility');
       
       if (visibilityContainer && visibilityDisplay) {
-        // Only show visibility for multiplayer modes
+        // Only show visibility for multiplayer modes, not for Marathon mode
         if (gameMode !== 'solo') {
           visibilityContainer.style.display = 'flex';
+          visibilityContainer.style.visibility = 'visible';
+          visibilityContainer.style.opacity = '1';
           // Check if answer-visibility element exists and get its value
           const answerVisibilityElement = document.getElementById('answer-visibility');
           if (answerVisibilityElement) {
@@ -1212,7 +1381,10 @@
             visibilityDisplay.textContent = visibilityLabels[visibility] || 'Answers Visible to All';
           }
         } else {
+          // Hide answer visibility for Marathon mode
           visibilityContainer.style.display = 'none';
+          visibilityContainer.style.visibility = 'hidden';
+          visibilityContainer.style.opacity = '0';
         }
       }
       
@@ -1224,6 +1396,8 @@
         // Only show lives for marathon mode
         if (gameMode === 'solo') {
           livesContainer.style.display = 'flex';
+          livesContainer.style.visibility = 'visible';
+          livesContainer.style.opacity = '1';
           const livesCount = document.getElementById('lives-count').value;
           
           if (livesCount === '0') {
@@ -1235,6 +1409,8 @@
           }
         } else {
           livesContainer.style.display = 'none';
+          livesContainer.style.visibility = 'hidden';
+          livesContainer.style.opacity = '0';
         }
       }
     }
