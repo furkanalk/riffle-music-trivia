@@ -44,12 +44,12 @@ npm start
 - [x] Add selection summary panel showing game mode and selected categories
 - [x] Auto-add album covers
 ### Pending
-- [] add valid playlists
-- [] Improve question variety
-- [] Redesign buttons
-- [] Add guest mode
-- [] Profile in top right
-  - [] Recent match history
-  - [] Score history
-- [] Add language options
-- [] Add images to categories
+- [ ] add valid playlists
+- [ ] Improve question variety
+- [ ] Redesign buttons
+- [ ] Add guest mode
+- [ ] Profile in top right
+  - [ ] Recent match history
+  - [ ] Score history
+- [ ] Add language options
+- [ ] Add images to categories
