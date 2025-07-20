@@ -19,14 +19,18 @@ app.get('/api/playlist/:playlistId/tracks', async (req, res) => {
     const { data } = await axios.get(`https://api.deezer.com/playlist/${playlistId}/tracks`);
     if (!data?.data) throw new Error('Invalid Deezer playlist response');
     const tracks = data.data
-      .filter(t => t.preview)
+      .filter(t => t.preview)             // sadece preview'i olanlar
       .map(t => ({
         id: t.id,
         title: t.title,
         artist: t.artist.name,
         preview: t.preview,
-        albumCover: t.album?.cover_medium || t.album?.cover || null,
-        albumTitle: t.album?.title || null
+        album: {
+          title: t.album.title,
+          cover_small: t.album.cover_small,
+          cover_medium: t.album.cover_medium,
+          cover_big: t.album.cover_big || t.album.cover
+        }
       }));
     return res.json(tracks);
   } catch (err) {
@@ -45,9 +49,13 @@ app.get('/api/track/:trackId', async (req, res) => {
       id: t.id,
       title: t.title,
       artist: t.artist.name,
-      album: t.album.title,
-      preview: t.preview,
-      albumCover: t.album?.cover_medium || t.album?.cover || null
+      album: {
+        title: t.album.title,
+        cover_small: t.album.cover_small,
+        cover_medium: t.album.cover_medium,
+        cover_big: t.album.cover_big || t.album.cover
+      },
+      preview: t.preview
     });
   } catch (err) {
     console.error('Deezer track error:', err.message);

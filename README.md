@@ -1,10 +1,6 @@
 # 🎸 Riffle
 
-> A Rock & Metal music trivia game built with **HTML**, **JavaScript**, **Tailwind CSS**, and the **Deezer API**.
-
-<p align="center">
-  <img src="src/img/riffle.png" alt="riffle-logo" width="400">
-</p>
+> A Rock & Metal music trivia game built with **HTML**, **JavaScript**, **Tailwind CSS** and the **Deezer API**.
 
 ---
 
@@ -14,31 +10,6 @@
 - 🧠 Multiple difficulty levels and game modes
 - 🎨 Responsive design with Tailwind CSS
 - 📊 Score tracking and session-based history
-- 🎵 **Custom Mode**: Create your own playlists and customize game settings
-- ⏱️ **Marathon Mode**: Endless rock/metal trivia with timer
-- 👥 **Multiplayer Modes**: Coop, Versus, Team, and Chaos modes
-
-## 🎮 Game Modes
-
-### 🏃‍♂️ Marathon Mode
-- Endless trivia questions with timer
-- Score tracking and progress indicators
-- Random rock/metal tracks from all eras
-
-### 🎵 Custom Mode
-- **Create Custom Playlists**: Choose specific eras (60s-2020s) or all eras
-- **Customizable Settings**: 
-  - Time limit (5-30 seconds per question)
-  - Question types (Artist questions, Title questions, or both)
-  - Playlist size (5-50 tracks)
-- **Playlist Management**: Preview, edit, and remove tracks before playing
-- **Progress Tracking**: See your score and accuracy percentage
-
-### 👥 Multiplayer Modes
-- **Coop**: Collaborative gameplay
-- **Versus**: Head-to-head competition
-- **Team**: Team-based challenges
-- **Chaos**: Fast-paced multiplayer action
 
 ## 🛠️ Technologies Used
 
@@ -55,3 +26,30 @@ cd riffle
 npm install
 npm start
 ```
+
+## 📋 Project Status
+
+### Completed
+- [x] Add timer bar
+- [x] Played songs won't play again
+- [x] Improve answer quality
+- [x] Improve score display
+- [x] Add avatar selection to categories page
+- [x] Make categories page scrollable
+- [x] Add lives system to Marathon mode
+- [x] Set Marathon mode to have "unlimited" questions by default
+- [x] Add animations to category filtering
+- [x] Show album cover of current track at end of round
+- [x] Make music categories horizontally scrollable with navigation buttons
+- [x] Add selection summary panel showing game mode and selected categories
+- [x] Auto-add album covers
+### Pending
+- [] add valid playlists
+- [] Improve question variety
+- [] Redesign buttons
+- [] Add guest mode
+- [] Profile in top right
+  - [] Recent match history
+  - [] Score history
+- [] Add language options
+- [] Add images to categories
