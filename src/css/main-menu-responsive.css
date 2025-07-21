@@ -1,0 +1,91 @@
+/* All main menu cards have the same width and height, fixed aspect ratio */
+.main-menu-cards > div {
+  width: 100%;
+  max-width: 700px;
+  aspect-ratio: 16/5;
+  min-height: 180px;
+  min-width: 320px;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+}
+
+/* Ensure video is above image on hover */
+.main-menu-cards video {
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.main-menu-cards .hover-video:hover video,
+.main-menu-cards .hover-video:focus-within video {
+  opacity: 1;
+}
+.main-menu-cards img {
+  z-index: 1;
+}
+/* Responsive styles for Riffle main menu */
+@media (max-width: 768px) {
+  main {
+    padding-top: 2.5rem !important;
+    padding-bottom: 2rem !important;
+  }
+  h1 {
+    font-size: 2.2rem !important;
+  }
+  .main-menu-cards {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+  .main-menu-cards a {
+    min-width: 0 !important;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 1.5rem !important;
+  }
+  .main-menu-cards {
+    gap: 0.5rem !important;
+  }
+  .main-menu-cards h2 {
+    font-size: 1rem !important;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .main-menu-cards {
+    grid-template-columns: 1fr 1fr !important;
+  }
+}
+
+/* Make sure menu cards and images are always responsive */
+.main-menu-cards a {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  display: block;
+}
+.main-menu-cards img,
+.main-menu-cards video {
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 0;
+  min-height: 0;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover !important;
+  border-radius: 0 !important;
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.main-menu-cards .relative {
+  position: relative !important;
+  width: 100%;
+  height: 100%;
+  min-height: 140px;
+  min-width: 100px;
+}
