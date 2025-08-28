@@ -1,3 +1,11 @@
+html, body { min-height: 100vh; height: 100%; overflow-y: auto; }
+@media (max-width: 767px) {
+  .main-menu-cards > div {
+    flex-direction: column !important;
+    min-height: 160px !important;
+  }
+}
+
 /* All main menu cards have the same width and height, fixed aspect ratio */
 .main-menu-cards > div {
   width: 100%;

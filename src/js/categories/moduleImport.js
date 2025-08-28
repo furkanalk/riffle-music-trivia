@@ -1,6 +1,6 @@
 // Import file for category page
 import { getAllGenres, getRandomTrackFromGenre } from "../music.js";
-import { startMode } from "../script.js";
+import { startMode } from "../manageGameModes.js";
 
 // Import category selection and settings from other modules
 import { setupGameModeSettings, loadSavedModeSettings, switchTab, updateSelectionsSummary } from "./categorySettings.js";
