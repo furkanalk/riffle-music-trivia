@@ -86,3 +86,10 @@ npm run dev
 - [ ] Add multiplayer functionality
 - [ ] Database integration (PostgreSQL)
 - [ ] Mobile app testing and deployment
+
+## 📄 License
+
+This project is **proprietary** and **not open source**.
+
+Source code is available for **educational review only**.  
+Any usage, modification, or distribution requires **explicit written permission** from the author.
