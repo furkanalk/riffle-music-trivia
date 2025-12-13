@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "1968:1968"
+    environment:
+      - NODE_ENV=dev
+      - DATABASE_URL=postgresql://user:password@db:5432/riffle_dev
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+      - /app/node_modules
+    networks:
+      - riffle-network
+
+networks:
+  riffle-network:
+    external: true
