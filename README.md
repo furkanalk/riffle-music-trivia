@@ -1,15 +1,15 @@
 # 🎸 Riffle
-
-> A Rock & Metal music trivia game built with **HTML**, **JavaScript**, **Tailwind CSS** and the **Deezer API**.
-
----
+<img src="https://imgur.com/dkZQodk.png" width="200" height="200">
+<p>A Rock & Metal music trivia game built with <strong>HTML</strong>, <strong>JavaScript</strong>, <strong>Tailwind CSS</strong> and the <strong>Deezer API</strong>.</p>
 
 ## 🚀 Features
+<img src="https://i.imgur.com/BT6O05h.png" width="450" height="150">
+<p> 🎶 Real-time trivia questions based on Deezer data </p>
+<p>🧠 Multiple difficulty levels and game modes </p>
 
-- 🎶 Real-time trivia questions based on Deezer data
-- 🧠 Multiple difficulty levels and game modes
-- 🎨 Responsive design with Tailwind CSS
-- 📊 Score tracking and session-based history
+<img src="https://i.imgur.com/PDjGzKP.png" width="450" height="150">
+<p> 🎨 Responsive design with Tailwind CSS </p>
+<p> 📊 Score tracking and session-based history </p>
 
 ## 🛠️ Technologies Used
 
@@ -18,16 +18,18 @@
 - Tailwind CSS
 - Deezer API
 
-## Installation
+## ⚙️ Installation
 
 ```
-git clone https://github.com/kullanici-adi/riffle.git
+git clone https://github.com/furkanalk/riffle.git
 cd riffle
 npm install
-npm start
+npm run dev
 ```
 
 ## 📋 Project Status
+
+> Temporary overview. Detailed progress will be tracked on a public board.
 
 ### Completed
 - [x] Add timer bar
@@ -49,7 +51,7 @@ npm start
 - [x] Ensure music continues playing when answers are selected
 - [x] Clean code and translate comments to English
 ### Pending
-- [ ] add valid playlists
+- [ ] Add valid playlists
 - [ ] Improve question variety
 - [ ] Add guest mode
 - [ ] Profile in top right
