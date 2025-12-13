@@ -1,69 +1,48 @@
-// server.js
 import express from 'express';
 import cors from 'cors';
 import path from 'path';
-import axios from 'axios';
 import dotenv from 'dotenv';
+import routes from './server/routes/index.js';
+import { config } from './server/config/environments.js';
 
 dotenv.config();
-const app = express();
-const PORT = process.env.PORT || 3000;
 
-app.use(cors());
+const app = express();
+const PORT = process.env.PORT || 1968;
+const NODE_ENV = process.env.NODE_ENV || 'dev';
+const envConfig = config[NODE_ENV] || config.dev;
+
+// CORS configuration
+if (NODE_ENV === 'dev') {
+  app.use(cors());
+} else {
+  app.use(cors({
+    origin: envConfig.corsOrigin,
+    credentials: true
+  }));
+}
+
 app.use(express.json());
 
-// 1) Playlist proxy
-app.get('/api/playlist/:playlistId/tracks', async (req, res) => {
-  const { playlistId } = req.params;
-  try {
-    const { data } = await axios.get(`https://api.deezer.com/playlist/${playlistId}/tracks`);
-    if (!data?.data) throw new Error('Invalid Deezer playlist response');
-    const tracks = data.data
-      .filter(t => t.preview)             // sadece preview'i olanlar
-      .map(t => ({
-        id: t.id,
-        title: t.title,
-        artist: t.artist.name,
-        preview: t.preview,
-        album: {
-          title: t.album.title,
-          cover_small: t.album.cover_small,
-          cover_medium: t.album.cover_medium,
-          cover_big: t.album.cover_big || t.album.cover
-        }
-      }));
-    return res.json(tracks);
-  } catch (err) {
-    console.error('Deezer playlist error:', err.message);
-    return res.status(502).json({ error: 'Failed to fetch playlist tracks' });
+// Environment-specific logging
+app.use((req, res, next) => {
+  if (envConfig.logLevel === 'debug') {
+    console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
   }
+  next();
 });
 
-// 2) (Opsiyonel) Single track proxy
-app.get('/api/track/:trackId', async (req, res) => {
-  const { trackId } = req.params;
-  try {
-    const { data: t } = await axios.get(`https://api.deezer.com/track/${trackId}`);
-    if (!t?.preview) throw new Error('No preview for this track');
-    return res.json({
-      id: t.id,
-      title: t.title,
-      artist: t.artist.name,
-      album: {
-        title: t.album.title,
-        cover_small: t.album.cover_small,
-        cover_medium: t.album.cover_medium,
-        cover_big: t.album.cover_big || t.album.cover
-      },
-      preview: t.preview
-    });
-  } catch (err) {
-    console.error('Deezer track error:', err.message);
-    return res.status(502).json({ error: 'Failed to fetch track' });
-  }
-});
+// Routes
+app.use('/api', routes);
 
-// 3) Statik dosyalar
+// Static files
 app.use(express.static(path.resolve('./')));
 
-app.listen(PORT, () => console.log(`Server @ http://localhost:${PORT}`));
+// Health check
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', environment: NODE_ENV });
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT} in ${NODE_ENV} mode`);
+});
