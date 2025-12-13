@@ -1,4 +1,48 @@
-riffle.drawio
-/node_modules
-package-lock.json
-/docs
+# Dependencies
+node_modules/
+
+# Environment variables
+.env
+config/.env
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Npm cache directory
+.npm
+
+# Temporary folders
+tmp/
+temp/
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Docker
+.dockerignore
+
+# Capacitor
+capacitor.config.json
+android/
+ios/
+
+# Build artifacts
+/build
+/dist
