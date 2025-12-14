@@ -1,48 +1,61 @@
 import express from 'express';
 import cors from 'cors';
-import path from 'path';
-import dotenv from 'dotenv';
-import routes from './server/routes/index.js';
-import { config } from './server/config/environments.js';
-
-dotenv.config();
+import { config, validateApiKey } from './config/environments.js';
 
 const app = express();
-const PORT = process.env.PORT || 1968;
-const NODE_ENV = process.env.NODE_ENV || 'dev';
-const envConfig = config[NODE_ENV] || config.dev;
+const PORT = process.env.PORT || 3000;
 
-// CORS configuration
-if (NODE_ENV === 'dev') {
-  app.use(cors());
-} else {
-  app.use(cors({
-    origin: envConfig.corsOrigin,
-    credentials: true
-  }));
-}
+// Determine the environment (Default: dev)
+const NODE_ENV = process.env.NODE_ENV || 'dev';
+const currentConfig = config[NODE_ENV];
+
+console.log(`🚀 Starting Riffle API`);
+console.log(`🌍 Environment: [${NODE_ENV}]`);
+console.log(`ℹ️  Log Level: ${currentConfig.logLevel}`);
+
+// CORS Configuration
+app.use(cors({
+  origin: currentConfig.corsOrigin
+}));
 
 app.use(express.json());
 
-// Environment-specific logging
-app.use((req, res, next) => {
-  if (envConfig.logLevel === 'debug') {
-    console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
+// Authentication Middleware
+const authMiddleware = (req, res, next) => {
+  const apiKey = req.headers['x-api-key'];
+
+  if (!apiKey || !validateApiKey(apiKey, NODE_ENV)) {
+    return res.status(401).json({ error: 'Unauthorized: Invalid or missing API Key' });
   }
+
   next();
-});
+};
 
 // Routes
-app.use('/api', routes);
-
-// Static files
-app.use(express.static(path.resolve('./')));
-
-// Health check
-app.get('/health', (req, res) => {
-  res.json({ status: 'ok', environment: NODE_ENV });
+app.get('/', (req, res) => {
+  res.json({ message: 'Riffle API is running', env: NODE_ENV });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT} in ${NODE_ENV} mode`);
+app.get('/secure-data', authMiddleware, (req, res) => {
+  res.json({ 
+    data: 'Secure data accessed successfully.',
+    context: 'This endpoint is protected by API Key validation.'
+  });
+});
+
+// Start Server
+const server = app.listen(PORT, () => {
+  console.log(`✅ Server running on port ${PORT}`);
+  
+  if (NODE_ENV === 'dev') {
+    console.log(`🔑 Dev API Key (Auto-Generated): ${currentConfig.apiKey}`);
+  }
+});
+
+// Docker Shutdown
+process.on('SIGTERM', () => {
+  console.log('SIGTERM signal received: closing HTTP server');
+  server.close(() => {
+    console.log('HTTP server closed');
+  });
 });
