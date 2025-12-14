@@ -2,21 +2,36 @@ version: '3.8'
 
 services:
   db:
-    image: postgres:15-alpine
+    image: postgres:17-bookworm
+    container_name: riffle-db
+    shm_size: 1gb # may be decreased based on available system memory
+    env_file:
+      - ./config/.env
     environment:
-      - POSTGRES_DB=riffle_dev
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=password
+      POSTGRES_USER: ${POSTGRES_USER:-riffle_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-riffle_pass}
+      POSTGRES_DB: ${POSTGRES_DB:-riffle_dev}
+      PGDATA: /var/lib/postgresql/data/pgdata
+      TZ: Etc/UTC
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - riffle-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-riffle_user} -d ${POSTGRES_DB:-riffle_dev}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
 volumes:
   postgres_data:
+    driver: local
 
 networks:
   riffle-network:
-    external: true
+    name: riffle-network
+    driver: bridge
