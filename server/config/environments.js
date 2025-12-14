@@ -31,16 +31,24 @@ export const config = {
   }
 };
 
+// Generates a deterministic API key based on the environment name.
 function generateApiKey(env) {
   const secret = `riffle-${env}-secret-key`;
   return crypto.createHash('sha256').update(secret).digest('hex').substring(0, 32);
 }
 
+// Validates the provided API key against the environment configuration.
 export function validateApiKey(providedKey, environment) {
   const envConfig = config[environment];
-  if (!envConfig) return false;
-  return crypto.timingSafeEqual(
-    Buffer.from(providedKey, 'hex'),
-    Buffer.from(envConfig.apiKey, 'hex')
-  );
+  
+  if (!envConfig || !providedKey) return false;
+
+  const providedBuffer = Buffer.from(providedKey, 'hex');
+  const actualBuffer = Buffer.from(envConfig.apiKey, 'hex');
+
+  if (providedBuffer.length !== actualBuffer.length) {
+    return false;
+  }
+
+  return crypto.timingSafeEqual(providedBuffer, actualBuffer);
 }
