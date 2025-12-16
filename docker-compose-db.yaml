@@ -4,7 +4,7 @@ services:
   db:
     image: postgres:17-bookworm
     container_name: riffle-db
-    shm_size: 1gb # may be decreased based on available system memory
+    shm_size: 256m # may be changed based on available system memory
     env_file:
       - ./config/.env
     environment:
