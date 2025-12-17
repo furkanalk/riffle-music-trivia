@@ -24,7 +24,9 @@
 
 ```bash
 git clone https://github.com/furkanalk/riffle.git
-cd riffle
+cd riffle/server
+npm install
+cd ..client
 npm install
 npm run dev
 ```
