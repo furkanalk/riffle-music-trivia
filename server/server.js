@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import { config, validateApiKey } from './config/environments.js';
+import routes from './routes/index.js'; 
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -43,6 +44,8 @@ app.get('/secure-data', authMiddleware, (req, res) => {
   });
 });
 
+app.use('/api', routes); 
+
 // Start Server
 const server = app.listen(PORT, () => {
   console.log(`✅ Server running on port ${PORT}`);
@@ -52,7 +55,6 @@ const server = app.listen(PORT, () => {
   }
 });
 
-// Docker Shutdown
 process.on('SIGTERM', () => {
   console.log('SIGTERM signal received: closing HTTP server');
   server.close(() => {
