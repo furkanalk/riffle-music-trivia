@@ -45,6 +45,37 @@ npm run dev
 - **Stage**: Pre-production testing
 - **Prod**: Live production environment
 
+## Project Structure
+
+```
+.
+├── LICENSE
+├── README.md
+├── capacitor.config.js
+├── config
+├── docker-compose-app.yaml
+├── docker-compose-db.yaml
+├── dockerfile
+├── index.html
+├── package-lock.json
+├── package.json
+├── public
+│   ├── categories.html
+│   └── game.html
+├── server
+│   ├── config
+│   ├── controllers
+│   ├── middleware
+│   ├── models
+│   ├── routes
+│   └── utils
+├── server.js
+└── src
+    ├── css
+    ├── img
+    └── js
+```
+
 ## 📋 Project Status
 
 > Temporary overview. Detailed progress will be tracked on a public board.

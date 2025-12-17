@@ -2,19 +2,18 @@ version: '3.8'
 
 services:
   app:
-    build: .
+    build: ./server 
     container_name: riffle-app
     ports:
       - "${PORT:-1968}:1968"
     env_file:
-      - ./config/.env
+      - ./server/config/.env
     environment:
       - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
       - NODE_ENV=${NODE_ENV:-dev}
       - TZ=Etc/UTC
-    # not productive for production use
     volumes:
-      - .:/app
+      - ./server:/app 
       - /app/node_modules
     networks:
       - riffle-network
@@ -23,7 +22,3 @@ services:
         condition: service_healthy
     restart: unless-stopped
     command: npm run dev
-
-networks:
-  riffle-network:
-    external: true
