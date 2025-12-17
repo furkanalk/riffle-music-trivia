@@ -51,29 +51,26 @@ npm run dev
 .
 ├── LICENSE
 ├── README.md
-├── capacitor.config.js
-├── config
+├── client
+│   ├── capacitor.config.js
+│   ├── index.html
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── public
+│   └── src
 ├── docker-compose-app.yaml
 ├── docker-compose-db.yaml
-├── dockerfile
-├── index.html
-├── package-lock.json
-├── package.json
-├── public
-│   ├── categories.html
-│   └── game.html
-├── server
-│   ├── config
-│   ├── controllers
-│   ├── middleware
-│   ├── models
-│   ├── routes
-│   └── utils
-├── server.js
-└── src
-    ├── css
-    ├── img
-    └── js
+└── server
+    ├── config
+    ├── controllers
+    ├── dockerfile
+    ├── middleware
+    ├── models
+    ├── package-lock.json
+    ├── package.json
+    ├── routes
+    ├── server.js
+    └── utils
 ```
 
 ## 📋 Project Status
