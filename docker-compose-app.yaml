@@ -9,6 +9,7 @@ services:
     environment:
       - DATABASE_URL=${DATABASE_URL}
       - NODE_ENV=${NODE_ENV:-dev}
+      - PORT=${PORT:-1968}
       - TZ=Etc/UTC
     volumes:
       - ./server:/app
