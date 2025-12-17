@@ -22,43 +22,82 @@
 
 ## ⚙️ Installation
 
+### Local Development
+
 ```bash
 git clone https://github.com/furkanalk/riffle.git
-cd riffle/server
+cd riffle
+
+# Install dependencies
 npm install
-cd ..client
-npm install
+cd client && npm install && cd ..
+
+# Create environment file
+cp server/config/.env.example server/config/.env.dev
+# Edit server/config/.env.dev with your configuration
+
+# Start development server
+npm run dev
 ```
-## Environment Setup
 
-Create the following files **manually** under `server/`:
+### Docker Setup
 
-- `.env.test`
-- `.env.dev`
-- `.env.stage`
-- `.env.prod`
+```bash
+# 1. Clone the repository
+git clone https://github.com/furkanalk/riffle.git
+cd riffle
 
-Fill their contents using the `.env.example` template below and replace the placeholders accordingly.
+# 2. Create and configure environment file
+cp server/config/.env.example server/config/.env.dev
+# Edit server/config/.env.dev with your configuration
 
+# 3. Run with Docker Compose
+# Development environment
+docker-compose --env-file ./server/config/.env.dev -f docker-compose-db.yaml -f docker-compose-app.yaml up --build
+
+# Or for other environments
+docker-compose --env-file ./server/config/.env.test -f docker-compose-db.yaml -f docker-compose-app.yaml up --build
+docker-compose --env-file ./server/config/.env.stage -f docker-compose-db.yaml -f docker-compose-app.yaml up --build
+docker-compose --env-file ./server/config/.env.prod -f docker-compose-db.yaml -f docker-compose-app.yaml up --build
+
+# View logs
+docker-compose -f docker-compose-db.yaml -f docker-compose-app.yaml logs -f
+
+# Stop services
+docker-compose -f docker-compose-db.yaml -f docker-compose-app.yaml down
 ```
-# --- APPLICATION ---
-NODE_ENV=<env>
-PORT=<port>
 
-# --- DATABASE (<env> DB) ---
-POSTGRES_USER=riffle_user
-POSTGRES_PASSWORD=riffle_pass
-POSTGRES_DB=riffle_<env>
-POSTGRES_PORT=<postgres_port>
+### Environment Variables
 
-DATABASE_URL=postgresql://riffle_user:riffle_pass@db:<postgres_port>/riffle_<env>
+Create environment files under `server/config/`:
 
-# --- SECURITY ---
-# Usage: node -e "console.log(require('crypto').randomBytes(16).toString('hex'))"
-RIFFLE_ENV_API_KEY=<YOUR_ENV_API_KEY_HERE>
+- `.env.dev` - Development
+- `.env.test` - Testing
+- `.env.stage` - Staging
+- `.env.prod` - Production
 
-# --- CORS ---
-CORS_ORIGIN=<cors_origin>
+Use `server/config/.env.example` as template:
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `NODE_ENV` | Environment mode (dev/test/stage/prod) | `dev` |
+| `PORT` | Server port | `1968` |
+| `POSTGRES_DB` | PostgreSQL database name | `riffle_dev` |
+| `POSTGRES_USER` | PostgreSQL username | `riffle_user` |
+| `POSTGRES_PASSWORD` | PostgreSQL password | `riffle_pass` |
+| `POSTGRES_PORT` | PostgreSQL port | `5432` |
+| `DATABASE_URL` | Full database connection URL | `postgresql://...` |
+| `RIFFLE_DEV_API_KEY` | API key for dev environment | Auto-generated |
+| `RIFFLE_TEST_API_KEY` | API key for test environment | Auto-generated |
+| `RIFFLE_STAGE_API_KEY` | API key for staging environment | Required |
+| `RIFFLE_PROD_API_KEY` | API key for production environment | Required |
+| `STAGE_ORIGIN` | Staging CORS origin | `https://stage.riffle.com` |
+| `PROD_ORIGIN` | Production CORS origin | `https://riffle.com` |
+| `DEEZER_API_KEY` | Deezer API key (if required) | - |
+
+**Generate secure API keys:**
+```bash
+node -e "console.log(require('crypto').randomBytes(16).toString('hex'))"
 ```
 
 ## 🏗️ Architecture
