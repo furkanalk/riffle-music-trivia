@@ -3,7 +3,10 @@ node_modules/
 
 # Environment variables
 .env
-config/.env
+config/.env.dev
+config/.env.test
+config/.env.stage
+config/.env.prod
 
 # Logs
 logs
