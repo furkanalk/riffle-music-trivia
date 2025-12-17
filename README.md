@@ -143,7 +143,15 @@ node -e "console.log(require('crypto').randomBytes(16).toString('hex'))"
 
 > Temporary overview. Detailed progress will be tracked on a public board.
 
-### Completed
+### 🏗 Architecture Refactoring (v2.0)
+- [x] **Separation of Concerns:** Split Monolithic architecture into Client (Vite) and Server (Express).
+- [x] **Client-Side:** Migrated to Vite for faster builds and better asset management.
+- [x] **Multi-Environment Setup:** Configured distinct environments for Dev, Test, Stage, and Prod via Docker.
+- [x] **Docker Integration:** Full containerization with dynamic configuration (no hardcoded env files in images).
+- [x] **Proxy Configuration:** Setup Vite proxy to handle API requests seamlessly in dev mode.
+- [x] **Database Isolation:** Postgres runs in a separate container with environment-specific data volumes.
+
+### Completed Features
 - [x] Add timer bar
 - [x] Played songs won't play again
 - [x] Improve answer quality
@@ -168,6 +176,7 @@ node -e "console.log(require('crypto').randomBytes(16).toString('hex'))"
 - [x] Capacitor mobile app configuration
 
 ### Pending
+- [ ] **Service Factory Implementation:** Implement Mock/Real data switching for Client.
 - [ ] Add valid playlists
 - [ ] Improve question variety
 - [ ] Add guest mode
@@ -176,9 +185,9 @@ node -e "console.log(require('crypto').randomBytes(16).toString('hex'))"
   - [ ] Score history
 - [ ] Add language options
 - [ ] Add images to categories
-- [ ] Implement user authentication
+- [ ] Implement user authentication (Register/Login UI)
 - [ ] Add multiplayer functionality
-- [ ] Database integration (PostgreSQL)
+- [ ] Database integration (PostgreSQL) - *Infrastructure Ready, Logic Pending*
 - [ ] Mobile app testing and deployment
 
 ## 📄 License
