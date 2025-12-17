@@ -55,6 +55,11 @@ const server = app.listen(PORT, () => {
   }
 });
 
+// Health Check Endpoint
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'OK', uptime: process.uptime() });
+});
+
 process.on('SIGTERM', () => {
   console.log('SIGTERM signal received: closing HTTP server');
   server.close(() => {
