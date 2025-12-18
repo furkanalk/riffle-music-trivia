@@ -22,25 +22,24 @@
 
 ## ⚙️ Installation
 
-### Local Development
+### Configurations and Frontend
 
 ```bash
 git clone https://github.com/furkanalk/riffle.git
-cd riffle
 
 # Install dependencies
-npm install
+cd riffle/server && npm install
 cd client && npm install && cd ..
 
 # Create environment file
 cp server/config/.env.example server/config/.env.dev
 # Edit server/config/.env.dev with your configuration
 
-# Start development server
+# Start development server (frontend)
 npm run dev
 ```
 
-### Docker Setup
+### Docker Setup and Backend
 
 ```bash
 # 1. Clone the repository
@@ -52,7 +51,7 @@ cp server/config/.env.example server/config/.env.dev
 # Edit server/config/.env.dev with your configuration
 
 # 3. Run with Docker Compose
-# Development environment
+# Development environment (Backend)
 docker-compose --env-file ./server/config/.env.dev -f docker-compose-db.yaml -f docker-compose-app.yaml up --build
 
 # Or for other environments
