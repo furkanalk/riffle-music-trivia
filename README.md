@@ -35,6 +35,10 @@ cd client && npm install && cd ..
 cp server/config/.env.example server/config/.env.dev
 # Edit server/config/.env.dev with your configuration
 
+# Password and sensitive keys can be generated with below commands:
+openssl rand -hex 16
+node -e "console.log(require('crypto').randomBytes(16).toString('hex'))"
+
 # Start development server (frontend)
 npm run dev
 ```
