@@ -7,6 +7,7 @@ config/.env.dev
 config/.env.test
 config/.env.stage
 config/.env.prod
+client/.env
 
 # Logs
 logs
