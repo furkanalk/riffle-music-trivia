@@ -1,7 +1,3 @@
-// src/js/script.js
-
-// This file manages game modes
-
 // Game mode selector - Now redirects directly to the categories.html page
 export function startMode(mode) {
   // Navigate to the categories page with selected mode
