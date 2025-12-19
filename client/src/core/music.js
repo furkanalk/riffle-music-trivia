@@ -1,43 +1,53 @@
-// src/js/music.js
+import MusicService from '../services/music/index.js';
 
 // Track IDs that have already been played in the current game session
 let playedTrackIds = [];
 
-// Reset played tracks history (call this when starting a new game)
+// Reset played tracks history (new game session)
 export function resetPlayedTracks() {
   playedTrackIds = [];
-  // Track history reset
 }
 
 // Get a random track from playlist (avoiding already played tracks)
 export async function getRandomTrackFromPlaylist(playlistId) {
-  // **Always** use relative path, don't hard-code the port!
-  const res = await fetch(`/api/playlist/${playlistId}/tracks`);
-  if (!res.ok) {
-    const err = await res.json();
-    throw new Error(err.error || 'Failed to fetch playlist tracks');
+  try {
+    const tracks = await MusicService.getPlaylistTracks(playlistId);
+    
+    // Filter out tracks that have already been played
+    const availableTracks = tracks.filter(track => !playedTrackIds.includes(track.id));
+    
+    // If running out of tracks, pick random from full list
+    if (availableTracks.length < 1) {
+      // Reset history if completely empty to avoid crash, or just pick duplicate
+      playedTrackIds = [];
+      const randomTrack = tracks[Math.floor(Math.random() * tracks.length)];
+      return normalizeTrackData(randomTrack);
+    }
+    
+    // Get a random track from the available ones
+    const randomTrack = availableTracks[Math.floor(Math.random() * availableTracks.length)];
+    
+    // Add the track ID to played tracks
+    playedTrackIds.push(randomTrack.id);
+    
+    return normalizeTrackData(randomTrack);
+
+  } catch (error) {
+    console.error("Error getting track:", error);
+    throw error;
   }
-  
-  const tracks = await res.json();
-  if (!tracks.length) throw new Error('No previewable tracks found');
-  
-  // Filter out tracks that have already been played
-  const availableTracks = tracks.filter(track => !playedTrackIds.includes(track.id));
-  
-  // If all tracks have been played or very few remain, reset the history
-  if (availableTracks.length < 3) {
-    // Running out of new tracks, resetting play history
-    playedTrackIds = [];
-    return tracks[Math.floor(Math.random() * tracks.length)];
-  }
-  
-  // Get a random track from the available ones
-  const randomTrack = availableTracks[Math.floor(Math.random() * availableTracks.length)];
-  
-  // Add the track ID to played tracks
-  playedTrackIds.push(randomTrack.id);
-  
-  return randomTrack;
+}
+
+// Normalize track data to a consistent format
+function normalizeTrackData(track) {
+    return {
+        id: track.id,
+        title: track.title,
+        artist: track.artist && track.artist.name ? track.artist.name : track.artist, 
+        preview: track.preview,
+        album: track.album,
+        // Other fields can be added as needed in the future (needs checking for null/undefined)
+    };
 }
 
 // Playlist IDs by category - Real playlist IDs from Deezer
@@ -69,7 +79,7 @@ const GENRE_PLAYLISTS = {
   'turkish_metal': '9270303122',     // Turkish Metal
   
   // Artist/Group Specific Categories
-  'turkish_anatolian': '1496273595', // Anatolian Rock (Erkin Koray, Barış Manço, Cem Karaca, 3 Hürel, Hardal etc.)
+  'turkish_anatolian': '1496273595', // Anatolian Rock
   'pentagram': '10581252702',       // Pentagram/Mezarkabul
   'mor_ve_otesi': '1155523471',     // Mor ve Ötesi
 };
