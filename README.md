@@ -114,32 +114,50 @@ node -e "console.log(require('crypto').randomBytes(16).toString('hex'))"
 - `GET /api/game/:id` - Get game state (planned)
 
 
-## Project Structure
+## 📁 Project Structure
 
 ```
 .
+├── .gitignore
 ├── LICENSE
 ├── README.md
-├── client
-│   ├── capacitor.config.js
-│   ├── index.html
-│   ├── package-lock.json
-│   ├── package.json
-│   ├── public
-│   └── src
-├── docker-compose-app.yaml
-├── docker-compose-db.yaml
-└── server
-    ├── config
-    ├── controllers
-    ├── dockerfile
-    ├── middleware
-    ├── models
-    ├── package-lock.json
-    ├── package.json
-    ├── routes
-    ├── server.js
-    └── utils
+├── docker-compose-db.yaml           # Database container setup
+├── docker-compose-app.yaml          # Application container setup
+│
+├── client/                          # Frontend
+│   ├── .env                         # Client environment variables
+│   ├── .gitignore
+│   ├── package.json                 # Node packages
+│   ├── package-lock.json            # Package versions
+│   ├── vite.config.js               # Vite configuration
+│   ├── capacitor.config.js          # Mobile app configuration
+│   ├── index.html                   # Main menu
+│   ├── categories.html              # Category selection
+│   ├── game.html                    # Game interface
+│   │
+│   └── src/
+│       ├── main.js                  # Entry point
+│       ├── categories/              # Category management
+│       ├── core/                    # Core functionality
+│       ├── game/                    # Game logic
+│       ├── menu/                    # Menu components
+│       ├── modes/                   # Game modes
+│       ├── services/                # Service layer (Mock/Real)
+│       ├── css/                     # Stylesheets
+│       └── img/                     # Images & assets
+│
+└── server/                          # Backend
+    ├── dockerfile                   # Server container image
+    ├── package.json                 # Node packages
+    ├── package-lock.json            # Package versions
+    ├── server.js                    # Entry point
+    │
+    ├── config/                      # Environment configurations
+    ├── controllers/                 # Route controllers
+    ├── middleware/                  # Express middleware
+    ├── models/                      # Data models
+    ├── routes/                      # API routes
+    └── utils/                       # Utility functions
 ```
 
 ## 📋 Project Status
