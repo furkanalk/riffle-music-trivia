@@ -1,5 +1,5 @@
 // Oyun başlatma ve ayarları kaydetme
-import { gameMode, selectedCategories } from './module-import.js';
+import { gameMode, selectedCategories } from './state.js';
 
 // Start the game
 function startGame() {
