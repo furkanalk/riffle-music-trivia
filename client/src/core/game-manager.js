@@ -1,4 +1,15 @@
 // Game mode selector - Now redirects directly to the categories.html page
+
+// Random user name generator for TEST purposes
+import { getUser } from './user-manager.js';
+
+const currentUser = getUser();
+
+console.log(`Rock on! Welcome back, ${currentUser.username}`);
+console.log('User Context:', currentUser);
+
+// TEST ends
+
 export function startMode(mode) {
   // Navigate to the categories page with selected mode
   window.location.href = `categories.html?mode=${mode}`;
