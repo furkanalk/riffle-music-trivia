@@ -11,6 +11,12 @@ services:
       - NODE_ENV=${NODE_ENV:-dev}
       - PORT=${PORT:-1968}
       - TZ=Etc/UTC
+      # Database connection variables
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_HOST=${POSTGRES_HOST}
     volumes:
       - ./server:/app
       - /app/node_modules
