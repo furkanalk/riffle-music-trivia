@@ -79,7 +79,7 @@ export class GameEngine {
       const avatar = this.settings.avatar || localStorage.getItem('selectedAvatar') || 'avatar1';
       const avatarElement = document.getElementById('player-avatar');
       if (avatarElement) {
-        avatarElement.src = `src/img/avatars/${avatar}.png`;
+        avatarElement.src = `../img/avatars/${avatar}.png`;
       }
     }
   }
@@ -462,7 +462,7 @@ export class GameEngine {
     this.uiManager.showFinalResults(
       scoreData,
       () => window.location.reload(), // Replay
-      () => window.location.href = '../index.html' // Main menu
+      () => window.location.href = '../../index.html' // Main menu
     );
   }
 
@@ -484,7 +484,7 @@ export class GameEngine {
     const mainMenuBtn = document.getElementById('mainMenuBtn');
     if (mainMenuBtn) {
       mainMenuBtn.addEventListener('click', () => {
-        window.location.href = '../index.html';
+        window.location.href = '../../index.html';
       });
     }
   }
