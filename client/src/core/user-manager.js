@@ -26,7 +26,7 @@ const nouns = [
 function generateGuestId() {
   const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
   const noun = nouns[Math.floor(Math.random() * nouns.length)];
-  const number = Math.floor(Math.random() * 90) + 10; // 10-99
+  const number = Math.floor(Math.random() * 9000) + 1000; // 1000-9999
   return `${adj}${noun}#${number}`;
 }
 
