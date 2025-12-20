@@ -1,4 +1,4 @@
-import { setupGameModeSettings, updateSelectionsSummary } from "./category-settings.js";
+import { setupGameModeSettings, updateSelectionsSummary, switchTab } from "./category-settings.js";
 import { loadCategories, filterCategories, debugCategories } from "./category-filters.js";
 import { sendChatMessage } from "./category-chat.js";
 import { startGame } from "./category-game.js";
@@ -17,6 +17,7 @@ function init() {
   initInviteCopy();
   initChat();
   initCategoryFilters();
+  initTabs();
 }
 
 // Section Initializers
@@ -110,6 +111,19 @@ function resetFilterButton(btn) {
 function activateFilterButton(btn) {
   btn.classList.remove("bg-purple-600", "bg-opacity-40");
   btn.classList.add("bg-purple-800", "bg-opacity-80");
+}
+
+function initTabs() {
+  const settingsTab = document.getElementById('tab-settings');
+  const chatTab = document.getElementById('tab-chat');
+
+  if (settingsTab) {
+    settingsTab.addEventListener('click', () => switchTab('settings'));
+  }
+  
+  if (chatTab) {
+    chatTab.addEventListener('click', () => switchTab('chat'));
+  }
 }
 
 // Debug
