@@ -7,7 +7,7 @@ import { setupGameModeSettings, loadSavedModeSettings, switchTab, updateSelectio
 import { loadCategories, toggleCategory, filterCategories, debugCategories } from "./category-filters.js";
 import { sendChatMessage, escapeHTML } from "./category-chat.js";
 import { startGame } from "./category-game.js";
-import { startGame } from "./menu-navigation.js";
+import "./menu-navigation.js";
 
 // Get mode parameter from URL
 // Create URLSearchParams object
@@ -16,7 +16,7 @@ const urlParams = new URLSearchParams(window.location.search);
 // Get 'mode' parameter
 const modeParam = urlParams.get('mode');
 
-// Marathon/solo eşleştirmesi ve son gameMode değerini belirle
+// Marathon/solo matching and determining the final gameMode value
 // NOTE: Marathon is 'marathon' in URL, but 'solo' in code
 let gameMode = modeParam || 'solo';
 
@@ -24,11 +24,7 @@ let gameMode = modeParam || 'solo';
 if (modeParam === 'marathon') {
     gameMode = 'solo';
 }
-
-// Game mode title function removed as the element is no longer displayed
-
-// Game mode title has been removed from UI per request
-// But we'll keep track of the mode internally
+// Define mode titles for display
 export const modeTitles = {
   'solo': 'Marathon Mode',
   'coop': 'Cooperative Mode',
@@ -38,21 +34,17 @@ export const modeTitles = {
   'custom': 'Custom Mode'
 };
 
-// Current game mode title is tracked internally
-
 // Variables to track categories
 let selectedCategories = [];
-
-// Update selections panel when mode changes
-// Call updateSelectionsSummary() function after selectedCategories is defined
 
 // Track the current filter
 let currentFilter = 'all';
 
 // Initialize when page loads
 document.addEventListener('DOMContentLoaded', () => {
-  // Set up for the current game mode
-  
+  // Set up old settings for the current game mode
+  // loadSavedModeSettings(gameMode);
+
   // Configure UI based on game mode - setup all game mode settings in one place
   setupGameModeSettings();
   
