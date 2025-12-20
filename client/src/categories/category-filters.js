@@ -1,5 +1,5 @@
 // Category filtering and management
-import { selectedCategories } from './module-import.js';
+import { selectedCategories } from './state.js';
 import { getAllGenres } from '../core/music.js';
 
 // Load music categories
