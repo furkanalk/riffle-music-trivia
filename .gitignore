@@ -6,6 +6,9 @@ package-lock.json
 # Root env
 .env
 
+# Backup files
+*.bak
+
 # Server Environments
 server/config/.env
 server/config/.env.*
