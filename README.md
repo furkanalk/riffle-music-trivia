@@ -198,6 +198,7 @@ node -e "console.log(require('crypto').randomBytes(16).toString('hex'))"
 
 ### Pending
 - [ ] **Service Factory Implementation:** Implement Mock/Real data switching for Client.
+- [ ] Clean code (Half way done)
 - [ ] Add endgame scoreboard etc.
 - [ ] Change timeout answer color to yellow
 - [ ] Add valid playlists
