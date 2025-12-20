@@ -7,6 +7,7 @@ import { setupGameModeSettings, loadSavedModeSettings, switchTab, updateSelectio
 import { loadCategories, toggleCategory, filterCategories, debugCategories } from "./category-filters.js";
 import { sendChatMessage, escapeHTML } from "./category-chat.js";
 import { startGame } from "./category-game.js";
+import { startGame } from "./menu-navigation.js";
 
 // Get mode parameter from URL
 // Create URLSearchParams object
@@ -45,7 +46,7 @@ let selectedCategories = [];
 // Update selections panel when mode changes
 // Call updateSelectionsSummary() function after selectedCategories is defined
 
-// Şu anki filtreyi takip et
+// Track the current filter
 let currentFilter = 'all';
 
 // Initialize when page loads
@@ -156,8 +157,8 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-// Global hata ayıklama fonksiyonu
+// Global debug function
 window.debugRiffleCategories = debugCategories;
 
-// Global değişkenleri export edelim
+// Global variables export
 export { gameMode, selectedCategories, currentFilter };
