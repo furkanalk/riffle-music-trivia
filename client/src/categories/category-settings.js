@@ -1,398 +1,358 @@
-// Category settings and UI control
-import { gameMode, selectedCategories } from './module-import.js';
+import { gameMode, selectedCategories } from './state.js';
 import { getAllGenres } from '../core/music.js';
+import { toggleCategory, filterCategories } from './category-filters.js'; // Importların doğru olduğundan emin ol
+import { sendChatMessage } from './category-chat.js';
 
-// Configure UI settings based on game mode
-function setupGameModeSettings() {
-  // Setup game mode settings for current mode
+// --- CONSTANTS ---
+
+const MODE_LABELS = {
+  'solo': 'Marathon', 'marathon': 'Marathon',
+  'coop': 'Cooperative', 'versus': 'Versus',
+  'team': 'Team', 'chaos': 'Chaos', 'custom': 'Custom'
+};
+
+const QUESTION_TYPE_LABELS = {
+  'song': 'Song Title Questions',
+  'artist': 'Artist/Band Questions',
+  'mixed': 'Mixed Questions',
+  'guitarist': 'Guitarist Questions (Hard!)'
+};
+
+const VISIBILITY_LABELS = {
+  'visible': 'Answers Visible to All',
+  'hidden': 'Answers Hidden Until Round End',
+  'individual': 'Answers Only Visible to Answerer'
+};
+
+// --- HELPERS ---
+
+const getEl = (id) => document.getElementById(id);
+
+const setVisibility = (element, isVisible, options = {}) => {
+  if (!element) return;
   
-  // Let's read the URL parameter again for validation
-  const currentUrlMode = new URLSearchParams(window.location.search).get('mode');
-  // URL parameter check
-  
-  const answerVisibilityContainer = document.getElementById('answer-visibility-container');
-  const livesContainer          = document.getElementById('lives-container');
-  const roundCountSelect        = document.getElementById('round-count');
-  const marathonDisplay         = document.getElementById('marathon-unlimited-display');
-  const marathonBadge           = document.getElementById('marathon-badge');
-  const marathonBadgeLives      = document.getElementById('marathon-badge-lives');
-  
-  // Check if elements exist
-
-  // Mode check
-  
-  if (gameMode === 'solo' || gameMode === 'marathon') {   // ====== MARATHON ======
-    /* 1. Select'i devre dışı bırak */
-    if (roundCountSelect) {
-      roundCountSelect.value    = 'unlimited';
-      roundCountSelect.disabled = true;
-      roundCountSelect.classList.add('disabled-select');   // görsel
-      roundCountSelect.style.display = 'none';  // Açıkça gizle
-      roundCountSelect.removeEventListener('change', updateSelectionsSummary);
+  if (!isVisible) {
+    element.classList.add('hidden');
+    element.style.display = 'none';
+    element.style.visibility = 'hidden';
+    element.style.opacity = '0';
+    if (options.hideAsAbsolute) {
+        element.style.position = 'absolute';
+        element.style.pointerEvents = 'none';
     }
-
-    /* 2. Visibility controls */
-    if (marathonDisplay) {
-      marathonDisplay.classList.remove('hidden');
-      marathonDisplay.style.display = 'block';  // Açıkça göster
-      marathonDisplay.style.visibility = 'visible';
-    }
-    if (marathonBadge)      marathonBadge.classList.remove('hidden');
-    if (marathonBadgeLives) marathonBadgeLives.classList.remove('hidden');
-
-    if (answerVisibilityContainer) {
-      answerVisibilityContainer.classList.add('hidden');
-      answerVisibilityContainer.style.display = 'none';
-      answerVisibilityContainer.style.visibility = 'hidden';
-      answerVisibilityContainer.style.position = 'absolute';
-      answerVisibilityContainer.style.pointerEvents = 'none';
-      answerVisibilityContainer.style.opacity = '0';
-      // MARATHON MODE: Answer visibility successfully hidden
-    } else {
-      console.error("✗ HATA: answerVisibilityContainer bulunamadı!");
-    }
-    
-    // Can hakkını göster
-    if (livesContainer) {
-      livesContainer.classList.remove('hidden');
-      livesContainer.style.display = 'block';
-      livesContainer.style.visibility = 'visible';
-      livesContainer.style.opacity = '1';
-      livesContainer.style.pointerEvents = 'auto';
-      // MARATHON MODE: Lives successfully displayed
-      
-      // Lives için marathon badge'i göster
-      if (marathonBadgeLives) {
-        marathonBadgeLives.classList.remove('hidden');
-        // MARATHON MODE: Marathon badge displayed for lives
-      }
-    } else {
-      console.error("✗ HATA: livesContainer bulunamadı!");
-    }
-
-  } else {                   // ====== DİĞER MODLAR ======
-    /* 3. Select'i tekrar etkinleştir */
-    if (roundCountSelect) {
-      roundCountSelect.disabled = false;
-      roundCountSelect.classList.remove('disabled-select');
-      roundCountSelect.style.display = 'block';  // Açıkça göster
-      // Varsayılan değere dönsün (10) veya sakladığınız ayar neyse onu bırakın
-      if (roundCountSelect.value === 'unlimited') {
-        roundCountSelect.value = '10';
-      }
-      // Re-add the listener (add once check!)
-      if (!roundCountSelect.hasAttribute('data-listener')) {
-        roundCountSelect.addEventListener('change', updateSelectionsSummary);
-        roundCountSelect.setAttribute('data-listener', 'true');
-      }
-    }
-
-    if (marathonDisplay) {
-      marathonDisplay.classList.add('hidden');
-      marathonDisplay.style.display = 'none';
-      marathonDisplay.style.visibility = 'hidden';
-    }
-    if (marathonBadge)      marathonBadge.classList.add('hidden');
-    if (marathonBadgeLives) marathonBadgeLives.classList.add('hidden');
-
-    // Cevap görünürlük ayarını göster
-    if (answerVisibilityContainer) {
-      answerVisibilityContainer.classList.remove('hidden');
-      answerVisibilityContainer.style.display = 'block';
-      answerVisibilityContainer.style.visibility = 'visible';
-      answerVisibilityContainer.style.position = 'static';
-      answerVisibilityContainer.style.pointerEvents = 'auto';
-      answerVisibilityContainer.style.opacity = '1';
-      // OTHER MODES: Answer visibility successfully displayed
-    } else {
-      console.error("✗ HATA: answerVisibilityContainer bulunamadı!");
-    }
-    
-    // Lives ayarını gizle
-    if (livesContainer) {
-      livesContainer.classList.add('hidden');
-      livesContainer.style.display = 'none';
-      livesContainer.style.visibility = 'hidden';
-      // OTHER MODES: Lives successfully hidden
-    } else {
-      console.error("✗ HATA: livesContainer bulunamadı!");
-    }
+    return;
   }
 
+  element.classList.remove('hidden');
+  element.style.display = options.display || 'block';
+  element.style.visibility = 'visible';
+  element.style.opacity = '1';
+  element.style.pointerEvents = 'auto';
+  if (options.position) element.style.position = options.position;
+};
+
+// --- CONFIGURATION LOGIC ---
+
+function setupGameModeSettings() {
+  const currentUrlMode = new URLSearchParams(window.location.search).get('mode');
+  
+  if (currentUrlMode && currentUrlMode !== gameMode && currentUrlMode !== 'marathon') {
+    console.warn(`URL mode '${currentUrlMode}' does not match internal game mode '${gameMode}'`);
+  }
+
+  const els = {
+    answerVisibility: getEl('answer-visibility-container'),
+    livesContainer: getEl('lives-container'),
+    roundCount: getEl('round-count'),
+    marathonDisplay: getEl('marathon-unlimited-display'),
+    marathonBadge: getEl('marathon-badge'),
+    marathonBadgeLives: getEl('marathon-badge-lives')
+  };
+
+  const isMarathon = (gameMode === 'solo' || gameMode === 'marathon');
+
+  if (isMarathon) {
+    configureMarathonMode(els);
+    loadSavedModeSettings();
+    return;
+  }
+
+  configureNormalMode(els);
   loadSavedModeSettings();
 }
 
-// Load saved settings for the current game mode
+function configureMarathonMode(els) {
+  if (els.roundCount) {
+    els.roundCount.value = 'unlimited';
+    els.roundCount.disabled = true;
+    els.roundCount.classList.add('disabled-select');
+    setVisibility(els.roundCount, false);
+  }
+
+  setVisibility(els.marathonDisplay, true);
+  setVisibility(els.marathonBadge, true);
+  setVisibility(els.livesContainer, true);
+  setVisibility(els.marathonBadgeLives, true);
+  setVisibility(els.answerVisibility, false, { hideAsAbsolute: true });
+}
+
+function configureNormalMode(els) {
+  if (els.roundCount) {
+    els.roundCount.disabled = false;
+    els.roundCount.classList.remove('disabled-select');
+    if (els.roundCount.value === 'unlimited') els.roundCount.value = '10';
+    setVisibility(els.roundCount, true);
+  }
+
+  setVisibility(els.marathonDisplay, false);
+  setVisibility(els.marathonBadge, false);
+  setVisibility(els.livesContainer, false);
+  setVisibility(els.marathonBadgeLives, false);
+  setVisibility(els.answerVisibility, true, { position: 'static' });
+}
+
 function loadSavedModeSettings() {
   const savedSettings = localStorage.getItem(`riffleSettings_${gameMode}`);
-  if (savedSettings) {
-    try {
-      const settings = JSON.parse(savedSettings);
-      
-      // Apply saved settings to form
-      if (settings.rounds) {
-        // For Marathon mode (solo), always use unlimited questions
-        if (gameMode === 'solo') {
-          // Set the hidden input instead of the dropdown
-          document.getElementById('marathon-round-count-hidden').value = 'unlimited';
-          // Make sure the marathon display is shown and dropdown is hidden
-          const roundCountSelect = document.getElementById('round-count');
-          const marathonDisplay = document.getElementById('marathon-unlimited-display');
-          if (roundCountSelect) roundCountSelect.classList.add('hidden');
-          if (marathonDisplay) marathonDisplay.classList.remove('hidden');
-        } else {
-          document.getElementById('round-count').value = settings.rounds;
-        }
-      }
-      
-      if (settings.questionType) {
-        document.getElementById('question-type').value = settings.questionType;
-      }
-      
-      if (settings.timeLimit) {
-        document.getElementById('time-limit').value = settings.timeLimit;
-      }
-      
-      // Load lives setting for marathon mode
-      if (settings.lives && gameMode === 'solo' && document.getElementById('lives-count')) {
-        document.getElementById('lives-count').value = settings.lives;
-      }
-      
-      // Load avatar if saved
-      const savedAvatar = localStorage.getItem('selectedAvatar');
-      if (savedAvatar) {
-        document.querySelectorAll('.avatar-option').forEach(option => {
-          if (option.getAttribute('data-avatar') === savedAvatar) {
-            // Remove selected from all options first
-            document.querySelectorAll('.avatar-option').forEach(opt => {
-              opt.classList.remove('selected', 'border-purple-500');
-              opt.classList.add('border-purple-900', 'border-opacity-30');
-              // Hide all checkmarks
-              const checkmark = opt.querySelector('.checkmark');
-              if (checkmark) checkmark.classList.add('hidden');
-            });
-            
-            // Add selected to this option
-            option.classList.add('selected', 'border-purple-500');
-            option.classList.remove('border-purple-900', 'border-opacity-30');
-            // Show this checkmark
-            const checkmark = option.querySelector('.checkmark');
-            if (checkmark) checkmark.classList.remove('hidden');
-          }
-        });
-      }
-      
-      // If categories were saved, pre-select them
-      if (settings.categories && settings.categories.length > 0) {
-        window.selectedCategories = settings.categories;
-        // Note: Categories will be selected visually after they are loaded
-      }
-    } catch (e) {
-      console.error('Failed to load saved settings:', e);
+  if (!savedSettings) return;
+
+  try {
+    const settings = JSON.parse(savedSettings);
+    const isMarathon = (gameMode === 'solo');
+    const safeSet = (id, val) => { const el = getEl(id); if(el) el.value = val; };
+
+    if (settings.questionType) safeSet('question-type', settings.questionType);
+    if (settings.timeLimit)    safeSet('time-limit', settings.timeLimit);
+    
+    if (settings.rounds) {
+        if (isMarathon) safeSet('marathon-round-count-hidden', 'unlimited');
+        else safeSet('round-count', settings.rounds);
     }
+
+    if (settings.lives && isMarathon) safeSet('lives-count', settings.lives);
+
+    if (localStorage.getItem('selectedAvatar')) {
+        updateAvatarSelection(localStorage.getItem('selectedAvatar'));
+    }
+
+    if (settings.categories && settings.categories.length > 0) {
+      selectedCategories.length = 0; 
+      settings.categories.forEach(c => selectedCategories.push(c));
+    }
+
+  } catch (e) {
+    console.error('Failed to load saved settings:', e);
   }
 }
 
-// Switch between settings and chat tabs
+function updateAvatarSelection(selectedId) {
+    document.querySelectorAll('.avatar-option').forEach(opt => {
+        const isSelected = opt.getAttribute('data-avatar') === selectedId;
+        const checkmark = opt.querySelector('.checkmark');
+        
+        if (isSelected) {
+            opt.classList.add('selected', 'border-purple-500');
+            opt.classList.remove('border-purple-900', 'border-opacity-30');
+            if (checkmark) checkmark.classList.remove('hidden');
+        } else {
+            opt.classList.remove('selected', 'border-purple-500');
+            opt.classList.add('border-purple-900', 'border-opacity-30');
+            if (checkmark) checkmark.classList.add('hidden');
+        }
+    });
+}
+
 function switchTab(tab) {
-  const settingsPanel = document.getElementById('settings-panel');
-  const chatPanel = document.getElementById('chat-panel');
-  const settingsTab = document.getElementById('tab-settings');
-  const chatTab = document.getElementById('tab-chat');
-  
-  if (tab === 'settings') {
-    settingsPanel.classList.remove('hidden');
-    chatPanel.classList.add('hidden');
-    settingsTab.classList.add('bg-purple-800', 'bg-opacity-80');
-    settingsTab.classList.remove('bg-purple-600', 'bg-opacity-40');
-    chatTab.classList.add('bg-purple-600', 'bg-opacity-40');
-    chatTab.classList.remove('bg-purple-800', 'bg-opacity-80');
-  } else {
-    settingsPanel.classList.add('hidden');
-    chatPanel.classList.remove('hidden');
-    chatTab.classList.add('bg-purple-800', 'bg-opacity-80');
-    chatTab.classList.remove('bg-purple-600', 'bg-opacity-40');
-    settingsTab.classList.add('bg-purple-600', 'bg-opacity-40');
-    settingsTab.classList.remove('bg-purple-800', 'bg-opacity-80');
-  }
-}
+  const els = {
+    settingsPanel: getEl('settings-panel'),
+    chatPanel: getEl('chat-panel'),
+    settingsTab: getEl('tab-settings'),
+    chatTab: getEl('tab-chat')
+  };
 
-// Update the selections panel with current game mode and category selections
-function updateSelectionsSummary() {
-  // Security check - is selectedCategories defined?
-  if (typeof selectedCategories === 'undefined') {
-    console.warn('updateSelectionsSummary: selectedCategories henüz tanımlanmamış, güncelleme atlanıyor');
+  const activeClass = ['bg-purple-800', 'bg-opacity-80'];
+  const inactiveClass = ['bg-purple-600', 'bg-opacity-40'];
+
+  if (tab === 'settings') {
+    els.settingsPanel.classList.remove('hidden');
+    els.chatPanel.classList.add('hidden');
+    els.settingsTab.classList.add(...activeClass);
+    els.settingsTab.classList.remove(...inactiveClass);
+    els.chatTab.classList.add(...inactiveClass);
+    els.chatTab.classList.remove(...activeClass);
     return;
   }
+
+  els.settingsPanel.classList.add('hidden');
+  els.chatPanel.classList.remove('hidden');
+  els.chatTab.classList.add(...activeClass);
+  els.chatTab.classList.remove(...inactiveClass);
+  els.settingsTab.classList.add(...inactiveClass);
+  els.settingsTab.classList.remove(...activeClass);
+}
+
+// --- SUMMARY UPDATE LOGIC ---
+
+function updateSelectionsSummary() {
+  if (typeof selectedCategories === 'undefined') return;
+
+  updateModeTitle();
+  updateCategoriesList();
+  updateSettingsSummary();
+}
+
+function updateModeTitle() {
+  const modeDisplay = getEl('selection-game-mode');
+  if (modeDisplay) modeDisplay.textContent = (MODE_LABELS[gameMode] || 'Marathon') + ' Mode';
+}
+
+function updateCategoriesList() {
+  const list = getEl('selected-categories-list');
+  if (!list) return;
+
+  list.innerHTML = '';
   
-  // Get the currently selected game mode
-  const modeDisplay = document.getElementById('selection-game-mode');
-  if (modeDisplay) {
-    const modeName = {
-      'solo': 'Marathon',
-      'coop': 'Cooperative',
-      'versus': 'Versus',
-      'team': 'Team',
-      'chaos': 'Chaos',
-      'custom': 'Custom'
-    }[gameMode] || 'Marathon';
+  if (!selectedCategories || selectedCategories.length === 0) {
+    const li = document.createElement('li');
+    li.className = 'text-purple-300 text-sm italic';
+    li.textContent = 'No categories selected';
+    list.appendChild(li);
     
-    modeDisplay.textContent = modeName + ' Mode';
-  }
+    const startBtn = getEl('start-game');
+    if(startBtn) startBtn.disabled = true;
+    return;
+  } 
   
-  // Update the categories list
-  const categoriesList = document.getElementById('selected-categories-list');
-  if (categoriesList) {
-    // Clear existing categories
-    categoriesList.innerHTML = '';
+  const startBtn = getEl('start-game');
+  if(startBtn) startBtn.disabled = false;
+
+  const allGenres = getAllGenres();
+  selectedCategories.forEach(id => {
+    const genre = allGenres.find(g => g.id === id);
+    if (!genre) return;
     
-    if (selectedCategories.length === 0) {
-      // No categories selected yet
-      const noCategories = document.createElement('li');
-      noCategories.className = 'text-purple-300 text-sm italic';
-      noCategories.textContent = 'No categories selected';
-      categoriesList.appendChild(noCategories);
-    } else {
-      // Get all genre data
-      const allGenres = getAllGenres();
-      
-      // Add each selected category
-      selectedCategories.forEach(id => {
-        const genre = allGenres.find(g => g.id === id);
-        if (genre) {
-          const item = document.createElement('li');
-          item.className = 'mb-2 flex items-center rounded-full bg-purple-900 bg-opacity-50 px-3 py-1 text-white text-sm';
-          item.innerHTML = `
-            <span class="w-2 h-2 rounded-full bg-purple-400 mr-2"></span>
-            ${genre.name}
-          `;
-          categoriesList.appendChild(item);
-        }
-      });
-    }
-  }
+    const li = document.createElement('li');
+    li.className = 'mb-2 flex items-center rounded-full bg-purple-900 bg-opacity-50 px-3 py-1 text-white text-sm';
+    li.innerHTML = `<span class="w-2 h-2 rounded-full bg-purple-400 mr-2"></span>${genre.name}`;
+    list.appendChild(li);
+  });
+}
+
+function updateSettingsSummary() {
+  const isMarathon = (gameMode === 'solo');
   
-  // Update the question count
-  const questionsDisplay = document.getElementById('selection-questions');
-  if (questionsDisplay) {
-    // Always show Unlimited Questions for Marathon mode, otherwise use the selected value
-    if (gameMode === 'solo') {
-      questionsDisplay.textContent = 'Unlimited Questions (Marathon Mode)';
-    } else {
-      const roundCount = document.getElementById('round-count').value;
-      questionsDisplay.textContent = roundCount === 'unlimited' ? 'Unlimited Questions' : `${roundCount} Questions`;
-    }
-  }
-  
-  // Update answer time
-  const timeDisplay = document.getElementById('selection-time');
-  if (timeDisplay) {
-    const timeLimit = document.getElementById('time-limit').value;
-    timeDisplay.textContent = `${timeLimit} seconds per answer`;
-  }
-  
-  // Update question type
-  const questionTypeDisplay = document.getElementById('selection-question-type');
-  if (questionTypeDisplay) {
-    const questionType = document.getElementById('question-type').value;
-    const questionTypeLabels = {
-      'song': 'Song Title Questions',
-      'artist': 'Artist/Band Questions',
-      'mixed': 'Mixed Questions',
-      'guitarist': 'Guitarist Questions (Hard!)'
-    };
-    questionTypeDisplay.textContent = questionTypeLabels[questionType] || 'Mixed Questions';
-  }
-  
-  // Update answer visibility (only for multiplayer modes)
-  const visibilityContainer = document.getElementById('selection-visibility-container');
-  const visibilityDisplay = document.getElementById('selection-visibility');
-  
-  if (visibilityContainer && visibilityDisplay) {
-    // Only show visibility for multiplayer modes, not for Marathon mode
-    if (gameMode !== 'solo') {
-      visibilityContainer.style.display = 'flex';
-      visibilityContainer.style.visibility = 'visible';
-      visibilityContainer.style.opacity = '1';
-      // Check if answer-visibility element exists and get its value
-      const answerVisibilityElement = document.getElementById('answer-visibility');
-      if (answerVisibilityElement) {
-        const visibility = answerVisibilityElement.value;
-        const visibilityLabels = {
-          'visible': 'Answers Visible to All',
-          'hidden': 'Answers Hidden Until Round End',
-          'individual': 'Answers Only Visible to Answerer'
-        };
-        visibilityDisplay.textContent = visibilityLabels[visibility] || 'Answers Visible to All';
+  const qEl = getEl('selection-questions');
+  if (qEl) {
+      if (isMarathon) qEl.textContent = 'Unlimited Questions (Marathon Mode)';
+      else {
+          const val = getEl('round-count')?.value;
+          qEl.textContent = val === 'unlimited' ? 'Unlimited Questions' : `${val} Questions`;
       }
-    } else {
-      // Hide answer visibility for Marathon mode
-      visibilityContainer.style.display = 'none';
-      visibilityContainer.style.visibility = 'hidden';
-      visibilityContainer.style.opacity = '0';
-    }
   }
-  
-  // Update lives (only for marathon mode)
-  const livesContainer = document.getElementById('selection-lives-container');
-  const livesDisplay = document.getElementById('selection-lives');
-  
-  if (livesContainer && livesDisplay) {
-    // Only show lives for marathon mode
-    if (gameMode === 'solo') {
-      livesContainer.style.display = 'flex';
-      livesContainer.style.visibility = 'visible';
-      livesContainer.style.opacity = '1';
-      const livesCount = document.getElementById('lives-count').value;
-      
-      if (livesCount === '0') {
-        livesDisplay.textContent = 'No Lives - One Strike Out';
-      } else if (livesCount === 'unlimited') {
-        livesDisplay.textContent = 'Unlimited Lives (Practice)';
+
+  const tEl = getEl('selection-time');
+  if (tEl) tEl.textContent = `${getEl('time-limit')?.value || '15'} seconds per answer`;
+
+  const typeEl = getEl('selection-question-type');
+  if (typeEl) {
+      const val = getEl('question-type')?.value || 'mixed';
+      typeEl.textContent = QUESTION_TYPE_LABELS[val] || 'Mixed Questions';
+  }
+
+  const visCont = getEl('selection-visibility-container');
+  const visLabel = getEl('selection-visibility');
+  if (visCont && visLabel) {
+      if (isMarathon) setVisibility(visCont, false);
+      else {
+          setVisibility(visCont, true, { display: 'flex' });
+          const val = getEl('answer-visibility')?.value || 'visible';
+          visLabel.textContent = VISIBILITY_LABELS[val] || 'Answers Visible to All';
+      }
+  }
+
+  const livesCont = getEl('selection-lives-container');
+  const livesLabel = getEl('selection-lives');
+  if (livesCont && livesLabel) {
+      if (!isMarathon) {
+          setVisibility(livesCont, false);
       } else {
-        livesDisplay.textContent = `${livesCount} Lives`;
+          setVisibility(livesCont, true, { display: 'flex' });
+          const val = getEl('lives-count')?.value || '3';
+          if (val === '0') livesLabel.textContent = 'No Lives - One Strike Out';
+          else if (val === 'unlimited') livesLabel.textContent = 'Unlimited Lives (Practice)';
+          else livesLabel.textContent = `${val} Lives`;
       }
-    } else {
-      livesContainer.style.display = 'none';
-      livesContainer.style.visibility = 'hidden';
-      livesContainer.style.opacity = '0';
-    }
   }
 }
 
-// Listen for changes that affect the selections panel
+// --- EVENT LISTENERS ---
+
 document.addEventListener('DOMContentLoaded', () => {
-  // Initial update
+  setupGameModeSettings();
   updateSelectionsSummary();
-  
-  // Update when categories change
-  const observer = new MutationObserver(updateSelectionsSummary);
-  const categoriesGrid = document.getElementById('categories-grid');
-  
-  // Update when game settings change
-  document.getElementById('round-count').addEventListener('change', updateSelectionsSummary);
-  document.getElementById('time-limit').addEventListener('change', updateSelectionsSummary);
-  document.getElementById('question-type').addEventListener('change', updateSelectionsSummary);
-  document.getElementById('lives-count').addEventListener('change', updateSelectionsSummary);
-  
-  // Also update when game mode changes
-  document.querySelectorAll('.mode-option').forEach(option => {
-    option.addEventListener('click', updateSelectionsSummary);
+
+  ['round-count', 'time-limit', 'question-type', 'lives-count', 'answer-visibility'].forEach(id => {
+    getEl(id)?.addEventListener('change', updateSelectionsSummary);
   });
+
+  document.querySelectorAll('.avatar-option').forEach(avatar => {
+    avatar.addEventListener('click', function() {
+      const selectedId = this.getAttribute('data-avatar');
+      updateAvatarSelection(selectedId);
+      this.classList.add('animate-pulse');
+      setTimeout(() => this.classList.remove('animate-pulse'), 500);
+      localStorage.setItem('selectedAvatar', selectedId);
+    });
+  });
+
+  const categoriesGrid = getEl('categories-grid');
   if (categoriesGrid) {
-    observer.observe(categoriesGrid, { childList: true, subtree: true, attributes: true });
+    new MutationObserver(updateSelectionsSummary).observe(categoriesGrid, { childList: true, subtree: true, attributes: true });
   }
-  
-  // Update when settings change
-  document.getElementById('round-count').addEventListener('change', updateSelectionsSummary);
-  document.getElementById('time-limit').addEventListener('change', updateSelectionsSummary);
-  
-  // Update when any category is clicked
+
   document.addEventListener('click', event => {
-    if (event.target.closest('.category-card')) {
-      // Need a small delay to allow toggleCategory to complete first
-      setTimeout(updateSelectionsSummary, 100);
+    const card = event.target.closest('.category-card');
+    
+    // Category Selection Logic
+    if (card) {
+        const categoryId = card.dataset.id;
+        if (typeof toggleCategory === 'function') {
+            toggleCategory(categoryId);
+            updateSelectionsSummary();
+        } else {
+            console.error("CRITICAL ERROR: toggleCategory function is NOT available!");
+        }
     }
+    
+    // Copy Link
+    if (event.target.closest('#copy-invite')) {
+        const link = getEl('invite-link');
+        if (link) {
+            link.select();
+            document.execCommand('copy');
+            alert('Invite link copied!');
+        }
+    }
+    
+    // Send Message
+    if (event.target.closest('#send-message')) {
+        sendChatMessage();
+    }
+  });
+  
+  getEl('chat-input')?.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') sendChatMessage();
+  });
+
+  document.querySelectorAll('.category-filter').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.category-filter').forEach(b => {
+        b.classList.remove('bg-purple-800', 'bg-opacity-80');
+        b.classList.add('bg-purple-600', 'bg-opacity-40');
+      });
+      this.classList.remove('bg-purple-600', 'bg-opacity-40');
+      this.classList.add('bg-purple-800', 'bg-opacity-80');
+      filterCategories(this.dataset.filter);
+    });
   });
 });
 
