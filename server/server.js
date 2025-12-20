@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import { config, validateApiKey } from './config/environments.js';
 import routes from './routes/index.js'; 
+import { initDatabase } from './models/init.js';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -45,6 +46,11 @@ app.get('/secure-data', authMiddleware, (req, res) => {
 });
 
 app.use('/api', routes); 
+
+// Initialize Database
+initDatabase().then(() => {
+    console.log('📊 Database ready for action');
+});
 
 // Start Server
 const server = app.listen(PORT, () => {
