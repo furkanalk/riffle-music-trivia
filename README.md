@@ -28,7 +28,7 @@
 git clone https://github.com/furkanalk/riffle.git
 
 # Install dependencies
-cd riffle/server && npm install
+cd riffle/server && npm install && npm install pg
 cd client && npm install && cd ..
 
 # Create environment file
