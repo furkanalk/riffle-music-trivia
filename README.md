@@ -189,7 +189,10 @@ Use `server/config/.env.example` as template:
 
 **Generate secure API keys:**
 ```bash
+# Using Node.js
 node -e "console.log(require('crypto').randomBytes(16).toString('hex'))"
+# Or using OpenSSL (if installed)
+openssl rand -hex 16
 ```
 
 ## Project Roadmap & Status
