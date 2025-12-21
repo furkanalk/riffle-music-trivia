@@ -2,16 +2,30 @@ export function initAuthUI() {
   console.log("🔒 Auth UI Initialized");
   
   const elements = {
-    authBtn: document.getElementById('auth-btn'),
+    // Buttons Containers
+    guestButtons: document.getElementById('guest-buttons'),
+    userProfileBtn: document.getElementById('user-profile-btn'),
+    
+    // Trigger Buttons
+    loginBtn: document.getElementById('login-btn'),
+    signupBtn: document.getElementById('signup-btn'),
+    
+    // Panel Elements
     authPanel: document.getElementById('auth-panel'),
     authBox: document.getElementById('auth-box'),
     closeBtn: document.getElementById('close-auth'),
+    
+    // Tabs
     tabLogin: document.getElementById('tab-login'),
     tabRegister: document.getElementById('tab-register'),
+    
+    // Forms
     formLogin: document.getElementById('form-login'),
     formRegister: document.getElementById('form-register'),
+    
+    // Display Info
     userDisplayName: document.getElementById('user-display-name'),
-    authMessage: document.getElementById('auth-message'), // error messages
+    authMessage: document.getElementById('auth-message'),
     
     // Inputs
     loginIdentifier: document.getElementById('login-identifier'),
