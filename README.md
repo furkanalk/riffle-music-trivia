@@ -37,7 +37,7 @@ Version      : v0.4.0-alpha
   - [Backend API Endpoints](#backend-api-endpoints)
 - [Project Structure](#project-structure)
 - [Installation \& Setup](#installation--setup)
-  - [Frontend Local Development](#frontend-local-development)
+  - [Local Development](#local-development)
   - [Docker Deployment (Backend \& DB)](#docker-deployment-backend--db)
 - [Configuration](#configuration)
 - [Project Roadmap \& Status](#project-roadmap--status)
@@ -118,32 +118,30 @@ Version      : v0.4.0-alpha
 
 ## Installation & Setup
 
-### Frontend Local Development
+### Local Development
 
 ```bash
 # Clone the repository
-git clone [https://github.com/furkanalk/riffle.git](https://github.com/furkanalk/riffle.git)
+git clone https://github.com/furkanalk/riffle.git
+cd riffle
 
-# Install dependencies
-cd riffle/server && npm install && npm install pg
+# Install backend dependencies
+cd server && npm install
+
+# Install frontend dependencies
 cd ../client && npm install && cd ..
 
-# Create environment file
-cp server/config/.env.example server/config/.env.dev
-
-# Start development server
+# Start frontend dev server
 cd client && npm run dev
 ```
 
 ### Docker Deployment (Backend & DB)
 
 ```bash
-# Clone the repository
-git clone [https://github.com/furkanalk/riffle.git](https://github.com/furkanalk/riffle.git)
-cd riffle
-
-# Configure environment
+# Assuming you are in the project root (riffle/)
+# Create environment file
 cp server/config/.env.example server/config/.env.dev
+# Repeat for test / stage / prod if needed
 
 # Run with Docker Compose
 # Development environment
@@ -213,18 +211,34 @@ node -e "console.log(require('crypto').randomBytes(16).toString('hex'))"
 ### Phase 2: Core Gameplay & UI
 *Polishing the user experience and game mechanics.*
 
-- [x] **Game Mechanics:**
+- [ ] **Game Mechanics:**
   - [x] Timer bar & Visualizer integration.
   - [x] Logic implementation for unique song playback per session.
   - [x] Score & Streak display improvements.
   - [x] Marathon Mode (Unlimited rounds + Lives system).
   - [x] Continuous audio playback during answer selection.
-- [x] **Category System:**
-  - [x] Dynamic Filtering & Search logic.
+  - [ ] Scoreboard
+    - [x] Show points and user names per round.
+    - [ ] Better visuals.
+  - [ ] Endgame screen.
+- [ ] **Category System:**
+  - [x] Dynamic filtering logic.
+  - [ ] Album covers hovering in the background.
+    - [x] Placeholder.
+      - [ ] Replace the placeholders with real covers.
   - [x] Horizontal scrolling categories with navigation controls.
   - [x] "Double Toggle" prevention logic.
-  - [x] Live Selection Summary Panel.
-  - [x] Avatar Selection UI.
+  - [ ] Live Selection Summary Panel.
+    - [x] Functionality.
+    - [ ] Compatible with smaller screens.
+  - [ ] Avatar Selection UI.
+    - [x] Placeholder added.
+      - [ ] Replace it with real avatar created.
+    - [ ] User friendly UI location.
+- [ ] **Chat System:**
+  - [ ] Chat Panel for users to chat with each other.
+  - [ ] Invite to lobby section.
+    - [ ] Link creation. 
 - [x] **UI/UX Polish:**
   - [x] Animations for filtering and selection.
   - [x] Audio visualizer integration.
@@ -236,7 +250,7 @@ node -e "console.log(require('crypto').randomBytes(16).toString('hex'))"
 *Connecting the Frontend Logic to Persistent Storage.*
 
 - [ ] **User Authentication:**
-  - [x] **UI:** Login/Register Modal & Button implementation.
+  - [x] **UI:** Login/Register implementation.
   - [ ] **Logic:** Implement JWT (JSON Web Token) handling.
   - [ ] **Security:** BCrypt password hashing & Salt integration.
   - [ ] **Session:** Secure LocalStorage/Cookie management.
