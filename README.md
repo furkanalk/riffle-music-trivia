@@ -129,19 +129,19 @@ cd riffle
 cd server && npm install
 
 # Install frontend dependencies
-cd ../client && npm install && cd ..
+cd ../client && npm install
 
 # Start frontend dev server
-cd client && npm run dev
+npm run dev
 ```
 
 ### Docker Deployment (Backend & DB)
 
 ```bash
-# Assuming you are in the project root (riffle/)
-# Create environment file
-cp server/config/.env.example server/config/.env.dev
+# Open a new terminal, navigate to the riffle project, and create an environment file
 # Repeat for test / stage / prod if needed
+cp server/config/.env.example server/config/.env.dev
+
 
 # Run with Docker Compose
 # Development environment
