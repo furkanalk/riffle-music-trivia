@@ -35,6 +35,10 @@ Version      : v0.4.0-alpha
 - [Technical Architecture](#technical-architecture)
   - [Technologies Used](#technologies-used)
   - [Backend API Endpoints](#backend-api-endpoints)
+    - [Music Data (Active)](#music-data-active)
+    - [Authentication (Implemented - Ready for Testing)](#authentication-implemented---ready-for-testing)
+    - [Game Logic (Planned)](#game-logic-planned)
+    - [System \& Infrastructure (Active)](#system--infrastructure-active)
 - [Project Structure](#project-structure)
 - [Installation \& Setup](#installation--setup)
   - [Local Development](#local-development)
@@ -76,12 +80,22 @@ Version      : v0.4.0-alpha
 
 ### Backend API Endpoints
 
-* `GET /api/tracks/playlist/:id/tracks` - Retrieve tracks from a specific playlist
-* `GET /api/tracks/track/:id` - Retrieve single track information
-* `POST /api/auth/register` - User registration (Planned)
-* `POST /api/auth/login` - User login (Planned)
-* `POST /api/game/create` - Initialize game session (Planned)
-* `GET /api/game/:id` - Retrieve current game state (Planned)
+####  Music Data (Active)
+* `GET /api/tracks/playlist/:id/tracks` - Retrieve tracks from a specific playlist.
+* `GET /api/tracks/track/:id` - Retrieve single track information.
+
+#### Authentication (Implemented - Ready for Testing)
+* `POST /api/auth/register` - Register a new user and return JWT.
+* `POST /api/auth/login` - Authenticate user and return JWT.
+
+#### Game Logic (Planned)
+* `POST /api/game/create` - Initialize a new game session.
+* `GET /api/game/:id` - Retrieve current game state/score.
+* `POST /api/game/:id/answer` - Submit an answer for server-side validation.
+
+#### System & Infrastructure (Active)
+* `GET /health` - Health check for Docker/Uptime monitoring.
+* `GET /secure-data` - API Key validation test endpoint.
 
 ## Project Structure
 
@@ -185,7 +199,7 @@ Use `server/config/.env.example` as template:
 | `RIFFLE_PROD_API_KEY` | API key for production environment | Required |
 | `RIFFLE_PROD_API_KEY` | API key for production environment | Required |
 | `JWT_SECRET` | Secret for signing JWTs | Required |
-| `TOKEN_EXPIRES_IN` | Token expiration time | `https://stage.riffle.com` |
+| `TOKEN_EXPIRES_IN` | Token expiration time | `1d` |
 | `PROD_ORIGIN` | Production CORS origin | `https://riffle.com` |
 | `DEEZER_API_KEY` | Deezer API key (if required) | - |
 
