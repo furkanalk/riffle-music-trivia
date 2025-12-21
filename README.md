@@ -38,6 +38,7 @@ Version      : v0.4.0-alpha
 - [Project Structure](#project-structure)
 - [Installation \& Setup](#installation--setup)
   - [Frontend Local Development](#frontend-local-development)
+  - [Docker Deployment (Backend \& DB)](#docker-deployment-backend--db)
 - [Configuration](#configuration)
 - [Project Roadmap \& Status](#project-roadmap--status)
   - [Phase 1: Architecture \& Infrastructure](#phase-1-architecture--infrastructure)
@@ -132,6 +133,7 @@ cp server/config/.env.example server/config/.env.dev
 
 # Start development server
 cd client && npm run dev
+```
 
 ### Docker Deployment (Backend & DB)
 
