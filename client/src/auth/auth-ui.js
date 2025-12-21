@@ -59,11 +59,20 @@ export function initAuthUI() {
     });
   }
 
-  // Close Panel
-  elements.closeBtn.addEventListener('click', closePanel);
-  elements.authPanel.addEventListener('click', (e) => {
-    if (e.target === elements.authPanel) closePanel();
-  });
+  // Profile button click to logout
+  if (elements.userProfileBtn) {
+    elements.userProfileBtn.addEventListener('click', () => {
+      if(confirm("Are you sure you want to logout?")) logout();
+    });
+  }
+
+  // Close panel
+  if (elements.closeBtn) elements.closeBtn.addEventListener('click', closePanel);
+  if (elements.authPanel) {
+    elements.authPanel.addEventListener('click', (e) => {
+      if (e.target === elements.authPanel) closePanel();
+    });
+  }
 
   // Tab Switch
   elements.tabLogin.addEventListener('click', () => switchAuthTab('login'));
