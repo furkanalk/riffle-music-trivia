@@ -111,35 +111,35 @@ export function initAuthUI() {
   }
 
   // REGISTER SUBMIT
-  elements.formRegister.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    showLoading(true);
-    clearMessage();
+  if (elements.formRegister) {
+    elements.formRegister.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      showLoading(true);
+      clearMessage();
 
-    const username = elements.regUsername.value;
-    const email = elements.regEmail.value;
-    const password = elements.regPassword.value;
+      const username = elements.regUsername.value;
+      const email = elements.regEmail.value;
+      const password = elements.regPassword.value;
 
-    try {
-      const res = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, email, password })
-      });
+      try {
+        const res = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, email, password })
+        });
 
-      const data = await res.json();
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Registration failed');
 
-      if (!res.ok) throw new Error(data.error || 'Registration failed');
+        loginSuccess(data);
 
-      // Auto login after successful registration
-      loginSuccess(data); 
-
-    } catch (error) {
-      showMessage(error.message, 'error');
-    } finally {
-      showLoading(false);
-    }
-  });
+      } catch (error) {
+        showMessage(error.message, 'error');
+      } finally {
+        showLoading(false);
+      }
+    });
+  }
 
   // Login Success
   function loginSuccess(data) {
