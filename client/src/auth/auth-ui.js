@@ -216,6 +216,7 @@ export function initAuthUI() {
     }, 300);
   }
 
+  // Switch between login and register tabs
   function switchAuthTab(tab) {
     clearMessage();
     if (tab === 'login') {
@@ -235,6 +236,7 @@ export function initAuthUI() {
     }
   }
 
+  // Show message
   function showMessage(msg, type) {
     elements.authMessage.textContent = msg;
     elements.authMessage.classList.remove('hidden', 'text-red-500', 'text-green-500');
@@ -246,11 +248,13 @@ export function initAuthUI() {
     }
   }
 
+  // Clear message
   function clearMessage() {
     elements.authMessage.classList.add('hidden');
     elements.authMessage.textContent = '';
   }
 
+  // Show loading state
   function showLoading(isLoading) {
     const btns = document.querySelectorAll('#auth-box button[type="submit"]');
     btns.forEach(btn => {
