@@ -138,7 +138,8 @@ npm run dev
 ### Docker Deployment (Backend & DB)
 
 ```bash
-# Open a new terminal, navigate to the riffle project, and create an environment file
+# Open a new terminal, navigate to the riffle project
+# Create an environment file from template
 # Repeat for test / stage / prod if needed
 cp server/config/.env.example server/config/.env.dev
 
