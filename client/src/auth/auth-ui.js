@@ -74,40 +74,41 @@ export function initAuthUI() {
     });
   }
 
-  // Tab Switch
+  // Tab Switching
   if (elements.tabLogin) elements.tabLogin.addEventListener('click', () => switchAuthTab('login'));
   if (elements.tabRegister) elements.tabRegister.addEventListener('click', () => switchAuthTab('register'));
 
   // --- API REQUESTS ---
 
   // LOGIN SUBMIT
-  elements.formLogin.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    showLoading(true);
-    clearMessage();
+  if (elements.formLogin) {
+    elements.formLogin.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      showLoading(true);
+      clearMessage();
 
-    const identifier = elements.loginIdentifier.value;
-    const password = elements.loginPassword.value;
+      const identifier = elements.loginIdentifier.value;
+      const password = elements.loginPassword.value;
 
-    try {
-      const res = await fetch('/api/auth/login', {
+      try {
+        const res = await fetch('/api/auth/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ identifier, password })
-      });
+        });
 
-      const data = await res.json();
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Login failed');
 
-      if (!res.ok) throw new Error(data.error || 'Login failed');
+        loginSuccess(data);
 
-      loginSuccess(data);
-
-    } catch (error) {
-      showMessage(error.message, 'error');
-    } finally {
-      showLoading(false);
-    }
-  });
+      } catch (error) {
+        showMessage(error.message, 'error');
+      } finally {
+        showLoading(false);
+      }
+    });
+  }
 
   // REGISTER SUBMIT
   elements.formRegister.addEventListener('submit', async (e) => {
