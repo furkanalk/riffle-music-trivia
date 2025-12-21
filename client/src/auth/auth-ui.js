@@ -44,20 +44,20 @@ export function initAuthUI() {
   // --- EVENT LISTENERS ---
 
   // Login button click to open login panel
-    if (elements.loginBtn) {
-        elements.loginBtn.addEventListener('click', () => {
-            switchAuthTab('login');
-            openPanel();
-        });
-    }
+  if (elements.loginBtn) {
+    elements.loginBtn.addEventListener('click', () => {
+      switchAuthTab('login');
+      openPanel();
+    });
+  }
 
-    // Signup button click to open register panel
-    if (elements.signupBtn) {
-        elements.signupBtn.addEventListener('click', () => {
-            switchAuthTab('register');
-            openPanel();
-        });
-    }
+  // Signup button click to open register panel
+  if (elements.signupBtn) {
+    elements.signupBtn.addEventListener('click', () => {
+      switchAuthTab('register');
+      openPanel();
+    });
+  }
 
   // Close Panel
   elements.closeBtn.addEventListener('click', closePanel);
