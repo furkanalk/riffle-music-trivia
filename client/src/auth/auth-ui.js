@@ -1,92 +1,222 @@
 export function initAuthUI() {
-    console.log("🔒 Auth UI Initialized");
+  console.log("🔒 Auth UI Initialized");
+  
+  const elements = {
+    authBtn: document.getElementById('auth-btn'),
+    authPanel: document.getElementById('auth-panel'),
+    authBox: document.getElementById('auth-box'),
+    closeBtn: document.getElementById('close-auth'),
+    tabLogin: document.getElementById('tab-login'),
+    tabRegister: document.getElementById('tab-register'),
+    formLogin: document.getElementById('form-login'),
+    formRegister: document.getElementById('form-register'),
+    userDisplayName: document.getElementById('user-display-name'),
+    authMessage: document.getElementById('auth-message'), // error messages
     
-    const elements = {
-        authBtn: document.getElementById('auth-btn'),
-        authPanel: document.getElementById('auth-panel'),
-        authBox: document.getElementById('auth-box'),
-        closeBtn: document.getElementById('close-auth'),
-        tabLogin: document.getElementById('tab-login'),
-        tabRegister: document.getElementById('tab-register'),
-        formLogin: document.getElementById('form-login'),
-        formRegister: document.getElementById('form-register'),
-        userDisplayName: document.getElementById('user-display-name')
-    };
+    // Inputs
+    loginIdentifier: document.getElementById('login-identifier'),
+    loginPassword: document.getElementById('login-password'),
+    regUsername: document.getElementById('reg-username'),
+    regEmail: document.getElementById('reg-email'),
+    regPassword: document.getElementById('reg-password')
+  };
 
-    if (!elements.authBtn) return;
+  if (!elements.authBtn) return;
 
-    // --- Event Listeners ---
+  // Check login status on load
+  checkLoginStatus();
 
-    // Open Panel
-    elements.authBtn.addEventListener('click', () => {
-        elements.authPanel.classList.remove('hidden');
-        // Delay for transition
-        setTimeout(() => {
-            elements.authBox.classList.remove('scale-95', 'opacity-0');
-            elements.authBox.classList.add('scale-100', 'opacity-100');
-        }, 10);
-    });
+  // --- EVENT LISTENERS ---
 
-    // Close Panel
-    elements.closeBtn.addEventListener('click', closePanel);
-
-    // Close on outside click
-    elements.authPanel.addEventListener('click', (e) => {
-        if (e.target === elements.authPanel) closePanel();
-    });
-
-    function closePanel() {
-        elements.authBox.classList.remove('scale-100', 'opacity-100');
-        elements.authBox.classList.add('scale-95', 'opacity-0');
-        
-        setTimeout(() => {
-            elements.authPanel.classList.add('hidden');
-        }, 300);
+  // Open Panel
+  elements.authBtn.addEventListener('click', () => {
+    // Ask for confirmation before logging out if already logged in
+    // Open panel (for now)
+    const token = localStorage.getItem('token');
+    if (token) {
+      if(confirm("Logout?")) logout();
+      return;
     }
+    
+    openPanel();
+  });
 
-    // Tab Switch (Login -> Register)
-    elements.tabLogin.addEventListener('click', () => switchAuthTab('login'));
-    elements.tabRegister.addEventListener('click', () => switchAuthTab('register'));
+  // Close Panel
+  elements.closeBtn.addEventListener('click', closePanel);
+  elements.authPanel.addEventListener('click', (e) => {
+    if (e.target === elements.authPanel) closePanel();
+  });
 
-    function switchAuthTab(tab) {
-        if (tab === 'login') {
-            // UI Update
-            elements.tabLogin.classList.add('text-white', 'border-purple-500');
-            elements.tabLogin.classList.remove('text-gray-400', 'border-transparent');
-            
-            elements.tabRegister.classList.add('text-gray-400', 'border-transparent');
-            elements.tabRegister.classList.remove('text-white', 'border-purple-500');
+  // Tab Switch
+  elements.tabLogin.addEventListener('click', () => switchAuthTab('login'));
+  elements.tabRegister.addEventListener('click', () => switchAuthTab('register'));
 
-            // Form Toggle
-            elements.formLogin.classList.remove('hidden');
-            elements.formRegister.classList.add('hidden');
-        } else {
-            // UI Update
-            elements.tabRegister.classList.add('text-white', 'border-purple-500');
-            elements.tabRegister.classList.remove('text-gray-400', 'border-transparent');
-            
-            elements.tabLogin.classList.add('text-gray-400', 'border-transparent');
-            elements.tabLogin.classList.remove('text-white', 'border-purple-500');
+  // --- API REQUESTS ---
 
-            // Form Toggle
-            elements.formRegister.classList.remove('hidden');
-            elements.formLogin.classList.add('hidden');
-        }
+  // LOGIN SUBMIT
+  elements.formLogin.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    showLoading(true);
+    clearMessage();
+
+    const identifier = elements.loginIdentifier.value;
+    const password = elements.loginPassword.value;
+
+    try {
+      const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ identifier, password })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.error || 'Login failed');
+
+      loginSuccess(data);
+
+    } catch (error) {
+      showMessage(error.message, 'error');
+    } finally {
+      showLoading(false);
     }
+  });
 
-    // Form Submit (logging for now)
-    elements.formLogin.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const username = document.getElementById('login-username').value;
-        console.log(`🔑 Login Attempt: ${username}`);
-        // Future API call will go here
-    });
+  // REGISTER SUBMIT
+  elements.formRegister.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    showLoading(true);
+    clearMessage();
 
-    elements.formRegister.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const username = document.getElementById('reg-username').value;
-        const email = document.getElementById('reg-email').value;
-        console.log(`📝 Register Attempt: ${username} (${email})`);
-        // Future API call will go here
+    const username = elements.regUsername.value;
+    const email = elements.regEmail.value;
+    const password = elements.regPassword.value;
+
+    try {
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, email, password })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.error || 'Registration failed');
+
+      // Auto login after successful registration
+      loginSuccess(data); 
+
+    } catch (error) {
+      showMessage(error.message, 'error');
+    } finally {
+      showLoading(false);
+    }
+  });
+
+  // Login Success
+  function loginSuccess(data) {
+    console.log("✅ Auth Success:", data.user.username);
+    
+    // Save token & user info
+    localStorage.setItem('token', data.token);
+    localStorage.setItem('user', JSON.stringify(data.user));
+
+    // Show success message and update UI
+    showMessage(`Welcome back, ${data.user.username}!`, 'success');
+    setTimeout(() => {
+      closePanel();
+      updateUI(data.user);
+    }, 1000);
+  }
+
+  // Check login status on load
+  function checkLoginStatus() {
+    const user = JSON.parse(localStorage.getItem('user'));
+    const token = localStorage.getItem('token');
+    if (user && token) {
+      updateUI(user);
+    }
+  }
+
+  // Update UI after login
+  function updateUI(user) {
+    // Change Guest text button to Username
+    if (elements.userDisplayName) {
+      elements.userDisplayName.textContent = user.username;
+    }
+    // Avatar color can be set here based on user info
+  }
+
+  // Logout
+  function logout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    window.location.reload(); // Refresh to renew state
+  }
+
+  // --- UI Helper Functions ---
+
+  function openPanel() {
+    elements.authPanel.classList.remove('hidden');
+    setTimeout(() => {
+      elements.authBox.classList.remove('scale-95', 'opacity-0');
+      elements.authBox.classList.add('scale-100', 'opacity-100');
+    }, 10);
+  }
+
+  function closePanel() {
+    elements.authBox.classList.remove('scale-100', 'opacity-100');
+    elements.authBox.classList.add('scale-95', 'opacity-0');
+    setTimeout(() => {
+      elements.authPanel.classList.add('hidden');
+      clearMessage();
+      elements.formLogin.reset();
+      elements.formRegister.reset();
+    }, 300);
+  }
+
+  function switchAuthTab(tab) {
+    clearMessage();
+    if (tab === 'login') {
+      elements.tabLogin.classList.add('text-white', 'border-purple-500');
+      elements.tabLogin.classList.remove('text-gray-400', 'border-transparent');
+      elements.tabRegister.classList.add('text-gray-400', 'border-transparent');
+      elements.tabRegister.classList.remove('text-white', 'border-purple-500');
+      elements.formLogin.classList.remove('hidden');
+      elements.formRegister.classList.add('hidden');
+    } else {
+      elements.tabRegister.classList.add('text-white', 'border-purple-500');
+      elements.tabRegister.classList.remove('text-gray-400', 'border-transparent');
+      elements.tabLogin.classList.add('text-gray-400', 'border-transparent');
+      elements.tabLogin.classList.remove('text-white', 'border-purple-500');
+      elements.formRegister.classList.remove('hidden');
+      elements.formLogin.classList.add('hidden');
+    }
+  }
+
+  function showMessage(msg, type) {
+    elements.authMessage.textContent = msg;
+    elements.authMessage.classList.remove('hidden', 'text-red-500', 'text-green-500');
+    
+    if (type === 'error') {
+      elements.authMessage.classList.add('text-red-500');
+    } else {
+      elements.authMessage.classList.add('text-green-500');
+    }
+  }
+
+  function clearMessage() {
+    elements.authMessage.classList.add('hidden');
+    elements.authMessage.textContent = '';
+  }
+
+  function showLoading(isLoading) {
+    // Butonları disable etme animasyonu eklenebilir
+    const btns = document.querySelectorAll('#auth-box button[type="submit"]');
+    btns.forEach(btn => {
+      btn.disabled = isLoading;
+      btn.style.opacity = isLoading ? '0.5' : '1';
+      btn.textContent = isLoading ? 'Processing...' : (btn.id === 'btn-login' ? 'ENTER THE ARENA' : btn.textContent);
     });
+  }
 }
