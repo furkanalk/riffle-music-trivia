@@ -31,7 +31,8 @@ export const register = async (req, res) => {
     );
 
     // 5. Create a token (Auto-login)
-    const token = jwt.sign({ id: newUser.rows[0].id }, JWT_SECRET, { expiresIn: '7d' });
+    // Keep newUser.rows[0].id for registered user ID
+    const token = jwt.sign({ id: newUser.rows[0].id }, JWT_SECRET, { expiresIn: TOKEN_EXPIRES_IN || '1d' });
 
     res.status(201).json({
         message: 'User registered successfully!',
@@ -66,7 +67,8 @@ export const login = async (req, res) => {
     }
 
     // Create JWT token
-    const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '7d' });
+    // Keep user.id for logged in user ID
+    const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: TOKEN_EXPIRES_IN || '1d' });
 
     // Respond (excluding password)
     delete user.password_hash;
