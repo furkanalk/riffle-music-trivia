@@ -254,10 +254,13 @@ openssl rand -hex 16
 *Connecting the Frontend Logic to Persistent Storage.*
 
 - [ ] **User Authentication:**
-  - [x] **UI:** Login/Register implementation.
-  - [ ] **Logic:** Implement JWT (JSON Web Token) handling.
-  - [ ] **Security:** BCrypt password hashing & Salt integration.
-  - [ ] **Session:** Secure LocalStorage/Cookie management.
+  - [x] **UI:** Login/Register Modal & Button implementation.
+  - [x] **Logic:** Implement JWT (JSON Web Token) handling.
+  - [x] **Security:** BCrypt password hashing & Salt integration.
+  - [x] **Session:** Secure LocalStorage/Cookie management.
+  - [x] **Database:** Automated `users` table creation script (`init.js`).
+  - [x] **API:** Auth endpoints (`/register`, `/login`) configuration.
+  - [ ] **Verification:** End-to-end testing of Auth flow.
 - [ ] **Service Layer Implementation:**
   - [ ] **Service Factory:** Architecture to switch between Mock vs Real Data providers.
   - [ ] **API Integration:** Connect `music.js` service to real PostgreSQL endpoints.
