@@ -23,7 +23,7 @@ RIFFLE — MUSIC TRIVIA ENGINE
 Genre        : Rock • Metal (more TBD)
 Game Modes   : Classic • Marathon (more TBD)
 Platform     : Web • Mobile
-Version      : v0.4.0-alpha
+Version      : v0.4.5-alpha
 
 “Test your music knowledge under pressure.”
 ```
@@ -213,8 +213,8 @@ openssl rand -hex 16
 
 ## Project Roadmap & Status
 
-**Current Phase:** ```Alpha v0.4.0``` - Implementing Authentication & Service Layer
-**Architecture:** Modular Monolith (Client) + Microservices Ready (Server)
+- **Current Phase:** ```Alpha v0.4.5``` - Implementing Authentication & Service Layer
+- **Architecture:** Modular Monolith (Client) + Microservices Ready (Server)
 
 ### Phase 1: Architecture & Infrastructure
 > *Building a cloud-native, scalable foundation using Docker and Modern JS standards.*
@@ -273,7 +273,7 @@ openssl rand -hex 16
   - [ ] Chat Panel for users to chat with each other.  
   - [ ] Invite to lobby section (Link creation).  
 
-- [ ] UI/UX Polish:
+- [X] UI/UX Polish:
   - [x] Animations for filtering and selection.  
   - [x] Audio visualizer integration.  
   - [x] Auto-fetching album covers & duration bars.  
@@ -330,14 +330,15 @@ openssl rand -hex 16
 
 ## Progress
 
-> **Current Phase:** Building the Foundation & Architecture
+- **Current Phase:**  ```Phase 3: Identity & Data Layer```
+- **Focus:** Connecting Frontend Auth to Backend API
 
 ### Overall Progress (PoC)
 
 ```
-- Architecture & Infra     ▓▓▓▓▓▓▓░░░ 60%
-- Core Gameplay            ▓▓▓▓▓░░░░░ 50%
-- UI / UX                  ▓▓▓▓▓░░░░░ 50%
+- Architecture & Infra     ▓▓▓▓▓▓▓▓▓░ 90% (Dev env ready, basic mechanics working)
+- Core Gameplay            ▓▓▓▓▓░░░░░ 50% (Marathon works, but needs Smart Algo & Endgame along with bug fixes and minor improvements)
+- UI / UX                  ▓▓▓▓▓░░░░░ 50% (Visuals polished, Auth UI ready. Landing Page pending)
 ```
 
 ### Development Progress
@@ -345,11 +346,11 @@ openssl rand -hex 16
 _Not started. Will begin after PoC completion._
 
 ```
-- Architecture & Infra     ░░░░░░░░░░ 0%
-- Core Gameplay            ░░░░░░░░░░ 0%
-- UI / UX                  ░░░░░░░░░░ 0%
-- Auth & Persistence       ▓▓▓▓░░░░░░ 40%
-- Multiplayer              ░░░░░░░░░░ 0%
+- Architecture & Infra     ░░░░░░░░░░ 0%   (Production infra & Security not started)
+- Core Gameplay            ▓░░░░░░░░░ 10%  (Basic loop exists, but needs heavy refinement)
+- UI / UX                  ▓░░░░░░░░░ 15%  (Components are ready, but main menu and other category flows are missing)
+- Auth & Persistence       ▓▓▓▓▓░░░░░ 40%  (Logins/Register awaits test. Profile & History pending)
+- Multiplayer              ░░░░░░░░░░ 0%   (Not started)
 ```
 
 ## License
