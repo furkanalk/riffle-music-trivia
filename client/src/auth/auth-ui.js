@@ -182,6 +182,12 @@ export function initAuthUI() {
     if (elements.userDisplayName) elements.userDisplayName.textContent = user.username;
   }
 
+  // Show guest mode
+  function showGuestMode() {
+    if (elements.guestButtons) elements.guestButtons.classList.remove('hidden');
+    if (elements.userProfileBtn) elements.userProfileBtn.classList.add('hidden');
+  }
+
   // Logout
   function logout() {
     localStorage.removeItem('token');
