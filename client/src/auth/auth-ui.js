@@ -174,11 +174,12 @@ export function initAuthUI() {
 
   // Update UI after login
   function updateUI(user) {
-    // Change Guest text button to Username
-    if (elements.userDisplayName) {
-      elements.userDisplayName.textContent = user.username;
-    }
-    // Avatar color can be set here based on user info
+    // Hide guest buttons
+    if (elements.guestButtons) elements.guestButtons.classList.add('hidden');
+
+    // Show profile button and set username
+    if (elements.userProfileBtn) elements.userProfileBtn.classList.remove('hidden');
+    if (elements.userDisplayName) elements.userDisplayName.textContent = user.username;
   }
 
   // Logout
