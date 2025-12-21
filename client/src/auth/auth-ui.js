@@ -43,18 +43,21 @@ export function initAuthUI() {
 
   // --- EVENT LISTENERS ---
 
-  // Open Panel
-  elements.authBtn.addEventListener('click', () => {
-    // Ask for confirmation before logging out if already logged in
-    // Open panel (for now)
-    const token = localStorage.getItem('token');
-    if (token) {
-      if(confirm("Logout?")) logout();
-      return;
+  // Login button click to open login panel
+    if (elements.loginBtn) {
+        elements.loginBtn.addEventListener('click', () => {
+            switchAuthTab('login');
+            openPanel();
+        });
     }
-    
-    openPanel();
-  });
+
+    // Signup button click to open register panel
+    if (elements.signupBtn) {
+        elements.signupBtn.addEventListener('click', () => {
+            switchAuthTab('register');
+            openPanel();
+        });
+    }
 
   // Close Panel
   elements.closeBtn.addEventListener('click', closePanel);
