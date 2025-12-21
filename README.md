@@ -1,32 +1,52 @@
-# Riffle
+<h1 align="center">🎸 Quiz Game: Riffle</h1>
 
-<img src="https://imgur.com/dkZQodk.png" width="200" height="200" alt="Riffle Logo">
+<p align="center">
+  <img src="https://imgur.com/dkZQodk.png" width="180" alt="Riffle Logo">
+</p>
 
-**A Rock & Metal music trivia game.**
+<p align="center">
+  <strong>Rock & Metal music trivia game</strong><br>
+  Fast-paced quizzes powered by real music data.
+</p>
 
----
+<p align="center">
+  <img src="https://img.shields.io/badge/status-active--development-purple">
+  <img src="https://img.shields.io/badge/backend-Node.js-green">
+  <img src="https://img.shields.io/badge/frontend-Vite%20%7C%20Tailwind-blue">
+  <img src="https://img.shields.io/badge/mobile-Capacitor-lightgrey">
+  <img src="https://img.shields.io/badge/license-Proprietary-red">
+</p>
+
+```txt
+RIFFLE — MUSIC TRIVIA ENGINE
+
+Genre        : Rock • Metal (more TBD)
+Game Modes   : Classic • Marathon (more TBD)
+Platform     : Web • Mobile
+Version      : v0.4.0-alpha
+
+“Test your music knowledge under pressure.”
+```
 
 ## Table of Contents
 
-- [Riffle](#riffle)
-  - [Table of Contents](#table-of-contents)
-  - [Features](#features)
-  - [Technical Architecture](#technical-architecture)
-    - [Technologies Used](#technologies-used)
-    - [Backend API Endpoints](#backend-api-endpoints)
-  - [Project Structure](#project-structure)
-  - [Installation \& Setup](#installation--setup)
-    - [Frontend Local Development](#frontend-local-development)
-  - [Configuration](#configuration)
-  - [Project Roadmap \& Status](#project-roadmap--status)
-    - [Phase 1: Architecture \& Infrastructure (The Foundation)](#phase-1-architecture--infrastructure-the-foundation)
-    - [Phase 2: Core Gameplay \& UI (Completed Features)](#phase-2-core-gameplay--ui-completed-features)
-    - [Phase 3: Identity \& Data Layer (Current Focus)](#phase-3-identity--data-layer-current-focus)
-    - [Phase 4: Production Readiness \& Security (Enterprise Level)](#phase-4-production-readiness--security-enterprise-level)
-    - [Phase 5: Expansion](#phase-5-expansion)
-  - [License](#license)
-
----
+- [Table of Contents](#table-of-contents)
+- [Features](#features)
+- [Technical Architecture](#technical-architecture)
+  - [Technologies Used](#technologies-used)
+  - [Backend API Endpoints](#backend-api-endpoints)
+- [Project Structure](#project-structure)
+- [Installation \& Setup](#installation--setup)
+  - [Frontend Local Development](#frontend-local-development)
+- [Configuration](#configuration)
+- [Project Roadmap \& Status](#project-roadmap--status)
+  - [Phase 1: Architecture \& Infrastructure (The Foundation)](#phase-1-architecture--infrastructure-the-foundation)
+  - [Phase 2: Core Gameplay \& UI (Completed Features)](#phase-2-core-gameplay--ui-completed-features)
+  - [Phase 3: Identity \& Data Layer (Current Focus)](#phase-3-identity--data-layer-current-focus)
+  - [Phase 4: Production Readiness \& Security (Enterprise Level)](#phase-4-production-readiness--security-enterprise-level)
+  - [Phase 5: Expansion](#phase-5-expansion)
+- [Overall Progress (PoC)](#overall-progress-poc)
+- [License](#license)
 
 ## Features
 
@@ -244,6 +264,16 @@ node -e "console.log(require('crypto').randomBytes(16).toString('hex'))"
 - [ ] **Mobile App:** Finalize Capacitor builds for iOS & Android.
 - [ ] **Multiplayer:** Real-time WebSocket integration for VS Mode.
 - [ ] **Localization:** Multi-language support structure.
+
+## Overall Progress (PoC)
+
+```
+- Architecture & Infra     ▓▓▓▓▓▓▓░░░ 60%
+- Core Gameplay            ▓▓▓▓▓░░░░░ 50%
+- UI / UX                  ▓▓▓▓▓░░░░░ 50%
+- Auth & Persistence       ▓░░░░░░░░░ 10%
+- Multiplayer              ░░░░░░░░░░ 0%
+```
 
 ## License
 
