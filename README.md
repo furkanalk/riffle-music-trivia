@@ -173,9 +173,9 @@ Use `server/config/.env.example` as template:
 |----------|-------------|---------|
 | `NODE_ENV` | Environment mode (dev/test/stage/prod) | `dev` |
 | `PORT` | Server port | `1968` |
-| `POSTGRES_DB` | PostgreSQL database name | `riffle_dev` |
 | `POSTGRES_USER` | PostgreSQL username | `riffle_user` |
 | `POSTGRES_PASSWORD` | PostgreSQL password | `riffle_pass` |
+| `POSTGRES_DB` | PostgreSQL database name | `riffle_dev` |
 | `POSTGRES_HOST` | PostgreSQL host | `db` |
 | `POSTGRES_PORT` | PostgreSQL port | `5432` |
 | `DATABASE_URL` | Full database connection URL | `postgresql://...` |
@@ -183,7 +183,9 @@ Use `server/config/.env.example` as template:
 | `RIFFLE_TEST_API_KEY` | API key for test environment | Auto-generated |
 | `RIFFLE_STAGE_API_KEY` | API key for staging environment | Required |
 | `RIFFLE_PROD_API_KEY` | API key for production environment | Required |
-| `STAGE_ORIGIN` | Staging CORS origin | `https://stage.riffle.com` |
+| `RIFFLE_PROD_API_KEY` | API key for production environment | Required |
+| `JWT_SECRET` | Secret for signing JWTs | Required |
+| `TOKEN_EXPIRES_IN` | Token expiration time | `https://stage.riffle.com` |
 | `PROD_ORIGIN` | Production CORS origin | `https://riffle.com` |
 | `DEEZER_API_KEY` | Deezer API key (if required) | - |
 
