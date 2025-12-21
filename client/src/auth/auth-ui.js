@@ -35,7 +35,8 @@ export function initAuthUI() {
     regPassword: document.getElementById('reg-password')
   };
 
-  if (!elements.authBtn) return;
+  // if loginBtn or userProfileBtn not found, exit
+  if (!elements.loginBtn && !elements.userProfileBtn) return;
 
   // Check login status on load
   checkLoginStatus();
