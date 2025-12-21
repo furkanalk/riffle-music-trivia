@@ -166,6 +166,10 @@ export function initAuthUI() {
     if (user && token) {
       updateUI(user);
     }
+    else {
+      // Back to guest mode if token/user not found
+      showGuestMode();
+    }
   }
 
   // Update UI after login
