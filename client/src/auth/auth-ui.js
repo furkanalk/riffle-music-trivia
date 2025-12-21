@@ -252,7 +252,6 @@ export function initAuthUI() {
   }
 
   function showLoading(isLoading) {
-    // Butonları disable etme animasyonu eklenebilir
     const btns = document.querySelectorAll('#auth-box button[type="submit"]');
     btns.forEach(btn => {
       btn.disabled = isLoading;
