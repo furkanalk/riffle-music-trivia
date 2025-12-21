@@ -348,7 +348,7 @@ _Not started. Will begin after PoC completion._
 - Architecture & Infra     ░░░░░░░░░░ 0%
 - Core Gameplay            ░░░░░░░░░░ 0%
 - UI / UX                  ░░░░░░░░░░ 0%
-- Auth & Persistence       ▓░░░░░░░░░ 40%
+- Auth & Persistence       ▓▓▓▓░░░░░░ 40%
 - Multiplayer              ░░░░░░░░░░ 0%
 ```
 
