@@ -213,100 +213,124 @@ openssl rand -hex 16
 
 ## Project Roadmap & Status
 
-**Current Phase:** Alpha (v2.1) - Implementing Authentication & Service Layer
+**Current Phase:** ```Alpha v0.4.0``` - Implementing Authentication & Service Layer
 **Architecture:** Modular Monolith (Client) + Microservices Ready (Server)
 
 ### Phase 1: Architecture & Infrastructure
-*Building a cloud-native, scalable foundation using Docker and Modern JS standards.*
+> *Building a cloud-native, scalable foundation using Docker and Modern JS standards.*
 
-- [x] **Separation of Concerns:** Split Monolithic architecture into Client (Vite) and Server (Express).
-- [x] **Client-Side Migration:** Migrated to Vite for optimized builds and asset management.
-- [x] **Modular Client Architecture:** Refactored JS into ES6 Modules (`state.js`, `module-import.js`) implementing **Single Source of Truth**.
-- [x] **Multi-Environment Setup:** Configured distinct environments (Dev, Test, Stage, Prod) via Docker.
-- [x] **Containerization:** Full Docker integration with dynamic configuration (Environment variables).
-- [x] **Database Isolation:** PostgreSQL containerized with persistent volumes.
-- [x] **Proxy Configuration:** Vite proxy setup for seamless API handling in Dev mode.
-- [x] **State Management:** Implemented centralized state handling to prevent race conditions and circular dependencies.
+- [x] Separation of Concerns: Split Monolithic architecture into Client (Vite) and Server (Express).  
+- [x] Client-Side Migration: Migrated to Vite for optimized builds and asset management.  
+- [x] Modular Client Architecture: Refactored JS into ES6 Modules (state.js, module-import.js) implementing Single Source of Truth.  
+- [x] Multi-Environment Setup: Configured distinct environments (Dev, Test, Stage, Prod) via Docker.  
+- [x] Containerization: Full Docker integration with dynamic configuration (Environment variables).  
+- [x] Database Isolation: PostgreSQL containerized with persistent volumes.  
+- [x] Proxy Configuration: Vite proxy setup for seamless API handling in Dev mode.  
+- [x] State Management: Implemented centralized state handling to prevent race conditions and circular dependencies.  
 
 ### Phase 2: Core Gameplay & UI
-*Polishing the user experience and game mechanics.*
+> *Polishing the user experience and game mechanics.*
 
-- [ ] **Game Mechanics:**
-  - [x] Timer bar & Visualizer integration.
-  - [x] Logic implementation for unique song playback per session.
-  - [x] Score & Streak display improvements.
-  - [x] Marathon Mode (Unlimited rounds + Lives system).
-  - [x] Continuous audio playback during answer selection.
-  - [ ] Scoreboard
-    - [x] Show points and user names per round.
-    - [ ] Better visuals.
-  - [ ] Endgame screen.
-- [ ] **Category System:**
-  - [x] Dynamic filtering logic.
-  - [ ] Album covers hovering in the background.
-    - [x] Placeholder.
-      - [ ] Replace the placeholders with real covers.
-  - [x] Horizontal scrolling categories with navigation controls.
-  - [x] "Double Toggle" prevention logic.
-  - [ ] Live Selection Summary Panel.
-    - [x] Functionality.
-    - [ ] Compatible with smaller screens.
-  - [ ] Avatar Selection UI.
-    - [x] Placeholder added.
-      - [ ] Replace it with real avatar created.
-    - [ ] User friendly UI location.
-- [ ] **Chat System:**
-  - [ ] Chat Panel for users to chat with each other.
-  - [ ] Invite to lobby section.
-    - [ ] Link creation. 
-- [x] **UI/UX Polish:**
-  - [x] Animations for filtering and selection.
-  - [x] Audio visualizer integration.
-  - [x] Auto-fetching album covers & duration bars.
-  - [x] Tabbed Interface (Settings vs Chat).
-  - [x] Codebase refactoring and English localization.
+- [ ] Game Mechanics:
+  - [ ] Timer bar & Visualizer integration.  
+  - [x] Logic implementation for unique song playback per session.  
+  - [x] Score & Streak display improvements.  
+  - [x] Marathon Mode (Unlimited rounds + Lives system).  
+  - [x] Continuous audio playback during answer selection.  
+
+- [ ] Smart Answer Algorithm:
+  - [ ] Prevent obvious/easy wrong answers (e.g., Pop options in Metal category).  
+  - [ ] Context-aware option generation.  
+
+- [ ] Data Integrity:
+  - [ ] Curate valid playlists (Filter out intros, covers, or wrong metadata).  
+  - [ ] Fix "wrong song playing" issues.  
+
+- [ ] Visual Progression:
+  - [ ] Dynamic Progress Indicator (Bar or Steps) showing round progression.  
+  - [ ] Enhanced Particle Effects for correct answers (More "juicy" visuals).  
+
+- [ ] Scoreboard & Endgame:
+  - [x] Show points and user names per round.  
+  - [ ] Endgame Screen: Comprehensive summary, high score comparison, "Play Again" flow.  
+  - [ ] Visual polish for the scoreboard.  
+
+- [ ] Navigation & Landing:
+  - [ ] Main Menu / Landing Page:  
+    - [ ] Create a dedicated entry screen (Logo, Play Button, Video Background maybe).  
+    - [ ] "About Us / Donate" section.  
+    - [ ] Settings shortcut.  
+
+- [ ] Category System:
+  - [x] Dynamic filtering logic.  
+  - [ ] Album covers hovering in the background (Replace placeholders).  
+  - [x] Horizontal scrolling categories with navigation controls.  
+  - [x] "Double Toggle" prevention logic.  
+  - [ ] Live Selection Summary Panel (Mobile compatibility pending).  
+  - [ ] Avatar Selection UI (Replace placeholders with real assets).  
+
+- [ ] Chat System:
+  - [ ] Chat Panel for users to chat with each other.  
+  - [ ] Invite to lobby section (Link creation).  
+
+- [ ] UI/UX Polish:
+  - [x] Animations for filtering and selection.  
+  - [x] Audio visualizer integration.  
+  - [x] Auto-fetching album covers & duration bars.  
+  - [x] Tabbed Interface (Settings vs Chat).  
+  - [x] Codebase refactoring and English localization.  
 
 ### Phase 3: Identity & Data Layer
-*Connecting the Frontend Logic to Persistent Storage.*
+> *Connecting the Frontend Logic to Persistent Storage.*
 
-- [ ] **User Authentication:**
-  - [x] **UI:** Login/Register Modal & Button implementation.
-  - [x] **Logic:** Implement JWT (JSON Web Token) handling.
-  - [x] **Security:** BCrypt password hashing & Salt integration.
-  - [x] **Session:** Secure LocalStorage/Cookie management.
-  - [x] **Database:** Automated `users` table creation script (`init.js`).
-  - [x] **API:** Auth endpoints (`/register`, `/login`) configuration.
-  - [ ] **Verification:** End-to-end testing of Auth flow.
-- [ ] **Service Layer Implementation:**
-  - [ ] **Service Factory:** Architecture to switch between Mock vs Real Data providers.
-  - [ ] **API Integration:** Connect `music.js` service to real PostgreSQL endpoints.
-- [ ] **User Profile:**
-  - [ ] Dashboard & Match History implementation.
-  - [ ] Persistent Stats (Wins, High Scores).
+- [ ] User Authentication:
+  - [x] UI: Login/Register Modal & Button implementation.  
+  - [x] Logic: Implement JWT (JSON Web Token) handling.  
+  - [x] Security: BCrypt password hashing & Salt integration.  
+  - [x] Session: Secure LocalStorage/Cookie management.  
+  - [x] Database: Automated users table creation script (init.js).  
+  - [x] API: Auth endpoints (/register, /login) configuration.  
+  - [ ] Verification: End-to-end testing of Auth flow.  
+  - [ ] Integration: Protect game routes (Guest vs User limitations).  
+
+- [ ] Service Layer Implementation:
+  - [ ] Service Factory: Architecture to switch between Mock vs Real Data providers.  
+  - [ ] API Integration: Connect music.js service to real PostgreSQL endpoints.  
+
+- [ ] User Profile:
+  - [ ] Dashboard & Match History implementation.  
+  - [ ] Persistent Stats (Wins, High Scores).  
+  - [ ] Avatar management.  
 
 ### Phase 4: Production Readiness & Security
-*Preparing the infrastructure for public deployment.*
+> *Preparing the infrastructure for public deployment.*
 
-- [ ] **Advanced Security (DevSecOps):**
-  - [ ] **API Gateway:** Implement **Kong OSS** for Rate Limiting & Auth Management.
-  - [ ] **WAF:** ModSecurity with OWASP Core Rule Set (L7 protection)
-  - [ ] **Firewall Strategy:** Configure Cloud Firewall (L3/L4) to whitelist only Gateway ports.
-- [ ] **Deployment Topology:**
-  - [ ] **Zero-Downtime:** Implement **Rolling Update** strategy using Docker Swarm or Scripted Compose.
-  - [ ] **Scalability:** Horizontal scaling of Node.js containers behind Kong Upstream.
-  - [ ] **Maintenance Mode:** Implement graceful shutdown and "Under Maintenance" API responses.
-- [ ] **Monitoring & Observability:**
-  - [ ] Integration of Prometheus & Grafana for system health metrics.
-- [ ] **CI/CD Pipeline:** Automated testing and deployment workflows.
+- [ ] Advanced Security (DevSecOps):
+  - [ ] API Gateway: Implement Kong OSS for Rate Limiting & Auth Management.  
+  - [ ] WAF: ModSecurity with OWASP Core Rule Set (L7 protection).  
+  - [ ] Firewall Strategy: Configure Cloud Firewall (L3/L4) to whitelist only Gateway ports.  
+
+- [ ] Deployment Topology:
+  - [ ] Zero-Downtime: Implement Rolling Update strategy using Docker Swarm or Scripted Compose.  
+  - [ ] Scalability: Horizontal scaling of Node.js containers behind Kong Upstream.  
+  - [ ] Maintenance Mode: Implement graceful shutdown and "Under Maintenance" API responses.  
+
+- [ ] Monitoring & Observability:
+  - [ ] Integration of Prometheus & Grafana for system health metrics.  
+  - [ ] Centralized Logging (ELK Stack or similar) for error tracking.  
+  - [ ] CI/CD Pipeline: Automated testing and deployment workflows.  
 
 ### Phase 5: Expansion
-*Platform growth and new features.*
+> *Platform growth and new features.*
 
-- [ ] **Mobile App:** Finalize Capacitor builds for iOS & Android.
-- [ ] **Multiplayer:** Real-time WebSocket integration for VS Mode.
-- [ ] **Localization:** Multi-language support structure.
+- [ ] Mobile App: Finalize Capacitor builds for iOS & Android.  
+- [ ] Multiplayer: Real-time WebSocket integration for VS Mode.  
+- [ ] Localization: Multi-language support structure.  
+- [ ] Social Features: Share scores/results on social media.  
 
 ## Progress
+
+> **Current Phase:** Building the Foundation & Architecture
 
 ### Overall Progress (PoC)
 
@@ -324,7 +348,7 @@ _Not started. Will begin after PoC completion._
 - Architecture & Infra     ░░░░░░░░░░ 0%
 - Core Gameplay            ░░░░░░░░░░ 0%
 - UI / UX                  ░░░░░░░░░░ 0%
-- Auth & Persistence       ▓░░░░░░░░░ 10%
+- Auth & Persistence       ▓░░░░░░░░░ 40%
 - Multiplayer              ░░░░░░░░░░ 0%
 ```
 
