@@ -211,8 +211,8 @@ export function initAuthUI() {
     setTimeout(() => {
       elements.authPanel.classList.add('hidden');
       clearMessage();
-      elements.formLogin.reset();
-      elements.formRegister.reset();
+      if (elements.formLogin) elements.formLogin.reset();
+      if (elements.formRegister) elements.formRegister.reset();
     }, 300);
   }
 
