@@ -75,8 +75,8 @@ export function initAuthUI() {
   }
 
   // Tab Switch
-  elements.tabLogin.addEventListener('click', () => switchAuthTab('login'));
-  elements.tabRegister.addEventListener('click', () => switchAuthTab('register'));
+  if (elements.tabLogin) elements.tabLogin.addEventListener('click', () => switchAuthTab('login'));
+  if (elements.tabRegister) elements.tabRegister.addEventListener('click', () => switchAuthTab('register'));
 
   // --- API REQUESTS ---
 
