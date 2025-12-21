@@ -141,6 +141,8 @@ export function initAuthUI() {
     });
   }
 
+  // --- LOGIC FUNCTIONS ---
+
   // Login Success
   function loginSuccess(data) {
     console.log("✅ Auth Success:", data.user.username);
@@ -149,7 +151,7 @@ export function initAuthUI() {
     localStorage.setItem('token', data.token);
     localStorage.setItem('user', JSON.stringify(data.user));
 
-    // Show success message and update UI
+    // Show success message and update UI after one second
     showMessage(`Welcome back, ${data.user.username}!`, 'success');
     setTimeout(() => {
       closePanel();
