@@ -40,10 +40,10 @@ Version      : v0.4.0-alpha
   - [Frontend Local Development](#frontend-local-development)
 - [Configuration](#configuration)
 - [Project Roadmap \& Status](#project-roadmap--status)
-  - [Phase 1: Architecture \& Infrastructure (The Foundation)](#phase-1-architecture--infrastructure-the-foundation)
-  - [Phase 2: Core Gameplay \& UI (Completed Features)](#phase-2-core-gameplay--ui-completed-features)
-  - [Phase 3: Identity \& Data Layer (Current Focus)](#phase-3-identity--data-layer-current-focus)
-  - [Phase 4: Production Readiness \& Security (Enterprise Level)](#phase-4-production-readiness--security-enterprise-level)
+  - [Phase 1: Architecture \& Infrastructure](#phase-1-architecture--infrastructure)
+  - [Phase 2: Core Gameplay \& UI](#phase-2-core-gameplay--ui)
+  - [Phase 3: Identity \& Data Layer](#phase-3-identity--data-layer)
+  - [Phase 4: Production Readiness \& Security](#phase-4-production-readiness--security)
   - [Phase 5: Expansion](#phase-5-expansion)
 - [Progress](#progress)
   - [Overall Progress (PoC)](#overall-progress-poc)
@@ -196,7 +196,7 @@ node -e "console.log(require('crypto').randomBytes(16).toString('hex'))"
 **Current Phase:** Alpha (v2.1) - Implementing Authentication & Service Layer
 **Architecture:** Modular Monolith (Client) + Microservices Ready (Server)
 
-### Phase 1: Architecture & Infrastructure (The Foundation)
+### Phase 1: Architecture & Infrastructure
 *Building a cloud-native, scalable foundation using Docker and Modern JS standards.*
 
 - [x] **Separation of Concerns:** Split Monolithic architecture into Client (Vite) and Server (Express).
@@ -208,7 +208,7 @@ node -e "console.log(require('crypto').randomBytes(16).toString('hex'))"
 - [x] **Proxy Configuration:** Vite proxy setup for seamless API handling in Dev mode.
 - [x] **State Management:** Implemented centralized state handling to prevent race conditions and circular dependencies.
 
-### Phase 2: Core Gameplay & UI (Completed Features)
+### Phase 2: Core Gameplay & UI
 *Polishing the user experience and game mechanics.*
 
 - [x] **Game Mechanics:**
@@ -230,7 +230,7 @@ node -e "console.log(require('crypto').randomBytes(16).toString('hex'))"
   - [x] Tabbed Interface (Settings vs Chat).
   - [x] Codebase refactoring and English localization.
 
-### Phase 3: Identity & Data Layer (Current Focus)
+### Phase 3: Identity & Data Layer
 *Connecting the Frontend Logic to Persistent Storage.*
 
 - [ ] **User Authentication:**
@@ -245,12 +245,12 @@ node -e "console.log(require('crypto').randomBytes(16).toString('hex'))"
   - [ ] Dashboard & Match History implementation.
   - [ ] Persistent Stats (Wins, High Scores).
 
-### Phase 4: Production Readiness & Security (Enterprise Level)
+### Phase 4: Production Readiness & Security
 *Preparing the infrastructure for public deployment.*
 
 - [ ] **Advanced Security (DevSecOps):**
   - [ ] **API Gateway:** Implement **Kong OSS** for Rate Limiting & Auth Management.
-  - [ ] **WAF:** Evaluate **Wallarm** or ModSecurity for L7 protection.
+  - [ ] **WAF:** ModSecurity with OWASP Core Rule Set (L7 protection)
   - [ ] **Firewall Strategy:** Configure Cloud Firewall (L3/L4) to whitelist only Gateway ports.
 - [ ] **Deployment Topology:**
   - [ ] **Zero-Downtime:** Implement **Rolling Update** strategy using Docker Swarm or Scripted Compose.
