@@ -45,7 +45,9 @@ Version      : v0.4.0-alpha
   - [Phase 3: Identity \& Data Layer (Current Focus)](#phase-3-identity--data-layer-current-focus)
   - [Phase 4: Production Readiness \& Security (Enterprise Level)](#phase-4-production-readiness--security-enterprise-level)
   - [Phase 5: Expansion](#phase-5-expansion)
-- [Overall Progress (PoC)](#overall-progress-poc)
+- [Progress](#progress)
+  - [Overall Progress (PoC)](#overall-progress-poc)
+  - [Development Progress](#development-progress)
 - [License](#license)
 
 ## Features
@@ -265,12 +267,24 @@ node -e "console.log(require('crypto').randomBytes(16).toString('hex'))"
 - [ ] **Multiplayer:** Real-time WebSocket integration for VS Mode.
 - [ ] **Localization:** Multi-language support structure.
 
-## Overall Progress (PoC)
+## Progress
+
+### Overall Progress (PoC)
 
 ```
 - Architecture & Infra     ▓▓▓▓▓▓▓░░░ 60%
 - Core Gameplay            ▓▓▓▓▓░░░░░ 50%
 - UI / UX                  ▓▓▓▓▓░░░░░ 50%
+```
+
+### Development Progress
+
+_Not started. Will begin after PoC completion._
+
+```
+- Architecture & Infra     ░░░░░░░░░░ 0%
+- Core Gameplay            ░░░░░░░░░░ 0%
+- UI / UX                  ░░░░░░░░░░ 0%
 - Auth & Persistence       ▓░░░░░░░░░ 10%
 - Multiplayer              ░░░░░░░░░░ 0%
 ```
