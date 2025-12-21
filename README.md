@@ -35,10 +35,10 @@ Version      : v0.4.0-alpha
 - [Technical Architecture](#technical-architecture)
   - [Technologies Used](#technologies-used)
   - [Backend API Endpoints](#backend-api-endpoints)
-    - [Music Data (Active)](#music-data-active)
-    - [Authentication (Implemented - Ready for Testing)](#authentication-implemented---ready-for-testing)
-    - [Game Logic (Planned)](#game-logic-planned)
-    - [System \& Infrastructure (Active)](#system--infrastructure-active)
+    - [1. Music Data (Active)](#1-music-data-active)
+    - [2. Authentication (Implemented - Ready for Testing)](#2-authentication-implemented---ready-for-testing)
+    - [3. Game Logic (Planned)](#3-game-logic-planned)
+    - [4. System \& Infrastructure (Active)](#4-system--infrastructure-active)
 - [Project Structure](#project-structure)
 - [Installation \& Setup](#installation--setup)
   - [Local Development](#local-development)
@@ -80,20 +80,20 @@ Version      : v0.4.0-alpha
 
 ### Backend API Endpoints
 
-####  Music Data (Active)
+####  1. Music Data (Active)
 * `GET /api/tracks/playlist/:id/tracks` - Retrieve tracks from a specific playlist.
 * `GET /api/tracks/track/:id` - Retrieve single track information.
 
-#### Authentication (Implemented - Ready for Testing)
+#### 2. Authentication (Implemented - Ready for Testing)
 * `POST /api/auth/register` - Register a new user and return JWT.
 * `POST /api/auth/login` - Authenticate user and return JWT.
 
-#### Game Logic (Planned)
+#### 3. Game Logic (Planned)
 * `POST /api/game/create` - Initialize a new game session.
 * `GET /api/game/:id` - Retrieve current game state/score.
 * `POST /api/game/:id/answer` - Submit an answer for server-side validation.
 
-#### System & Infrastructure (Active)
+#### 4. System & Infrastructure (Active)
 * `GET /health` - Health check for Docker/Uptime monitoring.
 * `GET /secure-data` - API Key validation test endpoint.
 
