@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import { query } from '../config/db.js';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'riffe_dev_jwt_secret';
+const TOKEN_EXPIRES_IN = process.env.TOKEN_EXPIRES_IN || '1d';
 
 // --- REGISTER ---
 export const register = async (req, res) => {
@@ -32,7 +33,7 @@ export const register = async (req, res) => {
 
     // 5. Create a token (Auto-login)
     // Keep newUser.rows[0].id for registered user ID
-    const token = jwt.sign({ id: newUser.rows[0].id }, JWT_SECRET, { expiresIn: TOKEN_EXPIRES_IN || '1d' });
+    const token = jwt.sign({ id: newUser.rows[0].id }, JWT_SECRET, { expiresIn: TOKEN_EXPIRES_IN });
 
     res.status(201).json({
         message: 'User registered successfully!',
@@ -68,7 +69,7 @@ export const login = async (req, res) => {
 
     // Create JWT token
     // Keep user.id for logged in user ID
-    const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: TOKEN_EXPIRES_IN || '1d' });
+    const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: TOKEN_EXPIRES_IN });
 
     // Respond (excluding password)
     delete user.password_hash;
