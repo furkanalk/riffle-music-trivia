@@ -158,7 +158,7 @@ npm run dev
 cp server/config/.env.example server/config/.env.dev
 
 
-# Run with Docker Compose
+# Run with Docker Compose (use --build for the first time)
 # Development environment
 docker-compose --env-file ./server/config/.env.dev -f docker-compose-db.yaml -f docker-compose-app.yaml up --build
 
