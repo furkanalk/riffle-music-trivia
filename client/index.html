@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Riffle</title>
   <!-- Favicon -->
   <link rel="icon" type="image/png" sizes="32x32" href="./src/img/favicon/favicon-32x32.png">
@@ -12,12 +13,15 @@
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet" />
   <style>
-    body { font-family: 'Montserrat', sans-serif; }
+    body {
+      font-family: 'Montserrat', sans-serif;
+    }
   </style>
   <link rel="stylesheet" href="./src/css/main-menu-responsive.css" />
 </head>
+
 <body class="bg-gradient-to-br from-gray-900 via-purple-900 to-black relative overflow-x-hidden">
 
   <!-- Language selector -->
@@ -29,27 +33,36 @@
   </div>
 
   <!-- Auth Buttons -->
-  <div class="absolute top-2 inset-x-0 flex flex-col xs:flex-row items-center justify-center z-20 gap-2 xs:gap-4 md:top-4 md:flex-row pointer-events-none">
+  <div
+    class="absolute top-2 inset-x-0 flex flex-col xs:flex-row items-center justify-center z-20 gap-2 xs:gap-4 md:top-4 md:flex-row pointer-events-none">
     <!-- Guest Buttons -->
     <div id="guest-buttons" class="flex gap-2 pointer-events-auto transition-opacity duration-300">
-        <button id="login-btn" class="py-1.5 px-4 md:py-2 md:px-6 bg-white text-gray-900 hover:bg-gray-100 rounded-lg font-semibold transition text-sm md:text-base w-32 md:w-auto shadow-lg">Login</button>
-        <button id="signup-btn" class="py-1.5 px-4 md:py-2 md:px-6 bg-purple-600 text-white hover:bg-purple-700 rounded-lg font-semibold transition text-sm md:text-base w-32 md:w-auto shadow-lg">Sign Up</button>
+      <button id="login-btn"
+        class="py-1.5 px-4 md:py-2 md:px-6 bg-white text-gray-900 hover:bg-gray-100 rounded-lg font-semibold transition text-sm md:text-base w-32 md:w-auto shadow-lg">Login</button>
+      <button id="signup-btn"
+        class="py-1.5 px-4 md:py-2 md:px-6 bg-purple-600 text-white hover:bg-purple-700 rounded-lg font-semibold transition text-sm md:text-base w-32 md:w-auto shadow-lg">Sign
+        Up</button>
     </div>
     <!-- User Profile Button -->
-    <button id="user-profile-btn" class="hidden pointer-events-auto glass-panel px-6 py-2 rounded-full text-white font-bold hover:bg-purple-600 transition-all duration-300 flex items-center gap-2 group shadow-purple-500/50 shadow-lg">
-        <span id="user-display-name">Guest</span>
-        <div class="w-8 h-8 rounded-full bg-purple-900 border-2 border-purple-500 flex items-center justify-center overflow-hidden">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-300 group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-            </svg>
-        </div>
+    <button id="user-profile-btn"
+      class="hidden pointer-events-auto glass-panel px-6 py-2 rounded-full text-white font-bold hover:bg-purple-600 transition-all duration-300 flex items-center gap-2 group shadow-purple-500/50 shadow-lg">
+      <span id="user-display-name">Guest</span>
+      <div
+        class="w-8 h-8 rounded-full bg-purple-900 border-2 border-purple-500 flex items-center justify-center overflow-hidden">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-300 group-hover:text-white transition-colors"
+          fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+        </svg>
+      </div>
     </button>
 
   </div>
 
   <!-- Main Menu Cards -->
   <main class="relative z-10 pt-16 md:pt-28 px-4 sm:px-6 md:px-8 lg:px-16 pb-6 md:pb-10 flex flex-col items-center">
-    <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white text-center mb-4 md:mb-10 drop-shadow-lg">Riffle</h1>
+    <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white text-center mb-4 md:mb-10 drop-shadow-lg">
+      Riffle</h1>
     <div class="main-menu-cards w-full flex flex-col gap-6 sm:gap-8 md:gap-10 lg:gap-12">
 
       <!-- Marathon Mode -->
@@ -61,18 +74,23 @@
                   hover:ring-4 hover:ring-purple-400/60
                   transition-all duration-300 backdrop-blur-[2px]">
         <a href="./categories.html?mode=marathon" class="flex-1 flex justify-center items-center mb-4 md:mb-0">
-          <div class="relative w-full h-40 sm:h-48 md:h-64 lg:h-64 xl:h-72 flex items-center justify-center overflow-hidden rounded-xl shadow-lg">
+          <div
+            class="relative w-full h-40 sm:h-48 md:h-64 lg:h-64 xl:h-72 flex items-center justify-center overflow-hidden rounded-xl shadow-lg">
             <img src="./src/img/modes/marathon/icon.png" alt="Marathon"
-                 class="w-full h-full object-cover transform scale-105 hover:scale-110 transition-transform duration-300 drop-shadow-2xl marathon-image"/>
-            <video src="./src/img/modes/marathon/preview.mp4" class="marathon hover-video absolute inset-0 hidden scale-125"
-                   muted loop preload="metadata" style="object-fit: cover; object-position: center; width: 120%; height: 120%; left: 0; top: 0;" playsinline></video>
+              class="w-full h-full object-cover transform scale-105 hover:scale-110 transition-transform duration-300 drop-shadow-2xl marathon-image" />
+            <video src="./src/img/modes/marathon/preview.mp4"
+              class="marathon hover-video absolute inset-0 hidden scale-125" muted loop preload="metadata"
+              style="object-fit: cover; object-position: center; width: 120%; height: 120%; left: 0; top: 0;"
+              playsinline></video>
             <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
           </div>
         </a>
-        <div class="flex-1 flex flex-col justify-center bg-gradient-to-br from-purple-900/80 to-black/80 p-4 md:p-6 lg:p-6 text-white/90">
+        <div
+          class="flex-1 flex flex-col justify-center bg-gradient-to-br from-purple-900/80 to-black/80 p-4 md:p-6 lg:p-6 text-white/90">
           <h3 class="text-lg sm:text-xl md:text-2xl font-semibold mb-2 text-purple-200">Marathon Mode</h3>
           <p class="text-sm sm:text-base md:text-lg leading-relaxed">
-            An endless music journey! Grow your score with every correct guess, lose lives when you go wrong. Let's see how long you can survive!
+            An endless music journey! Grow your score with every correct guess, lose lives when you go wrong. Let's see
+            how long you can survive!
           </p>
         </div>
       </div>
@@ -86,15 +104,17 @@
                   hover:ring-4 hover:ring-blue-400/60
                   transition-all duration-300 backdrop-blur-[2px]">
         <a href="./categories.html?mode=coop" class="flex-1 flex justify-center items-center mb-4 md:mb-0">
-          <div class="relative w-full h-40 sm:h-48 md:h-56 lg:h-64 xl:h-72 flex items-center justify-center overflow-hidden rounded-xl shadow-lg">
+          <div
+            class="relative w-full h-40 sm:h-48 md:h-56 lg:h-64 xl:h-72 flex items-center justify-center overflow-hidden rounded-xl shadow-lg">
             <img src="./src/img/modes/coop/icon.png" alt="Coop"
-                 class="w-full h-full object-cover transform scale-105 hover:scale-110 transition-transform duration-300 drop-shadow-2xl coop-image"/>
-            <video src="./src/img/modes/coop/preview.mp4" class="coop hover-video absolute inset-0 hidden"
-                   muted loop preload="metadata" style="object-fit: cover; object-position: center;" playsinline></video>
+              class="w-full h-full object-cover transform scale-105 hover:scale-110 transition-transform duration-300 drop-shadow-2xl coop-image" />
+            <video src="./src/img/modes/coop/preview.mp4" class="coop hover-video absolute inset-0 hidden" muted loop
+              preload="metadata" style="object-fit: cover; object-position: center;" playsinline></video>
             <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
           </div>
         </a>
-        <div class="flex-1 flex flex-col justify-center bg-gradient-to-br from-blue-900/80 to-black/80 p-4 md:p-6 lg:p-6 text-white/90">
+        <div
+          class="flex-1 flex flex-col justify-center bg-gradient-to-br from-blue-900/80 to-black/80 p-4 md:p-6 lg:p-6 text-white/90">
           <h3 class="text-lg sm:text-xl md:text-2xl font-semibold mb-2 text-blue-200">Coop Mode</h3>
           <p class="text-sm sm:text-base md:text-lg leading-relaxed">
             Team up with friends and guess songs together! Collaborate to reach the highest score.
@@ -111,15 +131,17 @@
                   hover:ring-4 hover:ring-pink-400/60
                   transition-all duration-300 backdrop-blur-[2px]">
         <a href="./categories.html?mode=versus" class="flex-1 flex justify-center items-center mb-4 md:mb-0">
-          <div class="relative w-full h-40 sm:h-48 md:h-56 lg:h-64 xl:h-72 flex items-center justify-center overflow-hidden rounded-xl shadow-lg">
+          <div
+            class="relative w-full h-40 sm:h-48 md:h-56 lg:h-64 xl:h-72 flex items-center justify-center overflow-hidden rounded-xl shadow-lg">
             <img src="./src/img/modes/solo/icons.png" alt="Solo VS"
-                 class="w-full h-full object-cover transform scale-105 hover:scale-110 transition-transform duration-300 drop-shadow-2xl solo-image"/>
-            <video src="./src/img/modes/solo/preview.mp4" class="solo hover-video absolute inset-0 hidden"
-                   muted loop preload="metadata" style="object-fit: cover; object-position: center;" playsinline></video>
+              class="w-full h-full object-cover transform scale-105 hover:scale-110 transition-transform duration-300 drop-shadow-2xl solo-image" />
+            <video src="./src/img/modes/solo/preview.mp4" class="solo hover-video absolute inset-0 hidden" muted loop
+              preload="metadata" style="object-fit: cover; object-position: center;" playsinline></video>
             <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
           </div>
         </a>
-        <div class="flex-1 flex flex-col justify-center bg-gradient-to-br from-pink-900/80 to-black/80 p-4 md:p-6 lg:p-6 text-white/90">
+        <div
+          class="flex-1 flex flex-col justify-center bg-gradient-to-br from-pink-900/80 to-black/80 p-4 md:p-6 lg:p-6 text-white/90">
           <h3 class="text-lg sm:text-xl md:text-2xl font-semibold mb-2 text-pink-200">Solo VS Mode</h3>
           <p class="text-sm sm:text-base md:text-lg leading-relaxed">
             Compete solo or take turns with friends to beat each other’s high scores.
@@ -136,13 +158,15 @@
                   hover:ring-4 hover:ring-yellow-400/60
                   transition-all duration-300 backdrop-blur-[2px]">
         <a href="./categories.html?mode=team" class="flex-1 flex justify-center items-center mb-4 md:mb-0">
-          <div class="relative w-full h-40 sm:h-48 md:h-56 lg:h-64 xl:h-72 flex items-center justify-center overflow-hidden rounded-xl shadow-lg">
+          <div
+            class="relative w-full h-40 sm:h-48 md:h-56 lg:h-64 xl:h-72 flex items-center justify-center overflow-hidden rounded-xl shadow-lg">
             <img src="./src/img/modes/team/icon.png" alt="Team VS"
-                 class="w-full h-full object-cover transform scale-105 hover:scale-110 transition-transform duration-300 drop-shadow-2xl"/>
+              class="w-full h-full object-cover transform scale-105 hover:scale-110 transition-transform duration-300 drop-shadow-2xl" />
             <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
           </div>
         </a>
-        <div class="flex-1 flex flex-col justify-center bg-gradient-to-br from-yellow-900/80 to-black/80 p-4 md:p-6 lg:p-6 text-white/90">
+        <div
+          class="flex-1 flex flex-col justify-center bg-gradient-to-br from-yellow-900/80 to-black/80 p-4 md:p-6 lg:p-6 text-white/90">
           <h3 class="text-lg sm:text-xl md:text-2xl font-semibold mb-2 text-yellow-200">Team VS Mode</h3>
           <p class="text-sm sm:text-base md:text-lg leading-relaxed">
             Choose your team and face off! The team with the most points wins.
@@ -159,13 +183,15 @@
                   hover:ring-4 hover:ring-fuchsia-400/60
                   transition-all duration-300 backdrop-blur-[2px]">
         <a href="./categories.html?mode=chaos" class="flex-1 flex justify-center items-center mb-4 md:mb-0">
-          <div class="relative w-full h-40 sm:h-48 md:h-56 lg:h-64 xl:h-72 flex items-center justify-center overflow-hidden rounded-xl shadow-lg">
+          <div
+            class="relative w-full h-40 sm:h-48 md:h-56 lg:h-64 xl:h-72 flex items-center justify-center overflow-hidden rounded-xl shadow-lg">
             <img src="https://via.placeholder.com/400x250" alt="Chaos"
-                 class="w-full h-full object-cover transform scale-105 hover:scale-110 transition-transform duration-300 drop-shadow-2xl"/>
+              class="w-full h-full object-cover transform scale-105 hover:scale-110 transition-transform duration-300 drop-shadow-2xl" />
             <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
           </div>
         </a>
-        <div class="flex-1 flex flex-col justify-center bg-gradient-to-br from-fuchsia-900/80 to-black/80 p-4 md:p-6 lg:p-6 text-white/90">
+        <div
+          class="flex-1 flex flex-col justify-center bg-gradient-to-br from-fuchsia-900/80 to-black/80 p-4 md:p-6 lg:p-6 text-white/90">
           <h3 class="text-lg sm:text-xl md:text-2xl font-semibold mb-2 text-fuchsia-200">Chaos Mode</h3>
           <p class="text-sm sm:text-base md:text-lg leading-relaxed">
             Anything goes in this surprise-packed mode! No rules, just chaos and fun.
@@ -182,15 +208,17 @@
                   hover:ring-4 hover:ring-green-400/60
                   transition-all duration-300 backdrop-blur-[2px]">
         <a href="./categories.html?mode=custom" class="flex-1 flex justify-center items-center mb-4 md:mb-0">
-          <div class="relative w-full h-40 sm:h-48 md:h-56 lg:h-64 xl:h-72 flex items-center justify-center overflow-hidden rounded-xl shadow-lg">
+          <div
+            class="relative w-full h-40 sm:h-48 md:h-56 lg:h-64 xl:h-72 flex items-center justify-center overflow-hidden rounded-xl shadow-lg">
             <img src="./src/img/modes/custom/icon.png" alt="Custom"
-                 class="w-full h-full object-cover transform scale-105 hover:scale-110 transition-transform duration-300 drop-shadow-2xl custom-image"/>
-            <video src="./src/img/modes/custom/preview.mp4" class="custom hover-video absolute inset-0 hidden"
-                   muted loop preload="metadata" style="object-fit: cover; object-position: center;" playsinline></video>
+              class="w-full h-full object-cover transform scale-105 hover:scale-110 transition-transform duration-300 drop-shadow-2xl custom-image" />
+            <video src="./src/img/modes/custom/preview.mp4" class="custom hover-video absolute inset-0 hidden" muted
+              loop preload="metadata" style="object-fit: cover; object-position: center;" playsinline></video>
             <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
           </div>
         </a>
-        <div class="flex-1 flex flex-col justify-center bg-gradient-to-br from-green-900/80 to-black/80 p-4 md:p-6 lg:p-6 text-white/90">
+        <div
+          class="flex-1 flex flex-col justify-center bg-gradient-to-br from-green-900/80 to-black/80 p-4 md:p-6 lg:p-6 text-white/90">
           <h3 class="text-lg sm:text-xl md:text-2xl font-semibold mb-2 text-green-200">Custom Mode</h3>
           <p class="text-sm sm:text-base md:text-lg leading-relaxed">
             Set your own rules! Create a custom game, share with friends, and enjoy a unique experience.
@@ -201,8 +229,11 @@
   </main>
 
   <!-- Authentication Panel -->
-  <div id="auth-panel" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black bg-opacity-80 backdrop-blur-sm transition-all duration-300">
-    <div class="glass-panel w-full max-w-md p-8 rounded-2xl relative transform transition-all duration-300 scale-95 opacity-0" id="auth-box">
+  <div id="auth-panel"
+    class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black bg-opacity-80 backdrop-blur-sm transition-all duration-300">
+    <div
+      class="glass-panel w-full max-w-md p-8 rounded-2xl relative transform transition-all duration-300 scale-95 opacity-0"
+      id="auth-box">
       <button id="close-auth" class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
@@ -210,20 +241,27 @@
       </button>
 
       <div class="flex border-b border-purple-800 mb-6">
-        <button id="tab-login" class="flex-1 py-3 text-center text-white font-bold border-b-2 border-purple-500 transition-colors">LOGIN</button>
-        <button id="tab-register" class="flex-1 py-3 text-center text-gray-400 font-bold border-b-2 border-transparent hover:text-white transition-colors">REGISTER</button>
+        <button id="tab-login"
+          class="flex-1 py-3 text-center text-white font-bold border-b-2 border-purple-500 transition-colors">LOGIN</button>
+        <button id="tab-register"
+          class="flex-1 py-3 text-center text-gray-400 font-bold border-b-2 border-transparent hover:text-white transition-colors">REGISTER</button>
       </div>
 
       <form id="form-login" class="space-y-4">
         <div>
           <label class="block text-purple-300 text-sm font-bold mb-2">Email or Username</label>
-          <input type="text" id="login-identifier" class="w-full bg-black bg-opacity-50 border border-purple-900 rounded-lg py-3 px-4 text-white focus:outline-none focus:border-purple-500 transition-colors" placeholder="Enter your username">
+          <input type="text" id="login-identifier"
+            class="w-full bg-black bg-opacity-50 border border-purple-900 rounded-lg py-3 px-4 text-white focus:outline-none focus:border-purple-500 transition-colors"
+            placeholder="Enter your username">
         </div>
         <div>
           <label class="block text-purple-300 text-sm font-bold mb-2">Password</label>
-          <input type="password" id="login-password" class="w-full bg-black bg-opacity-50 border border-purple-900 rounded-lg py-3 px-4 text-white focus:outline-none focus:border-purple-500 transition-colors" placeholder="••••••••">
+          <input type="password" id="login-password"
+            class="w-full bg-black bg-opacity-50 border border-purple-900 rounded-lg py-3 px-4 text-white focus:outline-none focus:border-purple-500 transition-colors"
+            placeholder="••••••••">
         </div>
-        <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:shadow-lg hover:shadow-purple-500/50 transform hover:-translate-y-1 transition-all duration-200">
+        <button type="submit" id="btn-login-submit"
+          class="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white font-bold py-3 px-4 rounded-lg hover:shadow-lg hover:shadow-purple-500/50 transform hover:-translate-y-1 transition-all duration-200">
           ENTER THE ARENA
         </button>
       </form>
@@ -231,21 +269,28 @@
       <form id="form-register" class="space-y-4 hidden">
         <div>
           <label class="block text-purple-300 text-sm font-bold mb-2">Username</label>
-          <input type="text" id="reg-username" class="w-full bg-black bg-opacity-50 border border-purple-900 rounded-lg py-3 px-4 text-white focus:outline-none focus:border-purple-500 transition-colors" placeholder="Choose a rockstar name">
+          <input type="text" id="reg-username"
+            class="w-full bg-black bg-opacity-50 border border-purple-900 rounded-lg py-3 px-4 text-white focus:outline-none focus:border-purple-500 transition-colors"
+            placeholder="Choose a rockstar name">
         </div>
         <div>
           <label class="block text-purple-300 text-sm font-bold mb-2">Email</label>
-          <input type="email" id="reg-email" class="w-full bg-black bg-opacity-50 border border-purple-900 rounded-lg py-3 px-4 text-white focus:outline-none focus:border-purple-500 transition-colors" placeholder="Valid email address">
+          <input type="email" id="reg-email"
+            class="w-full bg-black bg-opacity-50 border border-purple-900 rounded-lg py-3 px-4 text-white focus:outline-none focus:border-purple-500 transition-colors"
+            placeholder="Valid email address">
         </div>
         <div>
           <label class="block text-purple-300 text-sm font-bold mb-2">Password</label>
-          <input type="password" id="reg-password" class="w-full bg-black bg-opacity-50 border border-purple-900 rounded-lg py-3 px-4 text-white focus:outline-none focus:border-purple-500 transition-colors" placeholder="Make it strong">
+          <input type="password" id="reg-password"
+            class="w-full bg-black bg-opacity-50 border border-purple-900 rounded-lg py-3 px-4 text-white focus:outline-none focus:border-purple-500 transition-colors"
+            placeholder="Make it strong">
         </div>
-        <button type="submit" class="w-full bg-gradient-to-r from-pink-600 to-purple-600 text-white font-bold py-3 px-4 rounded-lg hover:shadow-lg hover:shadow-pink-500/50 transform hover:-translate-y-1 transition-all duration-200">
+        <button type="submit" id="btn-register-submit"
+          class="w-full bg-gradient-to-r from-pink-600 to-purple-600 text-white font-bold py-3 px-4 rounded-lg hover:shadow-lg hover:shadow-pink-500/50 transform hover:-translate-y-1 transition-all duration-200">
           CREATE LEGEND
         </button>
       </form>
-      
+
       <div id="auth-message" class="mt-4 text-center text-sm font-semibold hidden"></div>
     </div>
   </div>
@@ -254,4 +299,5 @@
   <script type="module" src="./src/menu/card-videos.js"></script>
   <script type="module" src="./src/main.js"></script>
 </body>
+
 </html>
