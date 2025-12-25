@@ -291,6 +291,8 @@ openssl rand -hex 16
   - [x] Database: Automated users table creation script (init.js).  
   - [x] API: Auth endpoints (/register, /login) configuration.  
   - [ ] Verification: End-to-end testing of Auth flow.  
+    - [ ] UI transition needs change.
+    - [ ] Better error displays.
   - [ ] Integration: Protect game routes (Guest vs User limitations).  
 
 - [ ] Service Layer Implementation:
@@ -330,7 +332,7 @@ openssl rand -hex 16
 
 ## Progress
 
-- **Current Phase:**  ```Phase 3: Identity & Data Layer```
+- **Current Phase:**  `Phase 3: Identity & Data Layer`
 - **Focus:** Connecting Frontend Auth to Backend API
 
 ### Overall Progress (PoC)
