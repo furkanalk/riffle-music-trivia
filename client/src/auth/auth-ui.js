@@ -88,7 +88,6 @@ export function initAuthUI() {
   // Registration rules and regex patterns
   const rules = {
     username: {
-      // Regex: Sadece harf, sayı ve alt tire.
       check: (val) => /^[a-zA-Z0-9_]+$/.test(val),
       msg: "Only letters, numbers, and underscores allowed (No spaces).",
     },
@@ -101,7 +100,7 @@ export function initAuthUI() {
       msg: "Please enter a valid email address.",
     },
     password: {
-      check: (val) => val.length >= 6,
+      check: (val) => val.length >= 6 && /^[\x21-\x7E]+$/.test(val),
       msg: "Password must be at least 6 characters long.",
     },
   };
