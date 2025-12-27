@@ -275,20 +275,25 @@ export function initAuthUI() {
 
       btns.forEach((btn) => {
         btn.disabled = isLoading;
-        btn.style.opacity = isLoading ? "0.5" : "1";
-
         if (isLoading) {
-          btn.textContent = "Processing...";
-          return;
-        }
+          btn.classList.add("opacity-75", "cursor-not-allowed");
+          btn.innerHTML = `
+                    <div class="flex items-center justify-center gap-2">
+                        <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        <span>Processing...</span>
+                    </div>
+                `;
+        } else {
+          btn.classList.remove("opacity-75", "cursor-not-allowed");
 
-        if (btn.id === "btn-login-submit") {
-          btn.textContent = "ENTER THE ARENA";
-          return;
-        }
-
-        if (btn.id === "btn-register-submit") {
-          btn.textContent = "CREATE LEGEND";
+          if (btn.id === "btn-login-submit") {
+            btn.textContent = "ENTER THE ARENA";
+          } else if (btn.id === "btn-register-submit") {
+            btn.textContent = "CREATE LEGEND";
+          }
         }
       });
     });
