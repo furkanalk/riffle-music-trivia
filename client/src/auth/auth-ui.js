@@ -83,6 +83,66 @@ export function initAuthUI() {
       switchAuthTab("register")
     );
 
+  // --- SMART VALIDATION (Live Input Check) ---
+
+  // Regex
+  const validators = {
+    username: (val) => /^[a-zA-Z0-9_]{3,20}$/.test(val),
+    email: (val) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val),
+    password: (val) => val.length >= 6,
+  };
+
+  function setupValidation(inputs, btn, validateFn) {
+    const check = () => {
+      const isValid = validateFn();
+      btn.disabled = !isValid;
+
+      if (isValid) {
+        btn.classList.remove("opacity-50", "cursor-not-allowed");
+        btn.classList.add("hover:shadow-lg", "hover:-translate-y-1");
+      } else {
+        btn.classList.add("opacity-50", "cursor-not-allowed");
+        btn.classList.remove("hover:shadow-lg", "hover:-translate-y-1");
+      }
+    };
+
+    inputs.forEach((input) => input.addEventListener("input", check));
+
+    check();
+  }
+
+  // Login Form
+  if (elements.formLogin) {
+    const inputs = [elements.loginIdentifier, elements.loginPassword];
+    const btn = document.getElementById("btn-login-submit");
+
+    const validator = () => inputs.every((i) => i.value.trim().length > 0);
+
+    if (btn) setupValidation(inputs, btn, validator);
+  }
+
+  // Register Form
+  if (elements.formRegister) {
+    const inputs = [
+      elements.regUsername,
+      elements.regEmail,
+      elements.regPassword,
+    ];
+    const btn = document.getElementById("btn-register-submit");
+
+    const validator = () => {
+      const u = elements.regUsername.value;
+      const e = elements.regEmail.value;
+      const p = elements.regPassword.value;
+
+      return (
+        validators.username(u) && validators.email(e) && validators.password(p)
+      );
+    };
+
+    if (btn) setupValidation(inputs, btn, validator);
+  }
+
   // --- API REQUESTS ---
 
   // LOGIN SUBMIT
@@ -137,7 +197,6 @@ export function initAuthUI() {
           }),
           wait(1500), // Minimum wait for UX, for safety its 1.5 seconds
         ]);
-
 
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || "Registration failed");
@@ -291,7 +350,7 @@ export function initAuthUI() {
                         <span>Processing...</span>
                     </div>
                 `;
-                return;
+        return;
       }
       btn.disabled = false;
       btn.classList.remove("opacity-75", "cursor-not-allowed");
@@ -302,46 +361,6 @@ export function initAuthUI() {
       } else if (btn.id === "btn-register-submit") {
         btn.textContent = "CREATE LEGEND";
       }
-    });
-  }
-
-  // --- LISTEN INPUT ---
-
-  const loginInputs = [elements.loginIdentifier, elements.loginPassword];
-  const loginBtn = document.getElementById("btn-login-submit");
-
-  if (loginBtn) {
-    setupValidation(loginInputs, loginBtn);
-  }
-
-  const regInputs = [
-    elements.regUsername,
-    elements.regEmail,
-    elements.regPassword,
-  ];
-  const regBtn = document.getElementById("btn-register-submit");
-
-  if (regBtn) {
-    setupValidation(regInputs, regBtn);
-  }
-
-  function setupValidation(inputs, btn) {
-    const check = () => {
-      const allFilled = inputs.every((input) => input.value.trim() !== "");
-
-      btn.disabled = !allFilled;
-
-      if (allFilled) {
-        btn.classList.remove("opacity-50", "cursor-not-allowed");
-        btn.classList.add("hover:shadow-lg", "hover:-translate-y-1");
-      } else {
-        btn.classList.add("opacity-50", "cursor-not-allowed");
-        btn.classList.remove("hover:shadow-lg", "hover:-translate-y-1");
-      }
-    };
-
-    inputs.forEach((input) => {
-      input.addEventListener("input", check);
     });
   }
 }
