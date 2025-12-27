@@ -96,7 +96,8 @@ export function initAuthUI() {
       msg: "Username must be between 3-20 characters.",
     },
     email: {
-      check: (val) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val),
+      check: (val) =>
+        /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(val),
       msg: "Please enter a valid email address.",
     },
     password: {
