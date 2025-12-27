@@ -294,6 +294,7 @@ openssl rand -hex 16
     - [x] UI transition needs change.
     - [x] Better error displays.
   - [ ] Mail confirmation
+  - [ ] Auth middleware
   - [ ] Integration: Protect game routes (Guest vs User limitations).
     - [ ] User permissions
 
