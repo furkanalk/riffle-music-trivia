@@ -298,4 +298,44 @@ export function initAuthUI() {
       });
     });
   }
+
+  // --- LISTEN INPUT ---
+
+  const loginInputs = [elements.loginIdentifier, elements.loginPassword];
+  const loginBtn = document.getElementById("btn-login-submit");
+
+  if (loginBtn) {
+    setupValidation(loginInputs, loginBtn);
+  }
+
+  const regInputs = [
+    elements.regUsername,
+    elements.regEmail,
+    elements.regPassword,
+  ];
+  const regBtn = document.getElementById("btn-register-submit");
+
+  if (regBtn) {
+    setupValidation(regInputs, regBtn);
+  }
+
+  function setupValidation(inputs, btn) {
+    const check = () => {
+      const allFilled = inputs.every((input) => input.value.trim() !== "");
+
+      btn.disabled = !allFilled;
+
+      if (allFilled) {
+        btn.classList.remove("opacity-50", "cursor-not-allowed");
+        btn.classList.add("hover:shadow-lg", "hover:-translate-y-1");
+      } else {
+        btn.classList.add("opacity-50", "cursor-not-allowed");
+        btn.classList.remove("hover:shadow-lg", "hover:-translate-y-1");
+      }
+    };
+
+    inputs.forEach((input) => {
+      input.addEventListener("input", check);
+    });
+  }
 }
