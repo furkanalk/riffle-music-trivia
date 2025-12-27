@@ -129,11 +129,15 @@ export function initAuthUI() {
       const password = elements.regPassword.value;
 
       try {
-        const res = await fetch("/api/auth/register", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ username, email, password }),
-        });
+        const [res, _] = await Promise.all([
+          fetch("/api/auth/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, email, password }),
+          }),
+          wait(1500), // Minimum wait for UX, for safety its 1.5 seconds
+        ]);
+
 
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || "Registration failed");
