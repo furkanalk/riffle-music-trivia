@@ -83,21 +83,82 @@ export function initAuthUI() {
       switchAuthTab("register")
     );
 
-  // --- SMART VALIDATION (Live Input Check) ---
+  // --- SMART VALIDATION ---
 
-  // Regex
-  const validators = {
-    username: (val) => /^[a-zA-Z0-9_]{3,20}$/.test(val),
-    email: (val) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val),
-    password: (val) => val.length >= 6,
+  // Registration rules and regex patterns
+  const rules = {
+    username: {
+      // Regex: Sadece harf, sayı ve alt tire.
+      check: (val) => /^[a-zA-Z0-9_]+$/.test(val),
+      msg: "Only letters, numbers, and underscores allowed (No spaces).",
+    },
+    usernameLength: {
+      check: (val) => val.length >= 3 && val.length <= 20,
+      msg: "Username must be between 3-20 characters.",
+    },
+    email: {
+      check: (val) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val),
+      msg: "Please enter a valid email address.",
+    },
+    password: {
+      check: (val) => val.length >= 6,
+      msg: "Password must be at least 6 characters long.",
+    },
   };
 
-  function setupValidation(inputs, btn, validateFn) {
-    const check = () => {
-      const isValid = validateFn();
-      btn.disabled = !isValid;
+  // Validation
+  function setupLiveFeedback(inputs, btn, formType) {
+    const validateAll = () => {
+      let isFormValid = true;
 
-      if (isValid) {
+      inputs.forEach((item) => {
+        const val = item.input.value;
+        const errEl = item.errorEl;
+        let isValidField = true;
+        let errorMsg = "";
+
+        if (val.trim() === "") {
+          isValidField = false;
+          if (errEl) errEl.classList.add("hidden");
+        } else {
+          if (item.type === "username") {
+            if (!rules.username.check(val)) {
+              isValidField = false;
+              errorMsg = rules.username.msg;
+            }
+            else if (!rules.usernameLength.check(val)) {
+              isValidField = false;
+              errorMsg = rules.usernameLength.msg;
+            }
+          } else if (item.type === "email") {
+            if (!rules.email.check(val)) {
+              isValidField = false;
+              errorMsg = rules.email.msg;
+            }
+          } else if (item.type === "password") {
+            if (!rules.password.check(val)) {
+              isValidField = false;
+              errorMsg = rules.password.msg;
+            }
+          }
+
+          // Show or hide error message
+          if (errEl) {
+            if (!isValidField && errorMsg) {
+              errEl.textContent = errorMsg;
+              errEl.classList.remove("hidden");
+            } else {
+              errEl.classList.add("hidden");
+            }
+          }
+        }
+
+        if (!isValidField) isFormValid = false;
+      });
+
+      // Button state
+      btn.disabled = !isFormValid;
+      if (isFormValid) {
         btn.classList.remove("opacity-50", "cursor-not-allowed");
         btn.classList.add("hover:shadow-lg", "hover:-translate-y-1");
       } else {
@@ -106,41 +167,57 @@ export function initAuthUI() {
       }
     };
 
-    inputs.forEach((input) => input.addEventListener("input", check));
-
-    check();
+    inputs.forEach((item) => {
+      item.input.addEventListener("input", validateAll);
+    });
   }
 
   // Login Form
   if (elements.formLogin) {
-    const inputs = [elements.loginIdentifier, elements.loginPassword];
     const btn = document.getElementById("btn-login-submit");
+    const inputs = [
+      { input: elements.loginIdentifier, type: "simple", errorEl: null },
+      { input: elements.loginPassword, type: "simple", errorEl: null },
+    ];
 
-    const validator = () => inputs.every((i) => i.value.trim().length > 0);
-
-    if (btn) setupValidation(inputs, btn, validator);
+    // Login specific simple check
+    const simpleCheck = () => {
+      const isValid = inputs.every((i) => i.input.value.trim() !== "");
+      btn.disabled = !isValid;
+      if (isValid) {
+        btn.classList.remove("opacity-50", "cursor-not-allowed");
+        btn.classList.add("hover:shadow-lg", "hover:-translate-y-1");
+      } else {
+        btn.classList.add("opacity-50", "cursor-not-allowed");
+        btn.classList.remove("hover:shadow-lg", "hover:-translate-y-1");
+      }
+    };
+    inputs.forEach((i) => i.input.addEventListener("input", simpleCheck));
+    simpleCheck(); // first run
   }
 
   // Register Form
   if (elements.formRegister) {
-    const inputs = [
-      elements.regUsername,
-      elements.regEmail,
-      elements.regPassword,
-    ];
     const btn = document.getElementById("btn-register-submit");
+    const inputs = [
+      {
+        input: elements.regUsername,
+        type: "username",
+        errorEl: document.getElementById("err-username"),
+      },
+      {
+        input: elements.regEmail,
+        type: "email",
+        errorEl: document.getElementById("err-email"),
+      },
+      {
+        input: elements.regPassword,
+        type: "password",
+        errorEl: document.getElementById("err-password"),
+      },
+    ];
 
-    const validator = () => {
-      const u = elements.regUsername.value;
-      const e = elements.regEmail.value;
-      const p = elements.regPassword.value;
-
-      return (
-        validators.username(u) && validators.email(e) && validators.password(p)
-      );
-    };
-
-    if (btn) setupValidation(inputs, btn, validator);
+    setupLiveFeedback(inputs, btn, "register");
   }
 
   // --- API REQUESTS ---
