@@ -267,23 +267,28 @@
       </form>
 
       <form id="form-register" class="space-y-4 hidden">
-        <div>
+        <div class="mb-4">
           <label class="block text-purple-300 text-sm font-bold mb-2">Username</label>
           <input type="text" id="reg-username"
             class="w-full bg-black bg-opacity-50 border border-purple-900 rounded-lg py-3 px-4 text-white focus:outline-none focus:border-purple-500 transition-colors"
             placeholder="Choose a rockstar name">
+          <p id="err-username" class="text-red-400 text-xs mt-1 ml-1 hidden"></p>
         </div>
-        <div>
+        
+        <div class="mb-4">
           <label class="block text-purple-300 text-sm font-bold mb-2">Email</label>
           <input type="email" id="reg-email"
             class="w-full bg-black bg-opacity-50 border border-purple-900 rounded-lg py-3 px-4 text-white focus:outline-none focus:border-purple-500 transition-colors"
             placeholder="Valid email address">
+          <p id="err-email" class="text-red-400 text-xs mt-1 ml-1 hidden"></p>
         </div>
-        <div>
+        
+        <div class="mb-6">
           <label class="block text-purple-300 text-sm font-bold mb-2">Password</label>
           <input type="password" id="reg-password"
             class="w-full bg-black bg-opacity-50 border border-purple-900 rounded-lg py-3 px-4 text-white focus:outline-none focus:border-purple-500 transition-colors"
             placeholder="Make it strong">
+          <p id="err-password" class="text-red-400 text-xs mt-1 ml-1 hidden"></p>
         </div>
         <button type="submit" id="btn-register-submit" disabled
           class="w-full bg-gradient-to-r from-pink-600 to-purple-600 text-white font-bold py-3 px-4 rounded-lg hover:shadow-lg hover:shadow-pink-500/50 transform hover:-translate-y-1 transition-all duration-200 opacity-50 cursor-not-allowed">
