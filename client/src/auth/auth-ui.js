@@ -291,16 +291,16 @@ export function initAuthUI() {
                         <span>Processing...</span>
                     </div>
                 `;
-      } else {
-        btn.disabled = false;
-        btn.classList.remove("opacity-75", "cursor-not-allowed");
-        btn.classList.add("hover:shadow-lg", "hover:-translate-y-1");
+                return;
+      }
+      btn.disabled = false;
+      btn.classList.remove("opacity-75", "cursor-not-allowed");
+      btn.classList.add("hover:shadow-lg", "hover:-translate-y-1");
 
-        if (btn.id === "btn-login-submit") {
-          btn.textContent = "ENTER THE ARENA";
-        } else if (btn.id === "btn-register-submit") {
-          btn.textContent = "CREATE LEGEND";
-        }
+      if (btn.id === "btn-login-submit") {
+        btn.textContent = "ENTER THE ARENA";
+      } else if (btn.id === "btn-register-submit") {
+        btn.textContent = "CREATE LEGEND";
       }
     });
   }
