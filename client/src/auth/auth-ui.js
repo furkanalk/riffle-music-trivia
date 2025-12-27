@@ -1,6 +1,7 @@
 export function initAuthUI() {
   console.log("🔒 Auth UI Initialized");
-
+  const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  
   const elements = {
     // Buttons Containers
     guestButtons: document.getElementById("guest-buttons"),
@@ -269,15 +270,13 @@ export function initAuthUI() {
   // Show loading state
   function showLoading(isLoading) {
     const btns = document.querySelectorAll('#auth-box button[type="submit"]');
-    btns.forEach((btn) => {
-      btn.disabled = isLoading;
-      btn.style.opacity = isLoading ? "0.5" : "1";
 
-      btns.forEach((btn) => {
-        btn.disabled = isLoading;
-        if (isLoading) {
-          btn.classList.add("opacity-75", "cursor-not-allowed");
-          btn.innerHTML = `
+    btns.forEach((btn) => {
+      if (isLoading) {
+        btn.disabled = true;
+        btn.classList.add("opacity-75", "cursor-not-allowed");
+        btn.classList.remove("opacity-50");
+        btn.innerHTML = `
                     <div class="flex items-center justify-center gap-2">
                         <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -286,16 +285,17 @@ export function initAuthUI() {
                         <span>Processing...</span>
                     </div>
                 `;
-        } else {
-          btn.classList.remove("opacity-75", "cursor-not-allowed");
+      } else {
+        btn.disabled = false;
+        btn.classList.remove("opacity-75", "cursor-not-allowed");
+        btn.classList.add("hover:shadow-lg", "hover:-translate-y-1");
 
-          if (btn.id === "btn-login-submit") {
-            btn.textContent = "ENTER THE ARENA";
-          } else if (btn.id === "btn-register-submit") {
-            btn.textContent = "CREATE LEGEND";
-          }
+        if (btn.id === "btn-login-submit") {
+          btn.textContent = "ENTER THE ARENA";
+        } else if (btn.id === "btn-register-submit") {
+          btn.textContent = "CREATE LEGEND";
         }
-      });
+      }
     });
   }
 
