@@ -172,6 +172,19 @@ export function initAuthUI() {
     });
   }
 
+  // Simple check for non-empty fields (to enable/disable submit button)
+  const simpleCheck = (btn, inputs) => {
+    const isValid = inputs.every((i) => i.input.value.trim() !== "");
+    btn.disabled = !isValid;
+    if (isValid) {
+      btn.classList.remove("opacity-50", "cursor-not-allowed");
+      btn.classList.add("hover:shadow-lg", "hover:-translate-y-1");
+    } else {
+      btn.classList.add("opacity-50", "cursor-not-allowed");
+      btn.classList.remove("hover:shadow-lg", "hover:-translate-y-1");
+    }
+  };
+  
   // Login Form
   if (elements.formLogin) {
     const btn = document.getElementById("btn-login-submit");
@@ -180,20 +193,8 @@ export function initAuthUI() {
       { input: elements.loginPassword, type: "simple", errorEl: null },
     ];
 
-    // Login specific simple check
-    const simpleCheck = () => {
-      const isValid = inputs.every((i) => i.input.value.trim() !== "");
-      btn.disabled = !isValid;
-      if (isValid) {
-        btn.classList.remove("opacity-50", "cursor-not-allowed");
-        btn.classList.add("hover:shadow-lg", "hover:-translate-y-1");
-      } else {
-        btn.classList.add("opacity-50", "cursor-not-allowed");
-        btn.classList.remove("hover:shadow-lg", "hover:-translate-y-1");
-      }
-    };
-    inputs.forEach((i) => i.input.addEventListener("input", simpleCheck));
-    simpleCheck(); // first run
+    inputs.forEach((i) => i.input.addEventListener("input", () => simpleCheck(btn, inputs)));
+    simpleCheck(btn, inputs); // first run
   }
 
   // Register Form
@@ -218,6 +219,9 @@ export function initAuthUI() {
     ];
 
     setupLiveFeedback(inputs, btn, "register");
+
+    inputs.forEach((i) => i.input.addEventListener("input", () => simpleCheck(btn, inputs)));
+    simpleCheck(btn, inputs);
   }
 
   // --- API REQUESTS ---
