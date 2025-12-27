@@ -213,7 +213,7 @@ openssl rand -hex 16
 
 ## Project Roadmap & Status
 
-- **Current Phase:** ```Alpha v0.4.5``` - Implementing Authentication & Service Layer
+- **Current Build:** ```Alpha v0.4.5```
 - **Architecture:** Modular Monolith (Client) + Microservices Ready (Server)
 
 ### Phase 1: Architecture & Infrastructure
@@ -341,7 +341,7 @@ openssl rand -hex 16
 ### Overall Progress (PoC)
 
 ```
-- Architecture & Infra     ▓▓▓▓▓▓▓▓▓░ 90% (Dev env ready, basic mechanics working)
+- Architecture & Infra     ▓▓▓▓▓▓▓▓▓░ 90% (Dev env ready, basic mechanics working, needs minor improvements)
 - Core Gameplay            ▓▓▓▓▓░░░░░ 50% (Marathon works, but needs Smart Algo & Endgame along with bug fixes and minor improvements)
 - UI / UX                  ▓▓▓▓▓░░░░░ 50% (Visuals polished, Auth UI ready. Landing Page pending)
 ```
@@ -354,7 +354,8 @@ _Not started. Will begin after PoC completion._
 - Architecture & Infra     ░░░░░░░░░░ 0%   (Production infra & Security not started)
 - Core Gameplay            ▓░░░░░░░░░ 10%  (Basic loop exists, but needs heavy refinement)
 - UI / UX                  ▓░░░░░░░░░ 15%  (Components are ready, but main menu and other category flows are missing)
-- Auth & Persistence       ▓▓▓▓▓░░░░░ 40%  (Logins/Register awaits test. Profile & History pending)
+- Auth                     ▓▓▓▓▓▓▓░░░ 70%  (Logins/Register works fine. Confirmation step will be added. Permissions TBD)
+- User Operations          ░░░░░░░░░░ 0%   (Profile,  history, favs etc.)
 - Multiplayer              ░░░░░░░░░░ 0%   (Not started)
 ```
 
