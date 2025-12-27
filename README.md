@@ -290,10 +290,12 @@ openssl rand -hex 16
   - [x] Session: Secure LocalStorage/Cookie management.  
   - [x] Database: Automated users table creation script (init.js).  
   - [x] API: Auth endpoints (/register, /login) configuration.  
-  - [ ] Verification: End-to-end testing of Auth flow.  
-    - [ ] UI transition needs change.
-    - [ ] Better error displays.
-  - [ ] Integration: Protect game routes (Guest vs User limitations).  
+  - [x] Verification: End-to-end testing of Auth flow.  
+    - [x] UI transition needs change.
+    - [x] Better error displays.
+  - [ ] Mail confirmation
+  - [ ] Integration: Protect game routes (Guest vs User limitations).
+    - [ ] User permissions
 
 - [ ] Service Layer Implementation:
   - [ ] Service Factory: Architecture to switch between Mock vs Real Data providers.  
