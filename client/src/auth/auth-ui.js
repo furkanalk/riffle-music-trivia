@@ -96,11 +96,14 @@ export function initAuthUI() {
       const password = elements.loginPassword.value;
 
       try {
-        const res = await fetch("/api/auth/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ identifier, password }),
-        });
+        const [res, _] = await Promise.all([
+          fetch("/api/auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ identifier, password }),
+          }),
+          wait(1500), // Minimum wait for UX, for safety its 1.5 seconds
+        ]);
 
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || "Login failed");
