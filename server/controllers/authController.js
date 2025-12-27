@@ -51,6 +51,10 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
   const { identifier, password } = req.body; // identifier = username OR email
 
+  if (!identifier || !password) {
+    return res.status(400).json({ error: "All fields are required." });
+  }
+  
   try {
     // Find user (by email or username)
     const userResult = await query('SELECT * FROM users WHERE email = $1 OR username = $1', [identifier]);
