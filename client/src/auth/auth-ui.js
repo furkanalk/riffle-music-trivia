@@ -1,7 +1,6 @@
 export function initAuthUI() {
-  console.log("🔒 Auth UI Initialized");
   const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-  
+
   const elements = {
     // Buttons Containers
     guestButtons: document.getElementById("guest-buttons"),
