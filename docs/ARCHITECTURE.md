@@ -1,0 +1,193 @@
+# Riffle Technical Architecture
+
+Riffle is designed as a modular, scalable system that prioritizes performance, security, and future service separation without premature complexity.
+
+## Table of Contents
+
+- [Riffle Technical Architecture](#riffle-technical-architecture)
+  - [Table of Contents](#table-of-contents)
+  - [1. Monorepo Structure](#1-monorepo-structure)
+  - [2. Technology Stack](#2-technology-stack)
+    - [Frontend (Client)](#frontend-client)
+    - [Backend Gateway \& Authentication](#backend-gateway--authentication)
+    - [Game Engine (Computation Core)](#game-engine-computation-core)
+    - [Security Core (Planned)](#security-core-planned)
+    - [Data \& State Management](#data--state-management)
+    - [Observability \& Monitoring](#observability--monitoring)
+  - [3. Security Architecture](#3-security-architecture)
+    - [Edge Layer (Planned)](#edge-layer-planned)
+    - [Gateway Layer](#gateway-layer)
+    - [Application Layer](#application-layer)
+    - [Client Integrity (Future)](#client-integrity-future)
+  - [4. Runtime Containers](#4-runtime-containers)
+  - [5. Scaling \& Failure Assumptions](#5-scaling--failure-assumptions)
+    - [Scalability](#scalability)
+    - [Data Consistency \& State](#data-consistency--state)
+    - [Failure Scenarios](#failure-scenarios)
+  - [6. Request Flow (High-Level)](#6-request-flow-high-level)
+
+## 1. Monorepo Structure
+
+Riffle is designed as a **Fully Distributed System**. Code is organized by domain responsibilities.
+
+```text
+riffle/
+├── apps/
+│   ├── client/           # [React] Frontend application
+│   ├── core-api/         # [Node.js] Main orchestrator (Auth/User)
+│   ├── game-engine/      # [Go] Matchmaker & Scoring Logic
+│   ├── worker/           # [Node.js] DB Sync (Write-Behind Pattern)
+│   ├── store-service/    # [Node.js] Economy & Inventory
+│   └── music-service/    # [Node.js] Deezer/Spotify Integration
+│
+├── ops/
+│   ├── compose/          # Modular Docker Compose files (11 files)
+│   └── env/              # Per-environment configuration
+│
+└── packages/             # Shared logic (UI, DB Schema, Types)
+```
+
+## 2. Technology Stack
+
+### Frontend (Client)
+* **Framework:** React 18 + Vite
+* **Language:** TypeScript
+* **State Management:**
+  * **Zustand:** Global client state
+  * **React Query:** Server state & caching
+* **Styling:** Tailwind CSS + Radix UI
+* **Platform:** Web-first, Capacitor-compatible (iOS / Android)
+
+> The client is responsible only for rendering, user input, and real-time communication. No authoritative game state or scoring logic exists on the client.
+
+### Backend Gateway & Authentication
+* **Runtime:** Node.js
+* **Framework:** Fastify
+* **Language:** TypeScript
+* **Protocols:** REST + WebSocket (Socket.io)
+
+**Responsibilities:**
+* API routing and request lifecycle
+* Authentication & authorization
+* Session handling
+* Schema-based input validation
+* WebSocket connection management
+
+> Fastify is selected for its low overhead, predictable performance, and strict schema validation model.
+
+### Game Engine (Computation Core)
+* **Language:** Go (Golang)
+* **Communication:** Internal HTTP / gRPC (planned)
+* **Execution Model:** Stateless
+
+**Responsibilities:**
+* Score calculation
+* Matchmaking logic (ELO-based)
+* Ranking computation
+* High-concurrency, CPU-bound operations
+
+> Go is used for workloads where Node.js may become a bottleneck due to its single-threaded execution model. Goroutines enable efficient parallel computation under heavy load.
+
+### Security Core (Planned)
+* **Language:** Rust
+* **Target:** WebAssembly (WASM)
+
+**Responsibilities:**
+* Client integrity verification
+* Audio stream fingerprint validation
+* Bot and automation detection
+* Runtime tamper detection
+
+> Rust is reserved for security-critical and real-time workloads due to its memory safety guarantees, zero garbage collection pauses, and resistance to reverse engineering when compiled to WASM.
+
+### Data & State Management
+* **PostgreSQL**
+  * Persistent data
+  * Users, profiles, match history, metadata
+* **Redis**
+  * Live game rooms
+  * Session tokens
+  * Leaderboards
+  * Pub/Sub for internal coordination
+
+> All backend services are **stateless**. Any instance can be terminated or scaled without state loss.
+
+### Observability & Monitoring
+* **Prometheus**
+  * Pull-based metric collection from all containers.
+* **Grafana**
+  * Centralized dashboard for health, latency, and throughput visualization.
+* **Loki**
+  * Lightweight log aggregation optimized for Docker containers.
+
+> Observability is decoupled from business logic. Monitoring agents run as sidecars or separate containers.
+
+## 3. Security Architecture
+
+Riffle follows a defense-in-depth security model.
+
+### Edge Layer (Planned)
+* **WAF: SafeLine (Community Edition)**
+  * Semantic traffic analysis
+  * SQLi / XSS / Bot mitigation
+  * Protects all external-facing traffic before it reaches the application layer
+
+### Gateway Layer
+* **Kong API Gateway**
+  * Rate limiting per IP / user
+  * Auth verification
+  * Request routing
+
+### Application Layer
+* **Schema-based validation (Zod / Fastify)**
+  * Strict input sanitization
+  * Role-based access control
+
+### Client Integrity (Future)
+* **Rust-based WASM module**
+  * Runtime verification of critical assets
+
+## 4. Runtime Containers
+
+| Layer      | Container Name       | Responsibility                     | Access           |
+|------------|----------------------|------------------------------------|------------------|
+| Security   | infra-waf            | L7 WAF (SafeLine)                  | Public Internet  |
+| Edge       | infra-kong           | API Gateway & Routing              | WAF Only         |
+| Edge Store | store-kong-pg        | Kong Configuration DB              | Kong Only        |
+| Active     | active-game-redis    | Hot State (Sessions/Scores)        | Services         |
+| Active     | active-worker        | Async DB Synchronization           | Internal         |
+| Store      | store-game-pg        | Persistent Game Data               | Worker / Core API|
+| Service    | service-core-api     | Auth & Orchestration               | Gateway          |
+| Service    | service-matchmaker   | Calculation Engine                 | Internal         |
+| Service    | service-music        | Music Provider Proxy               | Internal         |
+| Monitor    | monitor-prometheus   | Metrics Collection (Scraping)      | Internal (Admin) |
+| Monitor    | monitor-grafana      | Visualization Dashboard            | Internal (Admin) |
+| Monitor    | monitor-loki         | Log Aggregation                    | Internal         |
+
+## 5. Scaling & Failure Assumptions
+
+### Scalability
+- **Horizontal Scaling:** All Service Layer containers (API, Engine, Store) are stateless and can scale horizontally behind the Gateway.
+- **Database Scaling:** PostgreSQL is the single source of truth; read-replicas can be added for analytics. Redis handles high-throughput write operations.
+
+### Data Consistency & State
+- **Eventual Consistency:** Due to the **Write-Behind** pattern, data in PostgreSQL (Store Layer) is eventually consistent. Real-time game state exists in the Active Layer (Redis) first.
+- **Active State Authority:** Redis is **not** treated as ephemeral for live matches; it is the authoritative source for ongoing game sessions.
+- **Persistence:** The `active-worker` service ensures data durability by moving completed match data from Redis to PostgreSQL asynchronously.
+
+### Failure Scenarios
+- **Service Failure:** If `core-api` or `matchmaker` fails, they restart automatically. No state is lost as state lives in Redis.
+- **Gateway Failure:** If Kong fails, the API becomes unreachable, but the underlying data remains intact.
+- **Active Layer Failure:** If Redis fails critically without persistence, **live** match progress may be lost, but historical data (Postgres) remains secure.
+- **Isolation:** A failure in the Public/Edge layer (WAF/Kong) does not compromise the Security of the Data Store layer.
+
+## 6. Request Flow (High-Level)
+
+1. Edge: Request passes WAF -> Kong.
+2. Routing: Kong routes to service-core-api.
+3. Logic: Core API handles Auth and validates request.
+4. Hot Path: Game events are written instantly to active-game-redis.
+5. Async Sync: active-worker detects completed games in Redis.
+6. Persistence: Worker moves data to store-game-pg (Postgres).
+
+> No direct client-to-engine communication exists.
