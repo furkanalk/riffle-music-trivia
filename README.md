@@ -124,7 +124,7 @@ The system uses a 4-Environment Strategy (Dev, Test, Stage, Prod).
 # Generate environment configs for all stages
 # This will create .env.dev, .env.test, .env.stage, .env.prod
 # (Automatic if you used the migration script, otherwise copy manually)
-cp infrastructure/env/.env.example infrastructure/env/.env.dev
+cp ops/env/.env.example ops/env/.env.dev
 ```
 ### 3. Create Network
 
