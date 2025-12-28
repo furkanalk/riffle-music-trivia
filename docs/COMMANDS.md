@@ -1,17 +1,14 @@
-# Riffle – Management Commands
+# Riffle Management Commands
 
-This document describes all available **modular Docker Compose commands** and **Quality of Life (QoL) npm scripts** used to manage the Riffle platform.
+A complete guide to all **modular Docker Compose commands** and **QoL (Quality of Life) npm scripts** for managing the Riffle platform.
 
 ---
 
 ## Modular Docker Compose Commands
 
-These commands allow you to manage each layer independently without using npm scripts.
+Use these commands to manage each layer independently without npm shortcuts.
 
----
-
-### Security & Edge Layer (WAF + Kong)
-
+### 1. Security & Edge Layer (WAF + Kong)
 ```bash
 # Start
 docker-compose --env-file ops/env/.env.dev \
@@ -28,10 +25,7 @@ docker-compose \
   down
 ```
 
----
-
-### Data Layer (Postgres + Redis)
-
+### 2. Data Layer (Postgres + Redis)
 ```bash
 # Start
 docker-compose --env-file ops/env/.env.dev \
@@ -46,10 +40,7 @@ docker-compose \
   down
 ```
 
----
-
-### Core Services (API + Worker)
-
+### 3. Core Services (API + Worker)
 ```bash
 # Start
 docker-compose --env-file ops/env/.env.dev \
@@ -64,10 +55,7 @@ docker-compose \
   down
 ```
 
----
-
-### Game Engine (Matchmaker)
-
+### 4. Game Engine (Matchmaker)
 ```bash
 # Start
 docker-compose --env-file ops/env/.env.dev \
@@ -75,13 +63,12 @@ docker-compose --env-file ops/env/.env.dev \
   up -d
 
 # Stop
-docker-compose -f ops/compose/service.matchmaker.yml down
+docker-compose \
+  -f ops/compose/service.matchmaker.yml \
+  down
 ```
 
----
-
-### Frontend (Client)
-
+### 5. Frontend (Client)
 ```bash
 # Start
 docker-compose --env-file ops/env/.env.dev \
@@ -89,88 +76,99 @@ docker-compose --env-file ops/env/.env.dev \
   up -d
 
 # Stop
-docker-compose -f ops/compose/app.client.yml down
+docker-compose \
+  -f ops/compose/app.client.yml \
+  down
 ```
 
 ---
 
 ## QoL (npm) Scripts
 
-These npm scripts provide **high-level shortcuts** for common development workflows and are recommended for daily usage.
+High-level shortcuts for daily development. Recommended for most workflows.
+
+### 1. Environment Switching (Dynamic Mode)
+
+- Riffle scripts are environment-aware. By default, they run in development mode using .env.dev. You can target other environments (Test, Stage, Prod) by setting the ENV variable.
+- Global commands can run with `:<env>`
+- Others require `ENV=<env>`
+  
+```bash
+
+# Default (runs with .env.dev)
+npm run start
+
+# Production (runs with .env.prod)
+ENV=prod npm run start
+
+# Staging (runs with .env.stage)
+ENV=stage npm run start
+
+# Example: Start only Infrastructure in Production mode
+ENV=prod npm run infra:all
+```
+
+### 2. Global Commands
+```bash
+npm run start:dev        # Start everything (dev/test/stage/prod)
+npm run stop:all         # Stop all containers
+npm run restart:all      # Restart everything (Dev)
+```
+
+### 3. Infrastructure Commands
 
 ```bash
-# =========================
-# Global
-# =========================
-npm run start:dev        # Start everything
-npm run stop:all         # Stop everything
-npm run restart:all      # Stop + Start everything
+# All Layers
+npm run infra:all        # Start all infra layers
+npm run infra:down       # Stop all infra layers
 
-# =========================
-# ops – All
-# =========================
-npm run infra:all
-npm run infra:down
-
-# =========================
-# ops – Security & Edge
-# =========================
+# Security & Edge
 npm run infra:security   # WAF (SafeLine)
 npm run infra:edge       # Kong (Gateway + Store + Service)
-npm run infra:edge:down
+npm run infra:edge:down  # Stop Edge layer
 
-# =========================
-# ops – Data Layer
-# =========================
+# 3. Data Layer
 npm run infra:data       # Postgres + Redis
-npm run infra:data:down
+npm run infra:data:down  # Stop Data layer
+```
 
-# =========================
-# Services – All
-# =========================
-npm run svc:all
-npm run svc:down
+### 4. Service Commands
 
-# =========================
-# Services – Core
-# =========================
+```bash
+# All Services
+npm run svc:all          # Start all services
+npm run svc:down         # Stop all services
+
+# Core Services
 npm run svc:core         # Core API
 npm run svc:worker       # Worker
-npm run svc:core:down
+npm run svc:core:down    # Stop Core Services
 
-# =========================
-# Services – Game Engine
-# =========================
+# Game Engine
 npm run svc:engine       # Matchmaker
-npm run svc:engine:down
+npm run svc:engine:down  # Stop Game Engine
 
-# =========================
-# Services – Others
-# =========================
+# Other Services
 npm run svc:store
 npm run svc:music
 npm run svc:others
 npm run svc:others:down
 
-# =========================
-# Frontend
-# =========================
+# Frontend Commands
 npm run app:client
 npm run app:client:down
 
-# =========================
-# Utilities
-# =========================
+# Utility Commands
 npm run logs             # Follow all container logs
-npm run ps               # Docker compose status
-npm run clean            # Remove volumes & orphans
-npm run reset            # Clean + start:dev
+npm run ps               # Show Docker Compose status
+npm run clean            # Remove volumes & orphan containers
+npm run reset            # Clean + Start everything
 ```
 
 ---
 
 ### Notes
 - Prefer **QoL npm scripts** for daily development.
-- Use **modular Docker Compose commands** for debugging or partial environments.
-- All commands assume `.env.dev` is present and correctly configured.
+- Use **modular Docker Compose commands** for debugging or partial environment setups.
+- Prefer `ENV=prod npm run ...` over manually typing docker-compose commands for different environments.
 
