@@ -1,27 +1,30 @@
-<h1 align="center">🎸 Quiz Game: Riffle</h1>
+<h1 align="center">🎸 Riffle: Music Trivia</h1>
 
 <p align="center">
   <img src="https://imgur.com/dkZQodk.png" width="180" alt="Riffle Logo">
 </p>
 
 <p align="center">
-  <strong>Rock & Metal music trivia game</strong><br>
-  Fast-paced quizzes powered by real music data.
+  <strong>Real-time competitive music quiz engine powered by Modern Web Technologies.</strong><br>
+  Designed for scalability, performance, heavy concurrency, and shred. Rock on!
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/status-active--development-purple">
-  <img src="https://img.shields.io/badge/backend-Node.js-green">
-  <img src="https://img.shields.io/badge/frontend-Vite%20%7C%20Tailwind-blue">
-  <img src="https://img.shields.io/badge/mobile-Capacitor-lightgrey">
-  <img src="https://img.shields.io/badge/license-Proprietary-red">
+  <img src="https://img.shields.io/badge/architecture-Microservices-yellow">
+  <img src="https://img.shields.io/badge/stack-Monorepo-black">
+  <img src="https://img.shields.io/badge/backend-Node.js%20%7C%20Go-green">
+  <img src="https://img.shields.io/badge/security-Rust%20(WASM)-orange">
+  <img src="https://img.shields.io/badge/gateway-Kong%20%7C%20SafeLine-red">
+  <img src="https://img.shields.io/badge/frontend-React%20%7C%20TypeScript-blue">
+  <img src="https://img.shields.io/badge/infra-Docker%20%7C%20Terraform-purple">
+  <img src="https://img.shields.io/badge/license-Proprietary-lightgrey">
 </p>
 
 ```txt
-RIFFLE — MUSIC TRIVIA ENGINE
+RIFFLE — INFO
 
 Genre        : Rock • Metal (more TBD)
-Game Modes   : Classic • Marathon (more TBD)
+Architecture : Modular Monolith > Microservices
 Platform     : Web • Mobile
 Version      : v0.4.5-alpha
 
@@ -32,175 +35,160 @@ Version      : v0.4.5-alpha
 
 - [Table of Contents](#table-of-contents)
 - [Features](#features)
+  - [Gameplay \& Competition](#gameplay--competition)
+  - [Social, Progression \& Economy](#social-progression--economy)
 - [Technical Architecture](#technical-architecture)
-  - [Technologies Used](#technologies-used)
+  - [Tech Stack Overview](#tech-stack-overview)
   - [Backend API Endpoints](#backend-api-endpoints)
-    - [1. Music Data (Active)](#1-music-data-active)
-    - [2. Authentication (Implemented - Ready for Testing)](#2-authentication-implemented---ready-for-testing)
-    - [3. Game Logic (Planned)](#3-game-logic-planned)
-    - [4. System \& Infrastructure (Active)](#4-system--infrastructure-active)
-- [Project Structure](#project-structure)
 - [Installation \& Setup](#installation--setup)
-  - [Local Development](#local-development)
-  - [Docker Deployment (Backend \& DB)](#docker-deployment-backend--db)
-- [Configuration](#configuration)
-- [Project Roadmap \& Status](#project-roadmap--status)
-  - [Phase 1: Architecture \& Infrastructure](#phase-1-architecture--infrastructure)
-  - [Phase 2: Core Gameplay \& UI](#phase-2-core-gameplay--ui)
-  - [Phase 3: Identity \& Data Layer](#phase-3-identity--data-layer)
-  - [Phase 4: Production Readiness \& Security](#phase-4-production-readiness--security)
-  - [Phase 5: Expansion](#phase-5-expansion)
+  - [Prerequisites](#prerequisites)
+  - [1. Setup \& Installation](#1-setup--installation)
+  - [2. Environment Configuration](#2-environment-configuration)
+  - [3. Create Network](#3-create-network)
+  - [4. Start the Ecosystem](#4-start-the-ecosystem)
+  - [5. Stop Services](#5-stop-services)
+  - [Modular Management](#modular-management)
+  - [QoL (npm) Scripts](#qol-npm-scripts)
+- [Configuration  (to be updated)](#configuration--to-be-updated)
 - [Progress](#progress)
-  - [Overall Progress (PoC)](#overall-progress-poc)
-  - [Development Progress](#development-progress)
+  - [Roadmap Status](#roadmap-status)
+  - [Active Stage Breakdown (Stage 1 \& 2)](#active-stage-breakdown-stage-1--2)
 - [License](#license)
 
 ## Features
 
 <img src="https://i.imgur.com/BT6O05h.png" width="450" height="150" alt="Feature Preview 1">
 
-* **Real-time Trivia:** Dynamic questions generated based on Deezer music data.
-* **Game Modes:** Multiple difficulty levels and specialized modes (Marathon, etc.).
+### Gameplay & Competition
+1.  **Real-Time Versus Battles:** Challenge friends or match with random players globally in intense, synchronous music trivia duels.
+2.  **Diverse Game Modes:** Test your endurance in **Marathon Mode**, survive the chaos in **Sudden Death**, or relax with **Classic Mode**.
+3.  **Fair Play Guarantee:** Powered by a **Rust-based Anti-Cheat** engine that prevents bots and audio tampering, ensuring a purely skill-based environment.
+4.  **Global Leaderboards:** Climb the ELO-based ranking system. Compete for daily, weekly, and all-time glory.
+5.  **Community Driven:** Create your own custom quizzes, share them with the community, and play user-generated content.
 
 <img src="https://i.imgur.com/PDjGzKP.png" width="450" height="150" alt="Feature Preview 2">
 
-* **Modern UI:** Fully responsive design built with Tailwind CSS.
-* **Analytics:** Score tracking and session-based history.
+### Social, Progression & Economy
+6.  **Deep Customization:** Unlock unique **Avatars**, profile frames, and audio visualizer themes in the Shop.
+7.  **Social Hub:** Add friends, create private lobbies, and chat in real-time before matches.
+8.  **Live Operations:** Participate in **Seasonal Events** (e.g., Halloween Rock Fest) and special tournaments with exclusive rewards.
+9.  **Pro Membership (VIP):** Access exclusive game modes, ad-free experience, and premium cosmetic drops.
+10. **Detailed Stats:** Track your progress with comprehensive match history, win rates, and create a "Favorites" list of songs you discovered while playing.
 
 ## Technical Architecture
 
-### Technologies Used
+Riffle utilizes a **Modular Monolith** architecture designed to evolve into Microservices. The project is managed as a **Monorepo** using TurboRepo to ensure type safety and atomic deployments.
 
-* **Backend:** Node.js, Express.js
-* **Frontend:** HTML5, JavaScript (ES6 Modules), Tailwind CSS, Vite
-* **API:** Deezer API, Custom REST API
-* **Mobile:** Capacitor (iOS/Android)
-* **Database:** PostgreSQL (Containerized)
-* **Infrastructure:** Docker, Docker Compose
+**[Read the Full Architecture Documentation](./docs/ARCHITECTURE.md)** for a deep dive into our design decisions, security layers, and scaling strategy.
+
+### Tech Stack Overview
+
+| Component | Technology | Role |
+|-----------|------------|------|
+| **Frontend** | React 18 + Vite | User Interface & Global State (Zustand) |
+| **Core API** | Node.js (Fastify) | Orchestrator, Auth & User Management |
+| **Engine** | Go (Golang) | High-Performance Matchmaking Service |
+| **Edge** | Kong + SafeLine WAF | API Gateway, Rate Limiting & Security |
+| **Data (Active)**| Redis + Worker | Hot Data, Session & Write-Behind Sync |
+| **Data (Store)** | PostgreSQL | Cold Data, Persistence & Archival |
+| **Observability**| Prom / Grafana / Loki | System Metrics & Distributed Logging |
+| **Ops** | Docker & Terraform | Multi-Environment Containerization |
 
 ### Backend API Endpoints
 
-####  1. Music Data (Active)
-* `GET /api/tracks/playlist/:id/tracks` - Retrieve tracks from a specific playlist.
-* `GET /api/tracks/track/:id` - Retrieve single track information.
-
-#### 2. Authentication (Implemented - Ready for Testing)
-* `POST /api/auth/register` - Register a new user and return JWT.
-* `POST /api/auth/login` - Authenticate user and return JWT.
-
-#### 3. Game Logic (Planned)
-* `POST /api/game/create` - Initialize a new game session.
-* `GET /api/game/:id` - Retrieve current game state/score.
-* `POST /api/game/:id/answer` - Submit an answer for server-side validation.
-
-#### 4. System & Infrastructure (Active)
-* `GET /health` - Health check for Docker/Uptime monitoring.
-* `GET /secure-data` - API Key validation test endpoint.
-
-## Project Structure
-
-```text
-.
-├── .gitignore
-├── LICENSE
-├── README.md
-├── docker-compose-db.yaml           # Database container orchestration
-├── docker-compose-app.yaml          # Application container orchestration
-│
-├── client/                          # Frontend Application
-│   ├── .env                         # Client environment variables
-│   ├── vite.config.js               # Build configuration
-│   ├── capacitor.config.js          # Mobile bridge configuration
-│   ├── index.html                   # Entry HTML
-│   └── src/
-│       ├── main.js                  # Application entry point
-│       ├── categories/              # Feature: Category Logic
-│       ├── core/                    # Core Utilities & State
-│       ├── game/                    # Feature: Game Loop Logic
-│       ├── menu/                    # UI Components
-│       └── services/                # Data Layer (Mock/Real Factory)
-│
-└── server/                          # Backend Application
-    ├── dockerfile                   # Server image definition
-    ├── server.js                    # Express entry point
-    ├── config/                      # Environment configurations
-    ├── controllers/                 # Request handlers
-    ├── middleware/                  # Security & Logging middleware
-    ├── models/                      # Database schemas
-    └── routes/                      # API endpoint definitions
-```
+* **[API Endpoints](./docs/API_ENDPOINTS.md)**: Current list of active and planned REST endpoints.
 
 ## Installation & Setup
 
-### Local Development
+Riffle follows a **Tiered Enterprise Microservices Architecture**.
+The system is split into **Edge**, **Data**, and **Service** layers, orchestrated via TurboRepo.
+
+### Prerequisites
+
+### 1. Setup & Installation
 
 ```bash
 # Clone the repository
 git clone https://github.com/furkanalk/riffle.git
 cd riffle
 
-# Install backend dependencies
-cd server && npm install
-
-# Install frontend dependencies
-cd ../client && npm install
-
-# Start frontend dev server
-npm run dev
+# Install dependencies
+npm install
 ```
 
-### Docker Deployment (Backend & DB)
+### 2. Environment Configuration
+
+The system uses a 4-Environment Strategy (Dev, Test, Stage, Prod).
 
 ```bash
-# Open a new terminal, navigate to the riffle project
-# Create an environment file from template
-# Repeat for test / stage / prod if needed
-cp server/config/.env.example server/config/.env.dev
+# Generate environment configs for all stages
+# This will create .env.dev, .env.test, .env.stage, .env.prod
+# (Automatic if you used the migration script, otherwise copy manually)
+cp infrastructure/env/.env.example infrastructure/env/.env.dev
+```
+### 3. Create Network
 
-
-# Run with Docker Compose (use --build for the first time)
-# Development environment
-docker-compose --env-file ./server/config/.env.dev -f docker-compose-db.yaml -f docker-compose-app.yaml up --build
-
-# Production environment
-docker-compose --env-file ./server/config/.env.prod -f docker-compose-db.yaml -f docker-compose-app.yaml up --build
-
-# View logs
-docker-compose -f docker-compose-db.yaml -f docker-compose-app.yaml logs -f
-
-# Stop services
-docker-compose -f docker-compose-db.yaml -f docker-compose-app.yaml down
+```bash
+docker network create riffle_network
 ```
 
-## Configuration
+### 4. Start the Ecosystem
 
-Create environment files under `server/config/`:
+```bash
+# Launches WAF -> Kong -> Redis/Postgres -> API Services
+npm run start:dev
+
+# Dashboard Access:
+# ➜ Client:      http://localhost:5173
+# ➜ Core API:    http://localhost:1968
+# All dashboard urls will be provided in docs. (kong-waf-monitoring)
+```
+
+### 5. Stop Services
+
+```bash
+npm run stop:all
+```
+
+### Modular Management
+
+For the complete list of Modular Management, see  [`docs/COMMANDS.md`](docs/COMMANDS.md)
+
+### QoL (npm) Scripts
+
+For the complete list of Quality of Life (QoL) npm scripts, see  [`docs/COMMANDS.md`](docs/COMMANDS.md)
+
+## Configuration  (to be updated)
+
+In the Monorepo structure, environment variables are managed centrally for infrastructure components.
+
+Create environment files under `infrastructure/env/`:
 
 - `.env.dev` - Development
 - `.env.test` - Testing
 - `.env.stage` - Staging
 - `.env.prod` - Production
 
-Use `server/config/.env.example` as template:
+Use `ops/env/.env.example` as a template:
 
 | Variable | Description | Default |
 |----------|-------------|---------|
 | `NODE_ENV` | Environment mode (dev/test/stage/prod) | `dev` |
-| `PORT` | Server port | `1968` |
+| `PORT` | API Gateway port | `1968` |
 | `POSTGRES_USER` | PostgreSQL username | `riffle_user` |
 | `POSTGRES_PASSWORD` | PostgreSQL password | `riffle_pass` |
 | `POSTGRES_DB` | PostgreSQL database name | `riffle_dev` |
-| `POSTGRES_HOST` | PostgreSQL host | `db` |
-| `POSTGRES_PORT` | PostgreSQL port | `5432` |
-| `DATABASE_URL` | Full database connection URL | `postgresql://...` |
-| `RIFFLE_DEV_API_KEY` | API key for dev environment | Auto-generated |
-| `RIFFLE_TEST_API_KEY` | API key for test environment | Auto-generated |
-| `RIFFLE_STAGE_API_KEY` | API key for staging environment | Required |
-| `RIFFLE_PROD_API_KEY` | API key for production environment | Required |
-| `RIFFLE_PROD_API_KEY` | API key for production environment | Required |
-| `JWT_SECRET` | Secret for signing JWTs | Required |
+| `POSTGRES_HOST` | Database host (Docker service name) | `postgres` |
+| `POSTGRES_PORT` | Database port | `5432` |
+| `DATABASE_URL` | Full connection string (Prisma/Go) | `postgresql://...` |
+| `REDIS_HOST` | Redis host | `redis` |
+| `REDIS_PORT` | Redis port | `6379` |
+| `REDIS_USER` | Redis username | `default` |
+| `REDIS_PASSWORD` | Redis password | - |
+| `JWT_SECRET` | Secret for signing JWTs | **Required** |
 | `TOKEN_EXPIRES_IN` | Token expiration time | `1d` |
-| `PROD_ORIGIN` | Production CORS origin | `https://riffle.com` |
+| `CORS_ORIGIN` | Allowed Frontend URL | `http://localhost:5173` |
+| `RIFFLE_API_KEY` | Internal Service Key | **Required** |
 | `DEEZER_API_KEY` | Deezer API key (if required) | - |
 
 **Generate secure API keys:**
@@ -211,157 +199,40 @@ node -e "console.log(require('crypto').randomBytes(16).toString('hex'))"
 openssl rand -hex 16
 ```
 
-## Project Roadmap & Status
-
-- **Current Build:** ```Alpha v0.4.5```
-- **Architecture:** Modular Monolith (Client) + Microservices Ready (Server)
-
-### Phase 1: Architecture & Infrastructure
-> *Building a cloud-native, scalable foundation using Docker and Modern JS standards.*
-
-- [x] Separation of Concerns: Split Monolithic architecture into Client (Vite) and Server (Express).  
-- [x] Client-Side Migration: Migrated to Vite for optimized builds and asset management.  
-- [x] Modular Client Architecture: Refactored JS into ES6 Modules (state.js, module-import.js) implementing Single Source of Truth.  
-- [x] Multi-Environment Setup: Configured distinct environments (Dev, Test, Stage, Prod) via Docker.  
-- [x] Containerization: Full Docker integration with dynamic configuration (Environment variables).  
-- [x] Database Isolation: PostgreSQL containerized with persistent volumes.  
-- [x] Proxy Configuration: Vite proxy setup for seamless API handling in Dev mode.  
-- [x] State Management: Implemented centralized state handling to prevent race conditions and circular dependencies.  
-
-### Phase 2: Core Gameplay & UI
-> *Polishing the user experience and game mechanics.*
-
-- [ ] Game Mechanics:
-  - [ ] Timer bar & Visualizer integration.  
-  - [x] Logic implementation for unique song playback per session.  
-  - [x] Score & Streak display improvements.  
-  - [x] Marathon Mode (Unlimited rounds + Lives system).  
-  - [x] Continuous audio playback during answer selection.  
-
-- [ ] Smart Answer Algorithm:
-  - [ ] Prevent obvious/easy wrong answers (e.g., Pop options in Metal category).  
-  - [ ] Context-aware option generation.  
-
-- [ ] Data Integrity:
-  - [ ] Curate valid playlists (Filter out intros, covers, or wrong metadata).  
-  - [ ] Fix "wrong song playing" issues.  
-
-- [ ] Visual Progression:
-  - [ ] Dynamic Progress Indicator (Bar or Steps) showing round progression.  
-  - [ ] Enhanced Particle Effects for correct answers (More "juicy" visuals).  
-
-- [ ] Scoreboard & Endgame:
-  - [x] Show points and user names per round.  
-  - [ ] Endgame Screen: Comprehensive summary, high score comparison, "Play Again" flow.  
-  - [ ] Visual polish for the scoreboard.  
-
-- [ ] Navigation & Landing:
-  - [ ] Main Menu / Landing Page:  
-    - [ ] Create a dedicated entry screen (Logo, Play Button, Video Background maybe).  
-    - [ ] "About Us / Donate" section.  
-    - [ ] Settings shortcut.  
-
-- [ ] Category System:
-  - [x] Dynamic filtering logic.  
-  - [ ] Album covers hovering in the background (Replace placeholders).  
-  - [x] Horizontal scrolling categories with navigation controls.  
-  - [x] "Double Toggle" prevention logic.  
-  - [ ] Live Selection Summary Panel (Mobile compatibility pending).  
-  - [ ] Avatar Selection UI (Replace placeholders with real assets).  
-
-- [ ] Chat System:
-  - [ ] Chat Panel for users to chat with each other.  
-  - [ ] Invite to lobby section (Link creation).  
-
-- [X] UI/UX Polish:
-  - [x] Animations for filtering and selection.  
-  - [x] Audio visualizer integration.  
-  - [x] Auto-fetching album covers & duration bars.  
-  - [x] Tabbed Interface (Settings vs Chat).  
-  - [x] Codebase refactoring and English localization.  
-
-### Phase 3: Identity & Data Layer
-> *Connecting the Frontend Logic to Persistent Storage.*
-
-- [ ] User Authentication:
-  - [x] UI: Login/Register Modal & Button implementation.  
-  - [x] Logic: Implement JWT (JSON Web Token) handling.  
-  - [x] Security: BCrypt password hashing & Salt integration.  
-  - [x] Session: Secure LocalStorage/Cookie management.  
-  - [x] Database: Automated users table creation script (init.js).  
-  - [x] API: Auth endpoints (/register, /login) configuration.  
-  - [x] Verification: End-to-end testing of Auth flow.  
-    - [x] UI transition needs change.
-    - [x] Better error displays.
-  - [ ] Mail confirmation
-  - [ ] Auth middleware
-  - [ ] Integration: Protect game routes (Guest vs User limitations).
-    - [ ] User permissions
-
-- [ ] Service Layer Implementation:
-  - [ ] Service Factory: Architecture to switch between Mock vs Real Data providers.  
-  - [ ] API Integration: Connect music.js service to real PostgreSQL endpoints.  
-
-- [ ] User Profile:
-  - [ ] Dashboard & Match History implementation.  
-  - [ ] Persistent Stats (Wins, High Scores).  
-  - [ ] Avatar management.  
-
-### Phase 4: Production Readiness & Security
-> *Preparing the infrastructure for public deployment.*
-
-- [ ] Advanced Security (DevSecOps):
-  - [ ] API Gateway: Implement Kong OSS for Rate Limiting & Auth Management.  
-  - [ ] WAF: ModSecurity with OWASP Core Rule Set (L7 protection).  
-  - [ ] Firewall Strategy: Configure Cloud Firewall (L3/L4) to whitelist only Gateway ports.  
-
-- [ ] Deployment Topology:
-  - [ ] Zero-Downtime: Implement Rolling Update strategy using Docker Swarm or Scripted Compose.  
-  - [ ] Scalability: Horizontal scaling of Node.js containers behind Kong Upstream.  
-  - [ ] Maintenance Mode: Implement graceful shutdown and "Under Maintenance" API responses.  
-
-- [ ] Monitoring & Observability:
-  - [ ] Integration of Prometheus & Grafana for system health metrics.  
-  - [ ] Centralized Logging (ELK Stack or similar) for error tracking.  
-  - [ ] CI/CD Pipeline: Automated testing and deployment workflows.  
-
-### Phase 5: Expansion
-> *Platform growth and new features.*
-
-- [ ] Mobile App: Finalize Capacitor builds for iOS & Android.  
-- [ ] Multiplayer: Real-time WebSocket integration for VS Mode.  
-- [ ] Localization: Multi-language support structure.  
-- [ ] Social Features: Share scores/results on social media.  
-
 ## Progress
 
-- **Current Phase:**  `Phase 3: Identity & Data Layer`
-- **Focus:** Connecting Frontend Auth to Backend API
+- **Current Phase:**  `Stage 1: Phase 1`
+- **Focus:** Redis Setup & Service Layer Refactoring
 
-### Overall Progress (PoC)
+### Roadmap Status
 
+```text
+Stage 1: PoC Foundation        ▓▓▓▓▓▓▓▓▓░ 90%  (Docker/DB ready. Base logic developed. Redis pending.)
+Stage 2: Identity & Data       ▓▓▓▓░░░░░░ 40%  (Auth UI/JWT done. User Profile & Services pending.)
+Stage 3: Modernization         ░░░░░░░░░░ 0%   (Monorepo, Go, & Fastify migration upcoming.)
+Stage 4: Production Infra      ░░░░░░░░░░ 0%   (WAF, Kong, Terraform planned.)
+Stage 5: Expansion             ░░░░░░░░░░ 0%   (Mobile & Anti-Cheat planned.)
 ```
-- Architecture & Infra     ▓▓▓▓▓▓▓▓▓░ 90% (Dev env ready, basic mechanics working, needs minor improvements)
-- Core Gameplay            ▓▓▓▓▓░░░░░ 50% (Marathon works, but needs Smart Algo & Endgame along with bug fixes and minor improvements)
-- UI / UX                  ▓▓▓▓▓░░░░░ 50% (Visuals polished, Auth UI ready. Landing Page pending)
-```
 
-### Development Progress
-
-_Not started. Will begin after PoC completion._
-
-```
-- Architecture & Infra     ░░░░░░░░░░ 0%   (Production infra & Security not started)
-- Core Gameplay            ▓░░░░░░░░░ 10%  (Basic loop exists, but needs heavy refinement)
-- UI / UX                  ▓░░░░░░░░░ 15%  (Components are ready, but main menu and other category flows are missing)
-- Auth                     ▓▓▓▓▓▓▓░░░ 70%  (Logins/Register works fine. Confirmation step will be added. Permissions TBD)
-- User Operations          ░░░░░░░░░░ 0%   (Profile,  history, favs etc.)
-- Multiplayer              ░░░░░░░░░░ 0%   (Not started)
+### Active Stage Breakdown (Stage 1 & 2)
+```text
+- Infrastructure (S1)    ▓▓▓▓▓▓▓▓▓░ 90% (Postgres & Docker active. Redis integration next.)
+- Gameplay Logic (S1)    ▓▓▓▓▓░░░░░ 50% (Marathon mode ready. Smart Algorithm pending.)
+- Authentication (S2)    ▓▓▓▓▓▓▓░░░ 70% (Login/Register UI & JWT flow complete. Email Verify pending.)
+- User Services (S2)     ░░░░░░░░░░ 0%  (Profile, History & Stats services not started.)
 ```
 
 ## License
 
-This project is **proprietary** and **not open source**.
+Copyright (c) 2025 **Furkan Alkılıç**. All Rights Reserved.
 
-Source code is available for **educational review only**.
-Any usage, modification, or distribution requires **explicit written permission** from the author.
+This project is protected by a **Proprietary License**.
+See the [LICENSE](./LICENSE) file for the full legal text.
+
+```text
+PERMISSIONS SUMMARY:
+- Educational Use : You may view and study the source code for learning.
+- Commercial Use  : Strictly prohibited.
+- Distribution    : Strictly prohibited without explicit written permission.
+- Modification    : You may not create derivative works for public release.
+```
