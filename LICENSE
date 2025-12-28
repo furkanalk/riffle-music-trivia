@@ -1,28 +1,49 @@
-Copyright (c) 2025 Furkan Alkılıç
+RIFFLE PROPRIETARY LICENSE AGREEMENT
+Version 1.0, December 2025
 
-All rights reserved.
+Copyright (c) 2025 Furkan Alkılıç. All Rights Reserved.
 
-This software and its source code are proprietary and confidential.
+TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
 
-Permission is granted to view this repository and its contents solely for
-personal, educational, and evaluation purposes.
+1. DEFINITIONS
+   "Software" shall mean the source code, object code, assets, documentation,
+   and configuration files associated with the project "Riffle".
 
-No rights are granted to use, copy, modify, merge, publish, distribute,
-sublicense, deploy, or commercialize this software or any portion of it,
-whether in source or binary form, without prior explicit written permission
-from the copyright holder.
+   "Owner" shall mean Furkan Alk, the original author and copyright holder.
 
-Any form of commercial use, including but not limited to use in products,
-services, internal company tools, monetized platforms, or client work,
-is strictly prohibited.
+   "You" (or "Your") shall mean an individual or Legal Entity exercising
+   permissions granted by this License.
 
-Educational or academic use beyond passive review (including assignments,
-projects, demonstrations, or derivatives) requires prior written permission.
+2. GRANT OF LIMITED LICENSE
+   Permission is hereby granted, free of charge, to any person obtaining a copy
+   of this Software, to view and review the Source Code solely for
+   EDUCATIONAL PURPOSES and PERSONAL LEARING.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
+3. RESTRICTIONS
+   Without prior written permission from the Owner, You may NOT:
+   (a) Modify, translate, adapt, or otherwise create derivative works or
+       improvements, whether or not patentable, of the Software.
+   (b) Distribute, sublicense, assign, transfer, sell, lease, rent, or
+       otherwise make available the Software to any third party.
+   (c) Use the Software for any commercial purpose or in any production
+       environment.
+   (d) Reverse engineer, disassemble, decompile, decode, or otherwise
+       attempt to derive or gain access to the source code of any part of
+       the Software that is compiled.
 
-For permission requests, contact:
-Furkan Alkılıç
-GitHub: https://github.com/furkanalk
+4. INTELLECTUAL PROPERTY RIGHTS
+   The Software is not sold to You. It is licensed strictly under the terms
+   of this Agreement. The Owner retains all right, title, and interest in
+   and to the Software, including all copyrights, patents, trade secrets,
+   trademarks, and other intellectual property rights therein.
+
+5. DISCLAIMER OF WARRANTY
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+   THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+   DEALINGS IN THE SOFTWARE.
+
+END OF TERMS AND CONDITIONS
