@@ -202,11 +202,11 @@ npm run reset
 
 ### Modular Management
 
-For the complete list of Modular Management, see  [`docs/COMMANDS.md`](docs/COMMANDS.md)
+For the complete list of Modular Management, see  [`docs/COMMANDS.md`](docs/COMMANDS.md#modular-docker-compose-commands)
 
 ### QoL (npm) Scripts
 
-For the complete list of Quality of Life (QoL) npm scripts, see  [`docs/COMMANDS.md`](docs/COMMANDS.md)
+For the complete list of Quality of Life (QoL) npm scripts, see  [`docs/COMMANDS.md`](docs/COMMANDS.md#qoL-(npm)-scripts)
 
 ## Configuration
 
