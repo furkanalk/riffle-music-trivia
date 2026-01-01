@@ -14,6 +14,7 @@ Riffle is designed as a modular, scalable system that prioritizes performance, s
     - [4. Security Core (Planned)](#4-security-core-planned)
     - [5. Data \& State Management](#5-data--state-management)
     - [6. Observability \& Monitoring](#6-observability--monitoring)
+  - [Internal Service Discovery](#internal-service-discovery)
   - [Security Architecture](#security-architecture)
     - [1. Edge Layer (Planned)](#1-edge-layer-planned)
     - [2. Gateway Layer](#2-gateway-layer)
@@ -41,8 +42,11 @@ riffle/
 │   └── music-service/    # [Node.js] Deezer/Spotify Integration
 │
 ├── ops/
-│   ├── compose/          # Modular Docker Compose files (11 files)
-│   └── env/              # Per-environment configuration
+│   ├── compose/          # Modular Docker Compose files (Granular Control)
+│   ├── config/           # Dashboard & Tool configurations
+│   ├── env/              # Per-environment configuration (.env.dev, .env.prod, etc.)
+│   ├── scripts/          # Automation scripts (ctrl.js, dashboard.js)
+│   └── secrets/          # mTLS Certs & Keys (GitIgnored)
 │
 └── packages/             # Shared logic (UI, DB Schema, Types)
 ```
@@ -122,6 +126,27 @@ riffle/
 
 > Observability is decoupled from business logic. Monitoring agents run as sidecars or separate containers.
 
+## Internal Service Discovery
+
+Services communicate internally via the Docker Bridge Network using stable DNS names.
+These URLs are managed in `.env` files.
+
+| Service Key           | DNS Address                    | Port | Protocol      |
+|-----------------------|--------------------------------|------|---------------|
+| `WAF_HTTP_URL`        | `http://infra-waf`             | 80   | HTTP          |
+| `WAF_HTTPS_URL`       | `https://infra-waf`            | 443  | HTTPS         |
+| `KONG_PROXY_URL`      | `http://infra-kong`            | 8000 | HTTP          |
+| `KONG_ADMIN_URL`      | `http://infra-kong`            | 8001 | HTTP          |
+| `KONG_MANAGER_URL`    | `http://infra-kong`            | 8002 | HTTP          |
+| `KONG_STATUS_URL`     | `http://infra-kong`            | 8100 | HTTP          |
+| `CORE_API_URL`        | `http://service-core-api`      | 1968 | HTTP / mTLS   |
+| `MATCHMAKER_URL`      | `http://service-matchmaker`    | 8080 | HTTP / mTLS   |
+| `STORE_SERVICE_URL`   | `http://service-store`         | 3000 | HTTP / mTLS   |
+| `MUSIC_SERVICE_URL`   | `http://service-music`         | 3000 | HTTP / mTLS   |
+| `WORKER_URL`          | `http://service-worker`        | 3000 | HTTP / mTLS   |
+| `GAME_REDIS_HOST`     | `active-game-redis`            | 6379 | TCP / TLS     |
+| `POSTGRES_HOST`       | `store-game-pg`                | 5432 | TCP / SSL     |
+
 ## Security Architecture
 
 Riffle follows a defense-in-depth security model.
@@ -149,20 +174,26 @@ Riffle follows a defense-in-depth security model.
 
 ## Runtime Containers
 
-| Layer      | Container Name       | Responsibility                     | Access           |
-|------------|----------------------|------------------------------------|------------------|
-| Security   | infra-waf            | L7 WAF (SafeLine)                  | Public Internet  |
-| Edge       | infra-kong           | API Gateway & Routing              | WAF Only         |
-| Edge Store | store-kong-pg        | Kong Configuration DB              | Kong Only        |
-| Active     | active-game-redis    | Hot State (Sessions/Scores)        | Services         |
-| Active     | active-worker        | Async DB Synchronization           | Internal         |
-| Store      | store-game-pg        | Persistent Game Data               | Worker / Core API|
-| Service    | service-core-api     | Auth & Orchestration               | Gateway          |
-| Service    | service-matchmaker   | Calculation Engine                 | Internal         |
-| Service    | service-music        | Music Provider Proxy               | Internal         |
-| Monitor    | monitor-prometheus   | Metrics Collection (Scraping)      | Internal (Admin) |
-| Monitor    | monitor-grafana      | Visualization Dashboard            | Internal (Admin) |
-| Monitor    | monitor-loki         | Log Aggregation                    | Internal         |
+| Layer      | Container Name       | Responsibility                     | Access              | Availability     |
+|------------|----------------------|------------------------------------|---------------------|------------------|
+| Security   | infra-waf            | L7 WAF (SafeLine)                  | Public Internet     | Stage / Prod     |
+| Edge       | infra-kong           | API Gateway & Routing              | WAF Only            | All Envs         |
+| Edge       | infra-kong-migrations| **Ephemeral** Kong DB Bootstrap    | Internal            | All Envs         |
+| Edge Store | store-kong-pg        | Kong Configuration DB **(PG 14)**  | Kong Only           | All Envs         |
+| Active     | active-game-redis    | Hot State (Sessions/Scores)        | Services            | All Envs         |
+| Active     | service-worker       | Async DB Synchronization           | Internal            | All Envs         |
+| Store      | store-game-pg        | Persistent Game Data **(PG 17)**   | Worker / Core API   | All Envs         |
+| Store      | pg-backup            | Automated Daily SQL Backups        | None (Volume)       | All Envs         |
+| Service    | service-core-api     | Auth & Orchestration               | Gateway             | All Envs         |
+| Service    | service-matchmaker   | Calculation Engine (Go)            | **Internal (mTLS)** | All Envs         |
+| Service    | service-store        | Economy & Inventory                | **Internal (mTLS)** | All Envs         |
+| Service    | service-music        | Music Provider Proxy               | **Internal (mTLS)** | All Envs         |
+| Monitor    | monitor-prometheus   | Metrics Collection (Scraping)      | Internal (Admin)    | Stage / Prod     |
+| Monitor    | monitor-grafana      | Visualization Dashboard            | Internal (Admin)    | Stage / Prod     |
+| Monitor    | monitor-loki         | Log Aggregation                    | Internal            | Stage / Prod     |
+| DevTools   | dev-mailhog          | SMTP Mocking (Email Testing)       | Internal (Web)      | Dev / Test       |
+| DevTools   | dev-httpbin          | HTTP Request Mocking               | Internal            | Dev / Test       |
+| DevTools   | dev-redis-commander  | Redis GUI Management               | Internal (Web)      | Dev / Test       |
 
 ## Scaling & Failure Assumptions
 
@@ -172,11 +203,11 @@ Riffle follows a defense-in-depth security model.
 
 ### 2. Data Consistency & State
 - **Eventual Consistency:** Due to the **Write-Behind** pattern, data in PostgreSQL (Store Layer) is eventually consistent. Real-time game state exists in the Active Layer (Redis) first.
-- **Active State Authority:** Redis is **not** treated as ephemeral for live matches; it is the authoritative source for ongoing game sessions.
-- **Persistence:** The `active-worker` service ensures data durability by moving completed match data from Redis to PostgreSQL asynchronously.
+- **Persistence & Backup:** - The `active-worker` service ensures data durability by moving completed match data from Redis to PostgreSQL asynchronously.
+  - A dedicated `pg-backup` sidecar container performs automated daily backups of the PostgreSQL database to a secure volume, ensuring recovery point objectives (RPO) are met even in catastrophic failure scenarios.
 
 ### 3. Failure Scenarios
-- **Service Failure:** If `core-api` or `matchmaker` fails, they restart automatically. No state is lost as state lives in Redis.
+- **Service Failure:** If `core-api`, `matchmaker` or other services fail, they restart automatically. No state is lost as state lives in Redis.
 - **Gateway Failure:** If Kong fails, the API becomes unreachable, but the underlying data remains intact.
 - **Active Layer Failure:** If Redis fails critically without persistence, **live** match progress may be lost, but historical data (Postgres) remains secure.
 - **Isolation:** A failure in the Public/Edge layer (WAF/Kong) does not compromise the Security of the Data Store layer.

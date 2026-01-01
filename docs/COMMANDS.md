@@ -86,36 +86,16 @@ docker-compose \
 ## QoL (npm) Scripts
 
 High-level shortcuts for daily development. Recommended for most workflows.
+Riffle scripts use `cross-env` to ensure compatibility across Windows, Linux, and macOS.
 
-### 1. Environment Switching (Dynamic Mode)
-
-- Riffle scripts are environment-aware. By default, they run in development mode using .env.dev. You can target other environments (Test, Stage, Prod) by setting the ENV variable.
-- Global commands can run with `:<env>`
-- Others require `ENV=<env>`
-  
-```bash
-
-# Default (runs with .env.dev)
-npm run start
-
-# Production (runs with .env.prod)
-ENV=prod npm run start
-
-# Staging (runs with .env.stage)
-ENV=stage npm run start
-
-# Example: Start only Infrastructure in Production mode
-ENV=prod npm run infra:all
-```
-
-### 2. Global Commands
+### 1. Global Commands
 ```bash
 npm run start:dev        # Start everything (dev/test/stage/prod)
 npm run stop:all         # Stop all containers
 npm run restart:all      # Restart everything (Dev)
 ```
 
-### 3. Infrastructure Commands
+### 2. Infrastructure Commands
 
 ```bash
 # All Layers
@@ -132,7 +112,7 @@ npm run infra:data       # Postgres + Redis
 npm run infra:data:down  # Stop Data layer
 ```
 
-### 4. Service Commands
+### 3. Service Commands
 
 ```bash
 # All Services

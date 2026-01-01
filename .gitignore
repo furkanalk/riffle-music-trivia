@@ -1,39 +1,53 @@
-# Dependencies
+# ============================================
+# DEPENDENCIES
+# ============================================
 node_modules/
 */node_modules/
-package-lock.json
 
-# Root env
+# ============================================
+# ENVIRONMENT & SECRETS
+# ============================================
+# Root Envs
 .env
+.env.*
+!.env.example
 
-# Backup files
-*.bak
+# Ops Envs (Monorepo Configs)
+ops/env/.env.*
+!ops/env/.env.example
 
-# Server Environments
-server/config/.env
-server/config/.env.*
-!server/config/.env.example
+# Secrets & Certificates (Zero Trust)
+ops/secrets/
+ops/secrets/*
 
-# Client Environments
-client/.env
-client/.env.*
-!client/.env.example
+# App Specific Envs
+apps/*/.env
+apps/*/.env.*
+!apps/*/.env.example
 
-# Build outputs
+# ============================================
+# BUILD OUTPUTS
+# ============================================
 dist/
 build/
-client/dist/
-server/dist/
+out/
+apps/*/dist/
+apps/*/build/
 
-# Log files
+# ============================================
+# LOGS & DEBUG
+# ============================================
 logs
 *.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+*.bak
 
-# System & Editor Files
+# ============================================
+# SYSTEM & EDITOR
+# ============================================
 .DS_Store
 .vscode/
 !.vscode/extensions.json
@@ -46,15 +60,23 @@ pnpm-debug.log*
 Thumbs.db
 Desktop.ini
 
-# Docker
+# ============================================
+# DOCKER & DATABASE
+# ============================================
 .dockerignore
+# Local Volume Mounts (Eğer localde mount edersen)
 postgres_data/
-postgres_data_*/
+redis_data/
 
-# Client-side Ionic / Capacitor
-client/capacitor.config.json 
-client/capacitor.config.ts
+# ============================================
+# MOBILE (Capacitor/Native)
+# ============================================
+apps/client/capacitor.config.json
+apps/client/capacitor.config.ts
+apps/client/android/
+apps/client/ios/
 
-# Native build outputs
-client/android/
-client/ios/
+# ============================================
+# TURBO REPO
+# ============================================
+.turbo

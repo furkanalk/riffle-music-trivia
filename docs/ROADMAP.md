@@ -1,15 +1,16 @@
 # Riffle Roadmap
 
-- **Current Build:** `Alpha v0.4.5`
-- **Current Phase:** `Stage 1: Phase 1`
+- **Current Build:** `v0.5.0-alpha`
+- **Current Phase:** `Stage 4: Production Readiness`
 
 ## Stage 1: PoC Fundementals
 > *Setting up the baseline logic using standard technologies (Vanilla JS, Express).*
 
-- [ ] **Phase 1: Infrastructure & Data**
-  - [x] **Docker Compose** Setup (Modular)
-  - [x] **PostgreSQL Setup** (Isolated Store Layer)
-  - [ ] **Redis Setup** (Active Layer Implementation)
+- [x] **Phase 1: Structural Overhaul**
+  - [x] **Monorepo Init:** TurboRepo Setup complete (Apps/Ops split).
+  - [x] **Service Split:** Core API, Worker, and Engine separated.
+  - [x] **Environment Strategy:** 4-Env System (Dev/Test/Stage/Prod) implemented.
+  - [x] **Cross-Platform:** Windows support added via `cross-env`.
   
 - [ ] **Phase 2: Core Gameplay & Mechanics**
   - [ ] **Playlist Engine:** Unique song playback per session (No repeats).
@@ -53,10 +54,10 @@
 ## Stage 3: Architecture Modernization
 > *Refactoring into a Scalable Enterprise Microservices Architecture.*
 
-- [ ] **Phase 1: Structural Overhaul**
-  - [ ] **Monorepo Init:** TurboRepo Setup complete.
-  - [ ] **Service Split:** Core API, Worker, and Engine separated.
-  - [ ] **Environment Strategy:** 4-Env System (Dev/Test/Stage/Prod) implemented.
+- [x] **Phase 1: Structural Overhaul**
+  - [x] **Monorepo Init:** TurboRepo Setup complete (Apps/Ops split).
+  - [x] **Service Split:** Core API, Worker, and Engine separated.
+  - [x] **Environment Strategy:** 4-Env System (Dev/Test/Stage/Prod) implemented.
 
 - [ ] **Phase 2: Game Engine Implementation**
   - [ ] **Matchmaker:** Go-based logic implementation (Container ready).
@@ -70,13 +71,14 @@
 > *Hardening the application for the public internet.*
 
 - [ ] **Phase 1: Edge Security**
-  - [ ] **WAF:** SafeLine container integration.
-  - [ ] **Gateway:** Kong Gateway container & DB integration.
+  - [ ] **WAF:** SafeLine container integration (Disabled in Dev).
+  - [x] **Gateway:** Kong Gateway container & DB integration (Bootstrap implemented).
+  - [x] **Zero Trust Prep:** mTLS Certificate volume mounting infrastructure ready.
 
 - [ ] **Phase 2: DevOps & Infra**
+  - [x] **Disaster Recovery:** Automated PostgreSQL Backup Sidecar integration.
   - [ ] **IaC:** Defining infrastructure with **Terraform**.
   - [ ] **Deployment:** Zero-downtime strategy (Rolling Updates).
-  - [ ] **CI/CD:** GitHub Actions for automated testing & linting.
 
 - [ ] **Phase 3: Observability**
   - [ ] **Metrics:** Prometheus (Scraping) & Grafana (Dashboarding).

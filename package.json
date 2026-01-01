@@ -1,0 +1,53 @@
+{
+  "name": "riffle-monorepo",
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev --parallel",
+    "network": "docker network create riffle_network || true",
+    
+    "# --- START COMMANDS ---": "",
+    "start": "npm run start:dev",
+    "start:dev": "npm run network && npm run infra:up && npm run svc:up && npm run app:up && npm run info:dev && echo 'DEV STARTED'",
+    "start:test": "cross-env ENV=test npm run network && npm run infra:up && npm run svc:up && npm run app:up && npm run info:test && echo 'TEST STARTED'",
+    "start:stage": "cross-env ENV=stage npm run network && npm run infra:up && npm run svc:up && npm run app:up && echo 'STAGE STARTED'",
+    "start:prod": "cross-env ENV=prod npm run network && npm run infra:up && npm run svc:up && npm run app:up && echo 'PROD STARTED'",
+    "stop:all": "docker stop $(docker ps -aq) || true",
+    "restart:all": "npm run stop:all && npm run start:dev",
+    "clean": "docker system prune -f && docker volume prune -f",
+    "reset": "npm run stop:all && npm run clean && npm run start:dev",
+
+    "# --- CONTROLLER ALIASES ---": "",
+    "infra:up": "node ops/scripts/ctrl.js up infra:all",
+    "infra:down": "node ops/scripts/ctrl.js down infra:all",
+    "svc:up": "node ops/scripts/ctrl.js up svc:all",
+    "svc:down": "node ops/scripts/ctrl.js down svc:all",
+    "app:up": "node ops/scripts/ctrl.js up app:client",
+    "app:down": "node ops/scripts/ctrl.js down app:client",
+
+    "# --- DASHBOARDS ---": "",
+    "info:dev": "cross-env ENV=dev node ops/scripts/dashboard.js",
+    "info:test": "cross-env ENV=test node ops/scripts/dashboard.js",
+
+    "# --- GRANULAR CONTROLS (OPTIONAL) ---": "",
+    "infra:security": "node ops/scripts/ctrl.js up infra:security",
+    "infra:edge": "node ops/scripts/ctrl.js up infra:edge",
+    "infra:data": "node ops/scripts/ctrl.js up infra:data",
+    "svc:core": "node ops/scripts/ctrl.js up svc:core",
+    "svc:engine": "node ops/scripts/ctrl.js up svc:engine",
+    "svc:store": "node ops/scripts/ctrl.js up svc:store",
+    "svc:music": "node ops/scripts/ctrl.js up svc:music",
+    "infra:backup:now": "docker exec store-game-backup /backup.sh",
+    "logs": "docker-compose -f ops/compose/service.core.yml logs -f",
+    "ps": "docker ps --format 'table {{.Names}}\\t{{.Status}}\\t{{.Ports}}'"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "turbo": "latest",
+    "prettier": "latest"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
+}

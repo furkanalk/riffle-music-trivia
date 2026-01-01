@@ -11,9 +11,9 @@ const PORT = process.env.PORT || 3000;
 const NODE_ENV = process.env.NODE_ENV || 'dev';
 const currentConfig = config[NODE_ENV];
 
-console.log(`🚀 Starting Riffle API`);
-console.log(`🌍 Environment: [${NODE_ENV}]`);
-console.log(`ℹ️  Log Level: ${currentConfig.logLevel}`);
+console.log(`Starting Riffle API`);
+console.log(`Environment: [${NODE_ENV}]`);
+console.log(`Log Level: ${currentConfig.logLevel}`);
 
 // CORS Configuration
 app.use(cors({
@@ -54,10 +54,10 @@ initDatabase().then(() => {
 
 // Start Server
 const server = app.listen(PORT, () => {
-  console.log(`✅ Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
   
   if (NODE_ENV === 'dev') {
-    console.log(`🔑 Dev API Key (Auto-Generated): ${currentConfig.apiKey}`);
+    console.log(`Dev API Key (Auto-Generated): ${currentConfig.apiKey}`);
   }
 });
 

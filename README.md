@@ -24,9 +24,9 @@
 RIFFLE — INFO
 
 Genre        : Rock • Metal (more TBD)
-Architecture : Modular Monolith > Microservices
-Platform     : Web • Mobile
-Version      : v0.4.5-alpha
+Architecture : Microservices (Monorepo Managed)
+Platform     : Web • Mobile (Planned)
+Version      : v0.5.0-alpha
 
 “Test your music knowledge under pressure.”
 ```
@@ -43,16 +43,20 @@ Version      : v0.4.5-alpha
 - [Installation \& Setup](#installation--setup)
   - [Prerequisites](#prerequisites)
   - [1. Setup \& Installation](#1-setup--installation)
-  - [2. Environment Configuration](#2-environment-configuration)
-  - [3. Create Network](#3-create-network)
-  - [4. Start the Ecosystem](#4-start-the-ecosystem)
-  - [5. Stop Services](#5-stop-services)
+  - [2. Security Infrastructure (Zero Trust)](#2-security-infrastructure-zero-trust)
+  - [3. Environment Configuration](#3-environment-configuration)
+  - [4. Create Network (if needed)](#4-create-network-if-needed)
+  - [5. Start the Ecosystem](#5-start-the-ecosystem)
+  - [6. Dashboard Access (Quick Links)](#6-dashboard-access-quick-links)
+  - [7. Stop Services](#7-stop-services)
   - [Modular Management](#modular-management)
   - [QoL (npm) Scripts](#qol-npm-scripts)
-- [Configuration  (to be updated)](#configuration--to-be-updated)
+- [Configuration](#configuration)
+  - [Environment Templates](#environment-templates)
+  - [Environment Modes](#environment-modes)
 - [Progress](#progress)
   - [Roadmap Status](#roadmap-status)
-  - [Active Stage Breakdown (Stage 1 \& 2)](#active-stage-breakdown-stage-1--2)
+  - [Active Stage Breakdown (Stage 3 \& 4)](#active-stage-breakdown-stage-3--4)
 - [License](#license)
 
 ## Features
@@ -86,13 +90,13 @@ Riffle utilizes a **Modular Monolith** architecture designed to evolve into Micr
 | Component | Technology | Role |
 |-----------|------------|------|
 | **Frontend** | React 18 + Vite | User Interface & Global State (Zustand) |
-| **Core API** | Node.js (Fastify) | Orchestrator, Auth & User Management |
+| **Core API** | Node.js v22 (Express) | Orchestrator, Auth & User Management |
 | **Engine** | Go (Golang) | High-Performance Matchmaking Service |
-| **Edge** | Kong + SafeLine WAF | API Gateway, Rate Limiting & Security |
+| **Edge** | Kong + SafeLine + mTLS | API Gateway, WAF & Zero Trust Security |
 | **Data (Active)**| Redis + Worker | Hot Data, Session & Write-Behind Sync |
 | **Data (Store)** | PostgreSQL | Cold Data, Persistence & Archival |
 | **Observability**| Prom / Grafana / Loki | System Metrics & Distributed Logging |
-| **Ops** | Docker & Terraform | Multi-Environment Containerization |
+| **Ops** | Docker Compose | Multi-Environment Containerization |
 
 ### Backend API Endpoints
 
@@ -104,50 +108,96 @@ Riffle follows a **Tiered Enterprise Microservices Architecture**.
 The system is split into **Edge**, **Data**, and **Service** layers, orchestrated via TurboRepo.
 
 ### Prerequisites
+* **Docker Desktop** (running)
+* **Node.js v22+** (Required for Vite/Client)
+* **Git**
 
 ### 1. Setup & Installation
 
 ```bash
 # Clone the repository
-git clone https://github.com/furkanalk/riffle.git
+git clone [https://github.com/furkanalk/riffle.git](https://github.com/furkanalk/riffle.git)
 cd riffle
 
-# Install dependencies
+# Install dependencies (Installs Turbo, Cross-Env, and Packages)
 npm install
 ```
 
-### 2. Environment Configuration
+### 2. Security Infrastructure (Zero Trust)
 
-The system uses a 4-Environment Strategy (Dev, Test, Stage, Prod).
+Riffle uses mTLS (Mutual TLS) for service-to-service communication. You must generate the Root CA and Service Certificates before starting the system.
 
 ```bash
-# Generate environment configs for all stages
-# This will create .env.dev, .env.test, .env.stage, .env.prod
-# (Automatic if you used the migration script, otherwise copy manually)
-cp ops/env/.env.example ops/env/.env.dev
+# Make the script executable (Linux/Mac/WSL)
+chmod +x ops/scripts/generate-certs.sh
+
+# Generate Certificates
+./ops/scripts/generate-certs.sh
 ```
-### 3. Create Network
+> **Note:** This will create a `ops/secrets/certs` directory containing keys for Postgres, Redis, and all microservices.
+
+### 3. Environment Configuration
+
+Copy the template to create your environment files. The system uses a 4-Environment Strategy.
+
+```bash
+# Create the Development environment file
+cp ops/env/.env.example ops/env/.env.dev
+
+# (Optional) Create others if needed
+# cp ops/env/.env.example ops/env/.env.prod
+```
+> **Note:** Check `ops/env/.env.dev` and ensure **MTLS_ENABLED=false** for **Dev**, or **true** for **Prod**.
+
+### 4. Create Network (if needed)
 
 ```bash
 docker network create riffle_network
 ```
 
-### 4. Start the Ecosystem
+### 5. Start the Ecosystem
+
+You can start the system in different modes depending on your goal.
+
+- Option A: Development Mode (Recommended)
+- Features: Hot-reload, HTTP (No mTLS), WAF Disabled, Debug Logs.
+
+Best for: Coding, Testing features.
 
 ```bash
-# Launches WAF -> Kong -> Redis/Postgres -> API Services
-npm run start:dev
-
-# Dashboard Access:
-# ➜ Client:      http://localhost:5173
-# ➜ Core API:    http://localhost:1968
-# All dashboard urls will be provided in docs. (kong-waf-monitoring)
+npm run start:dev # dev=test
 ```
 
-### 5. Stop Services
+- Option B: Production Simulation
+- Features: Optimized Builds, mTLS Enabled, WAF Enabled (if configured), Secure Headers.
+
+Best for: Final verification before deployment.
 
 ```bash
+npm run start:prod # stage=prod
+```
+
+### 6. Dashboard Access (Quick Links)
+
+Once the system is up, you can access the following services via localhost.
+
+| Service | URL (Localhost) | Credentials (Default) |
+| :--- | :--- | :--- |
+| **Client App** | [http://localhost:5173](http://localhost:5173) | N/A |
+| **Core API** | [http://localhost:1968](http://localhost:1968) | `RIFFLE_API_KEY` (Check .env) |
+| **Kong Manager** | [http://localhost:8002](http://localhost:8002) | N/A |
+| **WAF (Prod Only)**| [http://localhost:80](http://localhost:80) | N/A |
+
+> **Note:** For a complete list of **Internal Docker DNS** names and Service-to-Service networking details, please refer to the **[Architecture Documentation](./docs/ARCHITECTURE.md#internal-service-discovery)**.
+
+### 7. Stop Services
+
+```bash
+# Stops all containers and removes orphans
 npm run stop:all
+
+# Hard Reset (Stop + Clean Volumes + Restart)
+npm run reset
 ```
 
 ### Modular Management
@@ -158,38 +208,29 @@ For the complete list of Modular Management, see  [`docs/COMMANDS.md`](docs/COMM
 
 For the complete list of Quality of Life (QoL) npm scripts, see  [`docs/COMMANDS.md`](docs/COMMANDS.md)
 
-## Configuration  (to be updated)
+## Configuration
 
-In the Monorepo structure, environment variables are managed centrally for infrastructure components.
+Riffle uses a centralized configuration strategy managed within the `ops/env/` directory.
 
-Create environment files under `infrastructure/env/`:
+### Environment Templates
+Instead of guessing variables, use the master template:
 
-- `.env.dev` - Development
-- `.env.test` - Testing
-- `.env.stage` - Staging
-- `.env.prod` - Production
+1.  **Locate the Template:** [`ops/env/.env.example`](ops/env/.env.example)
+2.  **Create your Environment:**
+    ```bash
+    cp ops/env/.env.example ops/env/.env.dev
+    ```
+3.  **Customize:** Edit `.env.dev` to match your local secrets.
 
-Use `ops/env/.env.example` as a template:
+### Environment Modes
+The system behaves differently based on the `ENV` variable (handled automatically via `npm` scripts):
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `NODE_ENV` | Environment mode (dev/test/stage/prod) | `dev` |
-| `PORT` | API Gateway port | `1968` |
-| `POSTGRES_USER` | PostgreSQL username | `riffle_user` |
-| `POSTGRES_PASSWORD` | PostgreSQL password | `riffle_pass` |
-| `POSTGRES_DB` | PostgreSQL database name | `riffle_dev` |
-| `POSTGRES_HOST` | Database host (Docker service name) | `postgres` |
-| `POSTGRES_PORT` | Database port | `5432` |
-| `DATABASE_URL` | Full connection string (Prisma/Go) | `postgresql://...` |
-| `REDIS_HOST` | Redis host | `redis` |
-| `REDIS_PORT` | Redis port | `6379` |
-| `REDIS_USER` | Redis username | `default` |
-| `REDIS_PASSWORD` | Redis password | - |
-| `JWT_SECRET` | Secret for signing JWTs | **Required** |
-| `TOKEN_EXPIRES_IN` | Token expiration time | `1d` |
-| `CORS_ORIGIN` | Allowed Frontend URL | `http://localhost:5173` |
-| `RIFFLE_API_KEY` | Internal Service Key | **Required** |
-| `DEEZER_API_KEY` | Deezer API key (if required) | - |
+| Mode | File Used | Features |
+|------|-----------|----------|
+| **Dev** | `.env.dev` | No mTLS, WAF Disabled, Debug Logs |
+| **Test** | `.env.test` | No mTLS, Mock Services |
+| **Stage**| `.env.stage`| **mTLS Enabled**, SSL Required, Pre-Prod |
+| **Prod** | `.env.prod` | **mTLS Enabled**, Tuned Performance, WAF Enabled |
 
 **Generate secure API keys:**
 ```bash
@@ -201,25 +242,25 @@ openssl rand -hex 16
 
 ## Progress
 
-- **Current Phase:**  `Stage 1: Phase 1`
-- **Focus:** Redis Setup & Service Layer Refactoring
+- **Current Phase:** `Stage 3 & 4 (Hybrid)`
+- **Focus:** Zero Trust Security, Kong Gateway Integration & Production Hardening
 
 ### Roadmap Status
 
 ```text
-Stage 1: PoC Foundation        ▓▓▓▓▓▓▓▓▓░ 90%  (Docker/DB ready. Base logic developed. Redis pending.)
-Stage 2: Identity & Data       ▓▓▓▓░░░░░░ 40%  (Auth UI/JWT done. User Profile & Services pending.)
-Stage 3: Modernization         ░░░░░░░░░░ 0%   (Monorepo, Go, & Fastify migration upcoming.)
-Stage 4: Production Infra      ░░░░░░░░░░ 0%   (WAF, Kong, Terraform planned.)
+Stage 1: PoC Foundation        ██████████ 100% (Completed)
+Stage 2: Identity & Data       ██████░░░░ 60%  (Auth Service segregated. User Profile pending.)
+Stage 3: Modernization         ██████████ 100% (Monorepo, Node v22, Service Split DONE.)
+Stage 4: Production Infra      ████████░░ 80%  (mTLS, Kong, Docker Network ready. WAF Tuning pending.)
 Stage 5: Expansion             ░░░░░░░░░░ 0%   (Mobile & Anti-Cheat planned.)
 ```
 
-### Active Stage Breakdown (Stage 1 & 2)
+### Active Stage Breakdown (Stage 3 & 4)
 ```text
-- Infrastructure (S1)    ▓▓▓▓▓▓▓▓▓░ 90% (Postgres & Docker active. Redis integration next.)
-- Gameplay Logic (S1)    ▓▓▓▓▓░░░░░ 50% (Marathon mode ready. Smart Algorithm pending.)
-- Authentication (S2)    ▓▓▓▓▓▓▓░░░ 70% (Login/Register UI & JWT flow complete. Email Verify pending.)
-- User Services (S2)     ░░░░░░░░░░ 0%  (Profile, History & Stats services not started.)
+- Infrastructure (S4)    ██████████ 100% (Docker, Redis, Postgres, Network isolation complete.)
+- Security (S4)          ████████░░ 80%  (mTLS/Zero Trust active. WAF integration in progress.)
+- Architecture (S3)      ██████████ 100% (TurboRepo, Centralized Config, Scripting complete.)
+- Gameplay Logic (S1)    ▓▓▓▓▓░░░░░ 50%  (Marathon mode ready. Engine Service isolated.)
 ```
 
 ## License
