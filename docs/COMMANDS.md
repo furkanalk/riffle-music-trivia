@@ -55,7 +55,22 @@ docker-compose \
   down
 ```
 
-### 4. Game Engine (Matchmaker)
+### 4. Domain Services (Store + Music)
+```bash
+# Start
+docker-compose --env-file ops/env/.env.dev \
+  -f ops/compose/service.store.yml \
+  -f ops/compose/service.music.yml \
+  up -d
+
+# Stop
+docker-compose \
+  -f ops/compose/service.store.yml \
+  -f ops/compose/service.music.yml \
+  down
+```
+
+### 5. Game Engine (Matchmaker)
 ```bash
 # Start
 docker-compose --env-file ops/env/.env.dev \
@@ -68,7 +83,7 @@ docker-compose \
   down
 ```
 
-### 5. Frontend (Client)
+### 6. Frontend (Client)
 ```bash
 # Start
 docker-compose --env-file ops/env/.env.dev \
@@ -90,65 +105,64 @@ Riffle scripts use `cross-env` to ensure compatibility across Windows, Linux, an
 
 ### 1. Global Commands
 ```bash
-npm run start:dev        # Start everything (dev/test/stage/prod)
-npm run stop:all         # Stop all containers
-npm run restart:all      # Restart everything (Dev)
+npm run start          # Alias for start:dev
+npm run start:dev      # Start everything (Dev Mode) - No mTLS
+npm run start:test     # Start everything (Test Mode)
+npm run start:stage    # Start everything (Stage Mode) - mTLS Enabled
+npm run start:prod     # Start everything (Prod Mode) - mTLS + WAF
 ```
 
-### 2. Infrastructure Commands
+### 2. Global Stop & Reset
+```bash
+npm run stop:all       # Stop all running containers
+npm run restart:all    # Stop all + Start Dev
+npm run clean          # Remove docker volumes & orphan containers
+npm run reset          # Full wipe (Stop + Clean + Start Dev)
+```
 
+### 3. Infrastructure Commands
 ```bash
 # All Layers
-npm run infra:all        # Start all infra layers
-npm run infra:down       # Stop all infra layers
+npm run infra:up       # Start all infra layers (Security + Edge + Data)
+npm run infra:down     # Stop all infra layers
 
-# Security & Edge
-npm run infra:security   # WAF (SafeLine)
-npm run infra:edge       # Kong (Gateway + Store + Service)
-npm run infra:edge:down  # Stop Edge layer
-
-# 3. Data Layer
-npm run infra:data       # Postgres + Redis
-npm run infra:data:down  # Stop Data layer
+# Granular
+npm run infra:security # Start WAF
+npm run infra:edge     # Start Kong Gateway + DB + Cache
+npm run infra:data     # Start Postgres + Redis
 ```
 
-### 3. Service Commands
-
+### 4. Service Commands
 ```bash
 # All Services
-npm run svc:all          # Start all services
-npm run svc:down         # Stop all services
+npm run svc:up         # Start all microservices
+npm run svc:down       # Stop all microservices
 
-# Core Services
-npm run svc:core         # Core API
-npm run svc:worker       # Worker
-npm run svc:core:down    # Stop Core Services
-
-# Game Engine
-npm run svc:engine       # Matchmaker
-npm run svc:engine:down  # Stop Game Engine
-
-# Other Services
-npm run svc:store
-npm run svc:music
-npm run svc:others
-npm run svc:others:down
-
-# Frontend Commands
-npm run app:client
-npm run app:client:down
-
-# Utility Commands
-npm run logs             # Follow all container logs
-npm run ps               # Show Docker Compose status
-npm run clean            # Remove volumes & orphan containers
-npm run reset            # Clean + Start everything
+# Individual Services
+npm run svc:core       # Core API
+npm run svc:worker     # Worker Service
+npm run svc:engine     # Matchmaker (Game Engine)
+npm run svc:store      # Store Service (Inventory/Economy)
+npm run svc:music      # Music Service (Deezer Integration)
 ```
 
+### 5. Frontend Commands
+```bash
+npm run app:up         # Start Client (Vite)
+npm run app:down       # Stop Client
+```
+
+### 6. Utility & Monitoring
+```bash
+npm run logs             # Follow logs for Core API (Main entry point)
+npm run ps               # Show formatted status of all containers
+npm run infra:backup:now # Trigger immediate DB backup script
+```
 ---
 
 ### Notes
-- Prefer **QoL npm scripts** for daily development.
-- Use **modular Docker Compose commands** for debugging or partial environment setups.
-- Prefer `ENV=prod npm run ...` over manually typing docker-compose commands for different environments.
+- **Daily Workflow:** Prefer **QoL npm scripts** (`npm run ...`) over raw docker commands.
+- **Windows Support:** Scripts use `cross-env`, making them compatible with PowerShell, CMD, and WSL.
+- **Debugging:** Use modular `docker-compose` commands (above) for granular control.
+- **Environments:** Use `npm run start:prod` or `npm run start:stage` instead of manually setting `ENV=`.
 
