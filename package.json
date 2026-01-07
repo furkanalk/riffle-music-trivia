@@ -2,6 +2,11 @@
   "name": "riffle-monorepo",
   "private": true,
   "scripts": {
+    "# --- BIOME COMMANDS ---": "",
+    "format": "biome format --write .",
+    "lint": "biome lint --write .",
+    "check": "biome check --write .",
+    "# --- TURBO COMMANDS ---": "",
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
     "network": "docker network create riffle_network || true",
@@ -25,7 +30,7 @@
     "# --- DASHBOARDS ---": "",
     "info:dev": "cross-env ENV=dev node ops/scripts/dashboard.js",
     "info:test": "cross-env ENV=test node ops/scripts/dashboard.js",
-    "# --- GRANULAR CONTROLS (OPTIONAL) ---": "",
+    "# --- GRANULAR CONTROLS ---": "",
     "infra:security": "node ops/scripts/ctrl.js up infra:security",
     "infra:edge": "node ops/scripts/ctrl.js up infra:edge",
     "infra:data": "node ops/scripts/ctrl.js up infra:data",
@@ -39,6 +44,8 @@
     "prepare": "husky"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.3.11",
+    "@biomejs/cli-linux-x64": "2.3.11",
     "@commitlint/cli": "^20.3.0",
     "@commitlint/config-conventional": "^20.3.0",
     "cross-env": "^7.0.3",
