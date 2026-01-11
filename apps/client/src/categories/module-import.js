@@ -1,7 +1,7 @@
-import { setupGameModeSettings, updateSelectionsSummary, switchTab } from "./category-settings.js";
-import { loadCategories, filterCategories, debugCategories } from "./category-filters.js";
 import { sendChatMessage } from "./category-chat.js";
+import { debugCategories, filterCategories, loadCategories } from "./category-filters.js";
 import { startGame } from "./category-game.js";
+import { setupGameModeSettings, switchTab, updateSelectionsSummary } from "./category-settings.js";
 import "./menu-navigation.js";
 import { selectedCategories } from "./state.js";
 
@@ -36,16 +36,18 @@ function initStartButton() {
 
 function initScrollButtons() {
   const container = document.querySelector(".overflow-x-auto");
-  document.getElementById("scroll-left")
+  document
+    .getElementById("scroll-left")
     ?.addEventListener("click", () => container?.scrollBy({ left: -400, behavior: "smooth" }));
-  document.getElementById("scroll-right")
+  document
+    .getElementById("scroll-right")
     ?.addEventListener("click", () => container?.scrollBy({ left: 400, behavior: "smooth" }));
 }
 
 function initAvatarSelection() {
   const avatars = document.querySelectorAll(".avatar-option");
 
-  avatars.forEach(avatar => {
+  avatars.forEach((avatar) => {
     avatar.addEventListener("click", () => {
       avatars.forEach(resetAvatar);
       selectAvatar(avatar);
@@ -69,11 +71,9 @@ function selectAvatar(avatar) {
 }
 
 function initSettingsListeners() {
-  ["round-count", "question-type", "time-limit", "answer-visibility", "lives-count"]
-    .forEach(id =>
-      document.getElementById(id)
-        ?.addEventListener("change", updateSelectionsSummary)
-    );
+  for (const id of ["round-count", "question-type", "time-limit", "answer-visibility", "lives-count"]) {
+    document.getElementById(id)?.addEventListener("change", updateSelectionsSummary);
+  }
 }
 
 function initInviteCopy() {
@@ -87,14 +87,15 @@ function initInviteCopy() {
 
 function initChat() {
   document.getElementById("send-message")?.addEventListener("click", sendChatMessage);
-  document.getElementById("chat-input")
-    ?.addEventListener("keypress", e => e.key === "Enter" && sendChatMessage());
+  document
+    .getElementById("chat-input")
+    ?.addEventListener("keypress", (e) => e.key === "Enter" && sendChatMessage());
 }
 
 function initCategoryFilters() {
   const buttons = document.querySelectorAll(".category-filter");
 
-  buttons.forEach(btn => {
+  buttons.forEach((btn) => {
     btn.addEventListener("click", () => {
       buttons.forEach(resetFilterButton);
       activateFilterButton(btn);
@@ -114,15 +115,15 @@ function activateFilterButton(btn) {
 }
 
 function initTabs() {
-  const settingsTab = document.getElementById('tab-settings');
-  const chatTab = document.getElementById('tab-chat');
+  const settingsTab = document.getElementById("tab-settings");
+  const chatTab = document.getElementById("tab-chat");
 
   if (settingsTab) {
-    settingsTab.addEventListener('click', () => switchTab('settings'));
+    settingsTab.addEventListener("click", () => switchTab("settings"));
   }
-  
+
   if (chatTab) {
-    chatTab.addEventListener('click', () => switchTab('chat'));
+    chatTab.addEventListener("click", () => switchTab("chat"));
   }
 }
 

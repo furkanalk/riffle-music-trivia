@@ -1,27 +1,31 @@
-import { gameMode, selectedCategories } from './state.js';
-import { getAllGenres } from '../core/music.js';
-import { toggleCategory, filterCategories } from './category-filters.js'; // Importların doğru olduğundan emin ol
-import { sendChatMessage } from './category-chat.js';
+import { getAllGenres } from "../core/music.js";
+import { sendChatMessage } from "./category-chat.js";
+import { filterCategories, toggleCategory } from "./category-filters.js"; // Importların doğru olduğundan emin ol
+import { gameMode, selectedCategories } from "./state.js";
 
 // --- CONSTANTS ---
 
 const MODE_LABELS = {
-  'solo': 'Marathon', 'marathon': 'Marathon',
-  'coop': 'Cooperative', 'versus': 'Versus',
-  'team': 'Team', 'chaos': 'Chaos', 'custom': 'Custom'
+  solo: "Marathon",
+  marathon: "Marathon",
+  coop: "Cooperative",
+  versus: "Versus",
+  team: "Team",
+  chaos: "Chaos",
+  custom: "Custom",
 };
 
 const QUESTION_TYPE_LABELS = {
-  'song': 'Song Title Questions',
-  'artist': 'Artist/Band Questions',
-  'mixed': 'Mixed Questions',
-  'guitarist': 'Guitarist Questions (Hard!)'
+  song: "Song Title Questions",
+  artist: "Artist/Band Questions",
+  mixed: "Mixed Questions",
+  guitarist: "Guitarist Questions (Hard!)",
 };
 
 const VISIBILITY_LABELS = {
-  'visible': 'Answers Visible to All',
-  'hidden': 'Answers Hidden Until Round End',
-  'individual': 'Answers Only Visible to Answerer'
+  visible: "Answers Visible to All",
+  hidden: "Answers Hidden Until Round End",
+  individual: "Answers Only Visible to Answerer",
 };
 
 // --- HELPERS ---
@@ -30,46 +34,46 @@ const getEl = (id) => document.getElementById(id);
 
 const setVisibility = (element, isVisible, options = {}) => {
   if (!element) return;
-  
+
   if (!isVisible) {
-    element.classList.add('hidden');
-    element.style.display = 'none';
-    element.style.visibility = 'hidden';
-    element.style.opacity = '0';
+    element.classList.add("hidden");
+    element.style.display = "none";
+    element.style.visibility = "hidden";
+    element.style.opacity = "0";
     if (options.hideAsAbsolute) {
-        element.style.position = 'absolute';
-        element.style.pointerEvents = 'none';
+      element.style.position = "absolute";
+      element.style.pointerEvents = "none";
     }
     return;
   }
 
-  element.classList.remove('hidden');
-  element.style.display = options.display || 'block';
-  element.style.visibility = 'visible';
-  element.style.opacity = '1';
-  element.style.pointerEvents = 'auto';
+  element.classList.remove("hidden");
+  element.style.display = options.display || "block";
+  element.style.visibility = "visible";
+  element.style.opacity = "1";
+  element.style.pointerEvents = "auto";
   if (options.position) element.style.position = options.position;
 };
 
 // --- CONFIGURATION LOGIC ---
 
 function setupGameModeSettings() {
-  const currentUrlMode = new URLSearchParams(window.location.search).get('mode');
-  
-  if (currentUrlMode && currentUrlMode !== gameMode && currentUrlMode !== 'marathon') {
+  const currentUrlMode = new URLSearchParams(window.location.search).get("mode");
+
+  if (currentUrlMode && currentUrlMode !== gameMode && currentUrlMode !== "marathon") {
     console.warn(`URL mode '${currentUrlMode}' does not match internal game mode '${gameMode}'`);
   }
 
   const els = {
-    answerVisibility: getEl('answer-visibility-container'),
-    livesContainer: getEl('lives-container'),
-    roundCount: getEl('round-count'),
-    marathonDisplay: getEl('marathon-unlimited-display'),
-    marathonBadge: getEl('marathon-badge'),
-    marathonBadgeLives: getEl('marathon-badge-lives')
+    answerVisibility: getEl("answer-visibility-container"),
+    livesContainer: getEl("lives-container"),
+    roundCount: getEl("round-count"),
+    marathonDisplay: getEl("marathon-unlimited-display"),
+    marathonBadge: getEl("marathon-badge"),
+    marathonBadgeLives: getEl("marathon-badge-lives"),
   };
 
-  const isMarathon = (gameMode === 'solo' || gameMode === 'marathon');
+  const isMarathon = gameMode === "solo" || gameMode === "marathon";
 
   if (isMarathon) {
     configureMarathonMode(els);
@@ -83,9 +87,9 @@ function setupGameModeSettings() {
 
 function configureMarathonMode(els) {
   if (els.roundCount) {
-    els.roundCount.value = 'unlimited';
+    els.roundCount.value = "unlimited";
     els.roundCount.disabled = true;
-    els.roundCount.classList.add('disabled-select');
+    els.roundCount.classList.add("disabled-select");
     setVisibility(els.roundCount, false);
   }
 
@@ -99,8 +103,8 @@ function configureMarathonMode(els) {
 function configureNormalMode(els) {
   if (els.roundCount) {
     els.roundCount.disabled = false;
-    els.roundCount.classList.remove('disabled-select');
-    if (els.roundCount.value === 'unlimited') els.roundCount.value = '10';
+    els.roundCount.classList.remove("disabled-select");
+    if (els.roundCount.value === "unlimited") els.roundCount.value = "10";
     setVisibility(els.roundCount, true);
   }
 
@@ -108,7 +112,7 @@ function configureNormalMode(els) {
   setVisibility(els.marathonBadge, false);
   setVisibility(els.livesContainer, false);
   setVisibility(els.marathonBadgeLives, false);
-  setVisibility(els.answerVisibility, true, { position: 'static' });
+  setVisibility(els.answerVisibility, true, { position: "static" });
 }
 
 function loadSavedModeSettings() {
@@ -117,64 +121,68 @@ function loadSavedModeSettings() {
 
   try {
     const settings = JSON.parse(savedSettings);
-    const isMarathon = (gameMode === 'solo');
-    const safeSet = (id, val) => { const el = getEl(id); if(el) el.value = val; };
+    const isMarathon = gameMode === "solo";
+    const safeSet = (id, val) => {
+      const el = getEl(id);
+      if (el) el.value = val;
+    };
 
-    if (settings.questionType) safeSet('question-type', settings.questionType);
-    if (settings.timeLimit)    safeSet('time-limit', settings.timeLimit);
-    
+    if (settings.questionType) safeSet("question-type", settings.questionType);
+    if (settings.timeLimit) safeSet("time-limit", settings.timeLimit);
+
     if (settings.rounds) {
-        if (isMarathon) safeSet('marathon-round-count-hidden', 'unlimited');
-        else safeSet('round-count', settings.rounds);
+      if (isMarathon) safeSet("marathon-round-count-hidden", "unlimited");
+      else safeSet("round-count", settings.rounds);
     }
 
-    if (settings.lives && isMarathon) safeSet('lives-count', settings.lives);
+    if (settings.lives && isMarathon) safeSet("lives-count", settings.lives);
 
-    if (localStorage.getItem('selectedAvatar')) {
-        updateAvatarSelection(localStorage.getItem('selectedAvatar'));
+    if (localStorage.getItem("selectedAvatar")) {
+      updateAvatarSelection(localStorage.getItem("selectedAvatar"));
     }
 
     if (settings.categories && settings.categories.length > 0) {
-      selectedCategories.length = 0; 
-      settings.categories.forEach(c => selectedCategories.push(c));
+      selectedCategories.length = 0;
+      for (const c of settings.categories) {
+        selectedCategories.push(c);
+      }
     }
-
   } catch (e) {
-    console.error('Failed to load saved settings:', e);
+    console.error("Failed to load saved settings:", e);
   }
 }
 
 function updateAvatarSelection(selectedId) {
-    document.querySelectorAll('.avatar-option').forEach(opt => {
-        const isSelected = opt.getAttribute('data-avatar') === selectedId;
-        const checkmark = opt.querySelector('.checkmark');
-        
-        if (isSelected) {
-            opt.classList.add('selected', 'border-purple-500');
-            opt.classList.remove('border-purple-900', 'border-opacity-30');
-            if (checkmark) checkmark.classList.remove('hidden');
-        } else {
-            opt.classList.remove('selected', 'border-purple-500');
-            opt.classList.add('border-purple-900', 'border-opacity-30');
-            if (checkmark) checkmark.classList.add('hidden');
-        }
-    });
+  document.querySelectorAll(".avatar-option").forEach((opt) => {
+    const isSelected = opt.getAttribute("data-avatar") === selectedId;
+    const checkmark = opt.querySelector(".checkmark");
+
+    if (isSelected) {
+      opt.classList.add("selected", "border-purple-500");
+      opt.classList.remove("border-purple-900", "border-opacity-30");
+      if (checkmark) checkmark.classList.remove("hidden");
+    } else {
+      opt.classList.remove("selected", "border-purple-500");
+      opt.classList.add("border-purple-900", "border-opacity-30");
+      if (checkmark) checkmark.classList.add("hidden");
+    }
+  });
 }
 
 function switchTab(tab) {
   const els = {
-    settingsPanel: getEl('settings-panel'),
-    chatPanel: getEl('chat-panel'),
-    settingsTab: getEl('tab-settings'),
-    chatTab: getEl('tab-chat')
+    settingsPanel: getEl("settings-panel"),
+    chatPanel: getEl("chat-panel"),
+    settingsTab: getEl("tab-settings"),
+    chatTab: getEl("tab-chat"),
   };
 
-  const activeClass = ['bg-purple-800', 'bg-opacity-80'];
-  const inactiveClass = ['bg-purple-600', 'bg-opacity-40'];
+  const activeClass = ["bg-purple-800", "bg-opacity-80"];
+  const inactiveClass = ["bg-purple-600", "bg-opacity-40"];
 
-  if (tab === 'settings') {
-    els.settingsPanel.classList.remove('hidden');
-    els.chatPanel.classList.add('hidden');
+  if (tab === "settings") {
+    els.settingsPanel.classList.remove("hidden");
+    els.chatPanel.classList.add("hidden");
     els.settingsTab.classList.add(...activeClass);
     els.settingsTab.classList.remove(...inactiveClass);
     els.chatTab.classList.add(...inactiveClass);
@@ -182,8 +190,8 @@ function switchTab(tab) {
     return;
   }
 
-  els.settingsPanel.classList.add('hidden');
-  els.chatPanel.classList.remove('hidden');
+  els.settingsPanel.classList.add("hidden");
+  els.chatPanel.classList.remove("hidden");
   els.chatTab.classList.add(...activeClass);
   els.chatTab.classList.remove(...inactiveClass);
   els.settingsTab.classList.add(...inactiveClass);
@@ -193,7 +201,7 @@ function switchTab(tab) {
 // --- SUMMARY UPDATE LOGIC ---
 
 function updateSelectionsSummary() {
-  if (typeof selectedCategories === 'undefined') return;
+  if (typeof selectedCategories === "undefined") return;
 
   updateModeTitle();
   updateCategoriesList();
@@ -201,156 +209,163 @@ function updateSelectionsSummary() {
 }
 
 function updateModeTitle() {
-  const modeDisplay = getEl('selection-game-mode');
-  if (modeDisplay) modeDisplay.textContent = (MODE_LABELS[gameMode] || 'Marathon') + ' Mode';
+  const modeDisplay = getEl("selection-game-mode");
+  if (modeDisplay) modeDisplay.textContent = `${MODE_LABELS[gameMode] || "Marathon"} Mode`;
 }
 
 function updateCategoriesList() {
-  const list = getEl('selected-categories-list');
+  const list = getEl("selected-categories-list");
   if (!list) return;
 
-  list.innerHTML = '';
-  
+  list.innerHTML = "";
+
   if (!selectedCategories || selectedCategories.length === 0) {
-    const li = document.createElement('li');
-    li.className = 'text-purple-300 text-sm italic';
-    li.textContent = 'No categories selected';
+    const li = document.createElement("li");
+    li.className = "text-purple-300 text-sm italic";
+    li.textContent = "No categories selected";
     list.appendChild(li);
-    
-    const startBtn = getEl('start-game');
-    if(startBtn) startBtn.disabled = true;
+
+    const startBtn = getEl("start-game");
+    if (startBtn) startBtn.disabled = true;
     return;
-  } 
-  
-  const startBtn = getEl('start-game');
-  if(startBtn) startBtn.disabled = false;
+  }
+
+  const startBtn = getEl("start-game");
+  if (startBtn) startBtn.disabled = false;
 
   const allGenres = getAllGenres();
-  selectedCategories.forEach(id => {
-    const genre = allGenres.find(g => g.id === id);
+  selectedCategories.forEach((id) => {
+    const genre = allGenres.find((g) => g.id === id);
     if (!genre) return;
-    
-    const li = document.createElement('li');
-    li.className = 'mb-2 flex items-center rounded-full bg-purple-900 bg-opacity-50 px-3 py-1 text-white text-sm';
+
+    const li = document.createElement("li");
+    li.className =
+      "mb-2 flex items-center rounded-full bg-purple-900 bg-opacity-50 px-3 py-1 text-white text-sm";
     li.innerHTML = `<span class="w-2 h-2 rounded-full bg-purple-400 mr-2"></span>${genre.name}`;
     list.appendChild(li);
   });
 }
 
 function updateSettingsSummary() {
-  const isMarathon = (gameMode === 'solo');
-  
-  const qEl = getEl('selection-questions');
+  const isMarathon = gameMode === "solo";
+
+  const qEl = getEl("selection-questions");
   if (qEl) {
-      if (isMarathon) qEl.textContent = 'Unlimited Questions (Marathon Mode)';
-      else {
-          const val = getEl('round-count')?.value;
-          qEl.textContent = val === 'unlimited' ? 'Unlimited Questions' : `${val} Questions`;
-      }
+    if (isMarathon) qEl.textContent = "Unlimited Questions (Marathon Mode)";
+    else {
+      const val = getEl("round-count")?.value;
+      qEl.textContent = val === "unlimited" ? "Unlimited Questions" : `${val} Questions`;
+    }
   }
 
-  const tEl = getEl('selection-time');
-  if (tEl) tEl.textContent = `${getEl('time-limit')?.value || '15'} seconds per answer`;
+  const tEl = getEl("selection-time");
+  if (tEl) tEl.textContent = `${getEl("time-limit")?.value || "15"} seconds per answer`;
 
-  const typeEl = getEl('selection-question-type');
+  const typeEl = getEl("selection-question-type");
   if (typeEl) {
-      const val = getEl('question-type')?.value || 'mixed';
-      typeEl.textContent = QUESTION_TYPE_LABELS[val] || 'Mixed Questions';
+    const val = getEl("question-type")?.value || "mixed";
+    typeEl.textContent = QUESTION_TYPE_LABELS[val] || "Mixed Questions";
   }
 
-  const visCont = getEl('selection-visibility-container');
-  const visLabel = getEl('selection-visibility');
+  const visCont = getEl("selection-visibility-container");
+  const visLabel = getEl("selection-visibility");
   if (visCont && visLabel) {
-      if (isMarathon) setVisibility(visCont, false);
-      else {
-          setVisibility(visCont, true, { display: 'flex' });
-          const val = getEl('answer-visibility')?.value || 'visible';
-          visLabel.textContent = VISIBILITY_LABELS[val] || 'Answers Visible to All';
-      }
+    if (isMarathon) setVisibility(visCont, false);
+    else {
+      setVisibility(visCont, true, { display: "flex" });
+      const val = getEl("answer-visibility")?.value || "visible";
+      visLabel.textContent = VISIBILITY_LABELS[val] || "Answers Visible to All";
+    }
   }
 
-  const livesCont = getEl('selection-lives-container');
-  const livesLabel = getEl('selection-lives');
+  const livesCont = getEl("selection-lives-container");
+  const livesLabel = getEl("selection-lives");
   if (livesCont && livesLabel) {
-      if (!isMarathon) {
-          setVisibility(livesCont, false);
-      } else {
-          setVisibility(livesCont, true, { display: 'flex' });
-          const val = getEl('lives-count')?.value || '3';
-          if (val === '0') livesLabel.textContent = 'No Lives - One Strike Out';
-          else if (val === 'unlimited') livesLabel.textContent = 'Unlimited Lives (Practice)';
-          else livesLabel.textContent = `${val} Lives`;
-      }
+    if (!isMarathon) {
+      setVisibility(livesCont, false);
+    } else {
+      setVisibility(livesCont, true, { display: "flex" });
+      const val = getEl("lives-count")?.value || "3";
+      if (val === "0") livesLabel.textContent = "No Lives - One Strike Out";
+      else if (val === "unlimited") livesLabel.textContent = "Unlimited Lives (Practice)";
+      else livesLabel.textContent = `${val} Lives`;
+    }
   }
 }
 
 // --- EVENT LISTENERS ---
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
   setupGameModeSettings();
   updateSelectionsSummary();
 
-  ['round-count', 'time-limit', 'question-type', 'lives-count', 'answer-visibility'].forEach(id => {
-    getEl(id)?.addEventListener('change', updateSelectionsSummary);
-  });
+  ["round-count", "time-limit", "question-type", "lives-count", "answer-visibility"].forEach(
+    (id) => {
+      getEl(id)?.addEventListener("change", updateSelectionsSummary);
+    }
+  );
 
-  document.querySelectorAll('.avatar-option').forEach(avatar => {
-    avatar.addEventListener('click', function() {
-      const selectedId = this.getAttribute('data-avatar');
+  document.querySelectorAll(".avatar-option").forEach((avatar) => {
+    avatar.addEventListener("click", function () {
+      const selectedId = this.getAttribute("data-avatar");
       updateAvatarSelection(selectedId);
-      this.classList.add('animate-pulse');
-      setTimeout(() => this.classList.remove('animate-pulse'), 500);
-      localStorage.setItem('selectedAvatar', selectedId);
+      this.classList.add("animate-pulse");
+      setTimeout(() => this.classList.remove("animate-pulse"), 500);
+      localStorage.setItem("selectedAvatar", selectedId);
     });
   });
 
-  const categoriesGrid = getEl('categories-grid');
+  const categoriesGrid = getEl("categories-grid");
   if (categoriesGrid) {
-    new MutationObserver(updateSelectionsSummary).observe(categoriesGrid, { childList: true, subtree: true, attributes: true });
+    new MutationObserver(updateSelectionsSummary).observe(categoriesGrid, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+    });
   }
 
-  document.addEventListener('click', event => {
-    const card = event.target.closest('.category-card');
-    
+  document.addEventListener("click", (event) => {
+    const card = event.target.closest(".category-card");
+
     // Category Selection Logic
     if (card) {
-        const categoryId = card.dataset.id;
-        if (typeof toggleCategory === 'function') {
-            toggleCategory(categoryId);
-            updateSelectionsSummary();
-        } else {
-            console.error("CRITICAL ERROR: toggleCategory function is NOT available!");
-        }
+      const categoryId = card.dataset.id;
+      if (typeof toggleCategory === "function") {
+        toggleCategory(categoryId);
+        updateSelectionsSummary();
+      } else {
+        console.error("CRITICAL ERROR: toggleCategory function is NOT available!");
+      }
     }
-    
+
     // Copy Link
-    if (event.target.closest('#copy-invite')) {
-        const link = getEl('invite-link');
-        if (link) {
-            link.select();
-            document.execCommand('copy');
-            alert('Invite link copied!');
-        }
+    if (event.target.closest("#copy-invite")) {
+      const link = getEl("invite-link");
+      if (link) {
+        link.select();
+        document.execCommand("copy");
+        alert("Invite link copied!");
+      }
     }
-    
+
     // Send Message
-    if (event.target.closest('#send-message')) {
-        sendChatMessage();
+    if (event.target.closest("#send-message")) {
+      sendChatMessage();
     }
-  });
-  
-  getEl('chat-input')?.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') sendChatMessage();
   });
 
-  document.querySelectorAll('.category-filter').forEach(btn => {
-    btn.addEventListener('click', function() {
-      document.querySelectorAll('.category-filter').forEach(b => {
-        b.classList.remove('bg-purple-800', 'bg-opacity-80');
-        b.classList.add('bg-purple-600', 'bg-opacity-40');
+  getEl("chat-input")?.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") sendChatMessage();
+  });
+
+  document.querySelectorAll(".category-filter").forEach((btn) => {
+    btn.addEventListener("click", function () {
+      document.querySelectorAll(".category-filter").forEach((b) => {
+        b.classList.remove("bg-purple-800", "bg-opacity-80");
+        b.classList.add("bg-purple-600", "bg-opacity-40");
       });
-      this.classList.remove('bg-purple-600', 'bg-opacity-40');
-      this.classList.add('bg-purple-800', 'bg-opacity-80');
+      this.classList.remove("bg-purple-600", "bg-opacity-40");
+      this.classList.add("bg-purple-800", "bg-opacity-80");
       filterCategories(this.dataset.filter);
     });
   });

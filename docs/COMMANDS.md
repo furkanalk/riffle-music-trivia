@@ -1,6 +1,7 @@
 # Riffle Management Commands
 
-A complete guide to all **modular Docker Compose commands** and **QoL (Quality of Life) npm scripts** for managing the Riffle platform.
+A complete guide to managing the Riffle platform across **Docker (Dev/Test)** and **Kubernetes (Stage/Prod)** environments.
+This document covers modular Docker Compose commands, npm shortcuts, and Kubernetes cluster operations.
 
 ---
 
@@ -158,11 +159,53 @@ npm run logs             # Follow logs for Core API (Main entry point)
 npm run ps               # Show formatted status of all containers
 npm run infra:backup:now # Trigger immediate DB backup script
 ```
+
+## Kubernetes Operations (Stage/Prod Simulation)
+
+Use these commands when working with the Kind cluster.
+
+### 1. Cluster Management
+```bash
+# Create Cluster (with Cilium & Config)
+kind create cluster --config ops/k8s/kind/riffle-cluster.yaml
+
+# Delete Cluster
+kind delete cluster --name riffle-cluster
+```
+
+## 2. Workload Management
+```bash
+# Deploy Infrastructure (Databases, Redis, Kong, WAF)
+helm install riffle-infra ./ops/k8s/charts/infra
+
+# Apply Application Manifests
+kubectl apply -f ops/k8s/manifests/
+
+# Restart Core API
+kubectl rollout restart deployment/core-api -n riffle-dev
+```
+
+## 3. Debugging & Access
+```bash
+# Access Kong Manager (GUI)
+kubectl port-forward svc/kong-gateway-manager -n kong 8002:8002
+
+# Access Grafana
+kubectl port-forward svc/grafana -n monitoring 3000:3000
+
+# Shell into a Pod
+kubectl exec -it deployment/core-api -n riffle-dev -- /bin/sh
+```
 ---
 
 ### Notes
-- **Daily Workflow:** Prefer **QoL npm scripts** (`npm run ...`) over raw docker commands.
-- **Windows Support:** Scripts use `cross-env`, making them compatible with PowerShell, CMD, and WSL.
-- **Debugging:** Use modular `docker-compose` commands (above) for granular control.
-- **Environments:** Use `npm run start:prod` or `npm run start:stage` instead of manually setting `ENV=`.
+
+- **Workflow Choice:**
+    - Use **npm scripts** (`npm run start:dev`) for rapid feature development (coding).
+    - Use **Kubernetes commands** (`kubectl`, `kind`) for infrastructure, network policy, and failover testing.
+- **Windows Support:** Docker scripts use `cross-env` for compatibility. Kubernetes commands work natively in PowerShell or WSL2.
+- **Debugging:**
+    - **Docker:** Use `docker logs -f <container_name>`.
+    - **K8s:** Use `kubectl logs -f -l app=core-api -n riffle-dev` or `k9s` for a visual dashboard.
+- **Environments:** Do not manually set `ENV=`. Let the npm scripts or Kubernetes ConfigMaps handle environment variables.
 

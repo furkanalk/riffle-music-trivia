@@ -110,7 +110,13 @@ The system is split into **Edge**, **Data**, and **Service** layers, orchestrate
 ### Prerequisites
 * **Docker Desktop** (running)
 * **Node.js v22+** (Required for Vite/Client)
+* **Go (Golang) v1.21+** (Required for Game Engine Development)
+* **Rust & Cargo** (Required for Security/WASM Module)
 * **Git**
+* **Kubernetes Tools:**
+  * `kubectl` (Cluster CLI)
+  * `kind` (Kubernetes in Docker - for Local Lab)
+  * `helm` (Package Manager)
 
 ### 1. Setup & Installation
 
@@ -157,24 +163,28 @@ docker network create riffle_network
 
 ### 5. Start the Ecosystem
 
-You can start the system in different modes depending on your goal.
+Choose the mode that fits your current task:
 
-- Option A: Development Mode (Recommended)
-- Features: Hot-reload, HTTP (No mTLS), WAF Disabled, Debug Logs.
-
-Best for: Coding, Testing features.
+#### Option A: Rapid Development (Docker Compose)
+> **Infrastructure:** Simple Containers, Hot-Reload active.
 
 ```bash
-npm run start:dev # dev=test
+# Start everything in Dev Mode
+npm run start:dev
 ```
 
-- Option B: Production Simulation
-- Features: Optimized Builds, mTLS Enabled, WAF Enabled (if configured), Secure Headers.
-
-Best for: Final verification before deployment.
+#### Option B: Production Simulation (Kubernetes / Kind)
+> **Infrastructure:** Full K8s Cluster (Kind), Cilium, Kong Ingress.
 
 ```bash
-npm run start:prod # stage=prod
+# 1. Create the Cluster
+kind create cluster --config ops/k8s/kind/riffle-cluster.yaml
+
+# 2. Install Infrastructure (Helm)
+helm install riffle-infra ./ops/k8s/charts/infra
+
+# 3. Deploy Apps
+kubectl apply -f ops/k8s/manifests/
 ```
 
 ### 6. Dashboard Access (Quick Links)
@@ -186,7 +196,7 @@ Once the system is up, you can access the following services via localhost.
 | **Client App** | [http://localhost:5173](http://localhost:5173) | N/A |
 | **Core API** | [http://localhost:1968](http://localhost:1968) | `RIFFLE_API_KEY` (Check .env) |
 | **Kong Manager** | [http://localhost:8002](http://localhost:8002) | N/A |
-| **WAF (Prod Only)**| [http://localhost:80](http://localhost:80) | N/A |
+| **WAF**| [http://localhost:80](http://localhost:80) | N/A |
 
 > **Note:** For a complete list of **Internal Docker DNS** names and Service-to-Service networking details, please refer to the **[Architecture Documentation](./docs/ARCHITECTURE.md#internal-service-discovery)**.
 

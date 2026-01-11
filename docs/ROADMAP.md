@@ -67,23 +67,22 @@
   - [ ] **Typed WebSocket:** Implementing Socket.io with Zod validation.
   - [ ] **Inter-service:** Basic HTTP/gRPC communication between Node.js and Go.
 
-## Stage 4: Production Readiness & Security
-> *Hardening the application for the public internet.*
+## Stage 4: Production Readiness & Cloud Native
+> *Transitioning from Docker Compose to Enterprise Kubernetes Architecture.*
 
-- [ ] **Phase 1: Edge Security**
-  - [ ] **WAF:** SafeLine container integration (Disabled in Dev).
-  - [x] **Gateway:** Kong Gateway container & DB integration (Bootstrap implemented).
-  - [x] **Zero Trust Prep:** mTLS Certificate volume mounting infrastructure ready.
+- [ ] **Phase 1: Cluster & Orchestration**
+  - [ ] **Local Lab:** Kind Cluster setup with Multi-Node (1 Master, 2 Worker).
+  - [ ] **Network:** Cilium CNI integration (eBPF replacement for kube-proxy).
+  - [ ] **Ingress:** Migration from Nginx LB to **Kong Ingress Controller**.
 
-- [ ] **Phase 2: DevOps & Infra**
-  - [x] **Disaster Recovery:** Automated PostgreSQL Backup Sidecar integration.
-  - [ ] **IaC:** Defining infrastructure with **Terraform**.
-  - [ ] **Deployment:** Zero-downtime strategy (Rolling Updates).
+- [ ] **Phase 2: DevOps & GitOps**
+  - [ ] **CD:** ArgoCD implementation for GitOps-based deployment.
+  - [ ] **Secret Mgmt:** HashiCorp Vault integration (replacing .env files).
+  - [ ] **Disaster Recovery:** Automated S3 Backups (Postgres & Thanos).
 
-- [ ] **Phase 3: Observability**
-  - [ ] **Metrics:** Prometheus (Scraping) & Grafana (Dashboarding).
-  - [ ] **Logs:** Loki (Log Aggregation) & Promtail.
-  - [ ] **Health:** Distributed tracing & Uptime monitoring.
+- [ ] **Phase 3: Advanced Observability**
+  - [ ] **Stack:** Full LGTM (Loki, Grafana, Tempo, Mimir/Prometheus) setup.
+  - [ ] **Tracing:** Distributed Tracing for latency analysis.
 
 ## Stage 5: Expansion & Competitive Integrity
 > *Scaling to mobile and ensuring fair play.*

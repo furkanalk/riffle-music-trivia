@@ -115,43 +115,36 @@ riffle/
 
 > All backend services are **stateless**. Any instance can be terminated or scaled without state loss.
 
-### 6. Observability & Monitoring
-* **Prometheus**
-  * Pull-based metric collection from all containers.
-* **Grafana**
-  * Centralized dashboard for health, latency, and throughput visualization.
-* **Loki**
-  * Lightweight log aggregation optimized for Docker containers.
+### 6. Observability & Monitoring (LGTM Stack)
+* **Prometheus:** Metrics collection.
+* **Thanos:** Long-term metric retention & global view (S3 Backend).
+* **Grafana:** Visualization dashboard.
+* **Loki:** Log aggregation (replacing traditional ELK stack).
+* **Tempo:** Distributed Tracing (OpenTelemetry) to track requests across Microservices.
 
-> Observability is decoupled from business logic. Monitoring agents run as sidecars or separate containers.
+> **Hybrid Strategy:** Self-Hosted in Local Lab (Kind) vs. Grafana Cloud in AWS Production.
 
 ## Internal Service Discovery
 
-Services communicate internally via the Docker Bridge Network using stable DNS names.
-These URLs are managed in `.env` files.
+Riffle uses a **Hybrid Infrastructure Strategy**:
+- **Dev/Test:** Uses **Docker Bridge Network** (Container Names).
+- **Stage/Prod:** Uses **Kubernetes CoreDNS** (Service DNS).
 
-| Layer       | Container Name            | Responsibility                     | Access              | Availability     |
-|:------------|:--------------------------|:-----------------------------------|:--------------------|:-----------------|
-| **Frontend**| `riffle-client`           | React Application (Vite Server)    | Public (Browser)    | All Envs         |
-| Security    | `infra-waf`               | L7 WAF (SafeLine)                  | Public Internet     | Stage / Prod     |
-| Edge        | `infra-kong`              | API Gateway & Routing              | WAF Only            | All Envs         |
-| Edge        | `infra-kong-migrations`   | **Ephemeral** Kong DB Bootstrap    | Internal            | All Envs         |
-| Edge Store  | `store-kong-pg`           | Kong Configuration DB **(PG 14)**  | Kong Only (TCP)     | All Envs         |
-| Edge Cache  | `cache-kong-redis`        | Kong Rate Limiting & Proxy Cache   | Kong Only (TCP)     | All Envs         |
-| Active      | `active-game-redis`       | Hot State (Sessions/Scores)        | Services (TCP/TLS)  | All Envs         |
-| Active      | `service-worker`          | Async DB Synchronization           | Internal            | All Envs         |
-| Store       | `store-game-pg`           | Persistent Game Data **(PG 17)**   | Services (TCP/SSL)  | All Envs         |
-| Store       | `store-game-backup`       | Automated Daily SQL Backups        | None (Volume)       | All Envs         |
-| Service     | `service-core-api`        | Auth & Orchestration               | Gateway (HTTP/mTLS) | All Envs         |
-| Service     | `service-matchmaker`      | Calculation Engine (Go)            | **Internal (mTLS)** | All Envs         |
-| Service     | `service-store`           | Economy & Inventory                | **Internal (mTLS)** | All Envs         |
-| Service     | `service-music`           | Music Provider Proxy               | **Internal (mTLS)** | All Envs         |
-| Monitor     | `monitor-prometheus`      | Metrics Collection (Scraping)      | Internal (Admin)    | Stage / Prod     |
-| Monitor     | `monitor-grafana`         | Visualization Dashboard            | Internal (Admin)    | Stage / Prod     |
-| Monitor     | `monitor-loki`            | Log Aggregation                    | Internal            | Stage / Prod     |
-| DevTools    | `dev-mailhog`             | SMTP Mocking (Email Testing)       | Internal (Web)      | Dev / Test       |
-| DevTools    | `dev-httpbin`             | HTTP Request Mocking               | Internal            | Dev / Test       |
-| DevTools    | `dev-redis-commander`     | Redis GUI Management               | Internal (Web)      | Dev / Test       |
+| Layer       | Service / Role            | 💻 Dev/Test Host (Docker) | ☁️ Stage/Prod DNS (K8s)                     | Port |
+|:------------|:--------------------------|:--------------------------|:--------------------------------------------|:-----|
+| **Ingress** | API Gateway (Public)      | `infra-kong`              | `kong-gateway-proxy.kong.svc...`            | 80/443|
+| **Admin**   | Kong OSS GUI (Internal)   | `infra-kong:8002`         | `kong-gateway-manager.kong.svc...`          | 8002 |
+| Security    | WAF (SafeLine)            | `infra-waf`               | `safeline-waf.security.svc...`              | 80   |
+| Edge Store  | Kong DB (PG 14)           | `store-kong-pg`           | `store-kong-pg.riffle-dev.svc...`           | 5432 |
+| Active      | Redis (Hot State)         | `active-game-redis`       | `active-game-redis.riffle-dev.svc...`       | 6379 |
+| Store       | Game DB (PG 17)           | `store-game-pg`           | `store-game-pg.riffle-dev.svc...`           | 5432 |
+| Service     | Core API (Node.js)        | `service-core-api`        | `core-api.riffle-dev.svc...`                | 3000 |
+| Service     | Matchmaker (Go)           | `service-matchmaker`      | `matchmaker.riffle-dev.svc...`              | 50051|
+| Service     | Store Service             | `service-store`           | `service-store.riffle-dev.svc...`           | 3002 |
+| Service     | Music Service             | `service-music`           | `service-music.riffle-dev.svc...`           | 3003 |
+| Monitor     | Prometheus                | `monitor-prometheus`      | `prometheus-server.monitoring.svc...`       | 9090 |
+| Monitor     | Grafana                   | `monitor-grafana`         | `grafana.monitoring.svc...`                 | 3000 |
+| **Worker**  | Async Worker              | `service-worker`          | *(No Service/DNS - Deployment Only)*        | N/A  |
 
 ## Security Architecture
 
@@ -197,11 +190,13 @@ Riffle follows a defense-in-depth security model.
 
 ## Request Flow (High-Level)
 
-1. Edge: Request passes WAF -> Kong.
-2. Routing: Kong routes to service-core-api.
-3. Logic: Core API handles Auth and validates request.
-4. Hot Path: Game events are written instantly to active-game-redis.
-5. Async Sync: active-worker detects completed games in Redis.
-6. Persistence: Worker moves data to store-game-pg (Postgres).
+1. **User:** Request enters via Internet.
+2. **WAF:** SafeLine filters malicious traffic (SQLi, XSS).
+3. **Ingress:** **Kong Ingress Controller** receives valid traffic.
+   - Handles SSL Termination (mTLS).
+   - Enforces Rate Limiting & Auth Plugins.
+4. **Routing:** Kong routes request to Kubernetes Service (`core-api`).
+5. **Logic:** Node.js/Go services process the request.
+6. **Trace:** Tempo generates a trace ID to follow the request through Redis/Postgres.
 
 > No direct client-to-engine communication exists.
