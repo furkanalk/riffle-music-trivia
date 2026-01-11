@@ -1,49 +1,59 @@
 RIFFLE PROPRIETARY LICENSE AGREEMENT
-Version 1.0, December 2025
+Version 1.2, December 2025
 
 Copyright (c) 2025 Furkan Alkılıç. All Rights Reserved.
 
 TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
 
 1. DEFINITIONS
-   "Software" shall mean the source code, object code, assets, documentation,
-   and configuration files associated with the project "Riffle".
 
-   "Owner" shall mean Furkan Alk, the original author and copyright holder.
+"Software" means the source code, object code, assets, documentation,
+configuration files, and any other materials associated with the project
+known as "Riffle".
 
-   "You" (or "Your") shall mean an individual or Legal Entity exercising
-   permissions granted by this License.
+"Owner" means Furkan Alkılıç, the original author and sole copyright holder
+of the Software.
+
+"You" (or "Your") means any individual or legal entity exercising permissions
+granted under this License.
 
 2. GRANT OF LIMITED LICENSE
-   Permission is hereby granted, free of charge, to any person obtaining a copy
-   of this Software, to view and review the Source Code solely for
-   EDUCATIONAL PURPOSES and PERSONAL LEARING.
+
+Permission is hereby granted, free of charge, to view, review, and execute
+the Software locally, solely for educational and personal learning purposes.
+
+No rights or licenses are granted except as expressly stated in this Agreement.
 
 3. RESTRICTIONS
-   Without prior written permission from the Owner, You may NOT:
-   (a) Modify, translate, adapt, or otherwise create derivative works or
-       improvements, whether or not patentable, of the Software.
-   (b) Distribute, sublicense, assign, transfer, sell, lease, rent, or
-       otherwise make available the Software to any third party.
-   (c) Use the Software for any commercial purpose or in any production
-       environment.
-   (d) Reverse engineer, disassemble, decompile, decode, or otherwise
-       attempt to derive or gain access to the source code of any part of
-       the Software that is compiled.
+
+Without prior written permission from the Owner, You may NOT:
+
+(a) Modify, translate, adapt, or otherwise create derivative works of the
+    Software, in whole or in part.
+
+(b) Distribute, sublicense, assign, transfer, sell, lease, rent, publish,
+    or otherwise make the Software available to any third party.
+
+(c) Use the Software for any commercial purpose, production environment,
+    or revenue-generating activity.
+
+(d) Reverse engineer, disassemble, decompile, or otherwise attempt to derive
+    source code from any compiled or binary form of the Software, where
+    applicable.
 
 4. INTELLECTUAL PROPERTY RIGHTS
-   The Software is not sold to You. It is licensed strictly under the terms
-   of this Agreement. The Owner retains all right, title, and interest in
-   and to the Software, including all copyrights, patents, trade secrets,
-   trademarks, and other intellectual property rights therein.
+
+The Software is licensed, not sold. The Owner retains all right, title, and
+interest in and to the Software, including all copyrights, patents,
+trade secrets, trademarks, and other intellectual property rights.
 
 5. DISCLAIMER OF WARRANTY
-   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-   THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-   FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
-   DEALINGS IN THE SOFTWARE.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT. IN NO EVENT SHALL
+THE OWNER BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN
+AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF, OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 END OF TERMS AND CONDITIONS
