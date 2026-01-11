@@ -189,16 +189,31 @@ kubectl apply -f ops/k8s/manifests/
 
 ### 6. Dashboard Access (Quick Links)
 
-Once the system is up, you can access the following services via localhost.
+Access methods depend on your running environment (**Docker** vs **Kubernetes**).
+
+#### A. Docker Dev Mode (Default)
+Directly accessible via localhost ports mapped by Docker Compose.
 
 | Service | URL (Localhost) | Credentials (Default) |
 | :--- | :--- | :--- |
 | **Client App** | [http://localhost:5173](http://localhost:5173) | N/A |
 | **Core API** | [http://localhost:1968](http://localhost:1968) | `RIFFLE_API_KEY` (Check .env) |
-| **Kong Manager** | [http://localhost:8002](http://localhost:8002) | N/A |
+| **Kong Manager** | [http://localhost:8002](http://localhost:8002) | N/A (Admin) |
 | **WAF**| [http://localhost:80](http://localhost:80) | N/A |
 
-> **Note:** For a complete list of **Internal Docker DNS** names and Service-to-Service networking details, please refer to the **[Architecture Documentation](./docs/ARCHITECTURE.md#internal-service-discovery)**.
+#### B. Kubernetes Lab Mode (Kind)
+Services are isolated by default. Use **Port-Forwarding** to access them securely.
+
+```bash
+# Kong Manager (GUI) -> http://localhost:8002
+kubectl port-forward svc/kong-gateway-manager -n kong 8002:8002
+
+# Grafana -> http://localhost:3000
+kubectl port-forward svc/grafana -n monitoring 3000:3000
+
+# Prometheus -> http://localhost:9090
+kubectl port-forward svc/prometheus-server -n monitoring 9090:9090
+```
 
 ### 7. Stop Services
 
