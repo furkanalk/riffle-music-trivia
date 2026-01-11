@@ -1,5 +1,5 @@
-const { spawn } = require("child_process");
-const path = require("path");
+const { spawn } = require("node:child_process");
+const path = require("node:path");
 
 // Environment and arguments
 const env = process.env.ENV || "dev";
@@ -16,9 +16,7 @@ const colors = {
 };
 
 if (!action || !target) {
-  console.error(
-    `${colors.red}Usage: node ops/scripts/ctrl.js [up|down] [target]${colors.reset}`
-  );
+  console.error(`${colors.red}Usage: node ops/scripts/ctrl.js [up|down] [target]${colors.reset}`);
   process.exit(1);
 }
 
@@ -26,14 +24,8 @@ if (!action || !target) {
 const layers = {
   // --- Infrastructure ---
   "infra:security": ["ops/compose/infra.security.yml"],
-  "infra:edge": [
-    "ops/compose/infra.edge.store.yml",
-    "ops/compose/infra.edge.service.yml",
-  ],
-  "infra:data": [
-    "ops/compose/infra.data.store.yml",
-    "ops/compose/infra.data.active.yml",
-  ],
+  "infra:edge": ["ops/compose/infra.edge.store.yml", "ops/compose/infra.edge.service.yml"],
+  "infra:data": ["ops/compose/infra.data.store.yml", "ops/compose/infra.data.active.yml"],
   "infra:monitor": ["ops/compose/infra.monitor.yml"],
   "infra:devtools": ["ops/compose/infra.devtools.yml"],
 
@@ -53,9 +45,7 @@ layers["infra:all"] = [
   ...layers["infra:security"],
   ...layers["infra:edge"],
   ...layers["infra:data"],
-  ...(env === "prod" || env === "stage"
-    ? layers["infra:monitor"]
-    : layers["infra:devtools"]),
+  ...(env === "prod" || env === "stage" ? layers["infra:monitor"] : layers["infra:devtools"]),
 ];
 
 layers["svc:all"] = [
@@ -104,9 +94,7 @@ const cmd = spawn("docker", args, { stdio: "inherit", shell: true });
 
 cmd.on("close", (code) => {
   if (code !== 0) {
-    console.error(
-      `${colors.red}Process failed with error code: ${code}${colors.reset}`
-    );
+    console.error(`${colors.red}Process failed with error code: ${code}${colors.reset}`);
     process.exit(code);
   } else {
     console.log(`${colors.green}Process completed successfully.${colors.reset}`);

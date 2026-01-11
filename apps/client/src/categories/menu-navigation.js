@@ -30,9 +30,9 @@ function enablePanelInteraction(panel) {
 }
 
 function normalizeZIndex() {
-  document.querySelectorAll(".fixed").forEach(el => {
+  document.querySelectorAll(".fixed").forEach((el) => {
     if (el.id === "menu-panel") return;
-    const z = parseInt(getComputedStyle(el).zIndex || "0");
+    const z = parseInt(getComputedStyle(el).zIndex || "0", 10);
     el.style.zIndex = Math.min(z, 9000);
   });
 }

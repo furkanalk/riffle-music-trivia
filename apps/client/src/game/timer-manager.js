@@ -4,7 +4,7 @@ export class TimerManager {
     this.timer = null;
     this.riffleTimeout = null;
     this.timeLimit = 15; // Default time limit in seconds
-    this.timerBar = document.getElementById('timer-bar');
+    this.timerBar = document.getElementById("timer-bar");
     this.timeoutHandled = false;
     this.answerSelected = false;
   }
@@ -18,9 +18,9 @@ export class TimerManager {
   startTimer(onTimeout) {
     this.timeoutHandled = false;
     let timeLeft = this.timeLimit;
-    this.timerBar.style.width = '100%';
-    this.timerBar.style.backgroundColor = '';
-    this.timerBar.textContent = '';
+    this.timerBar.style.width = "100%";
+    this.timerBar.style.backgroundColor = "";
+    this.timerBar.textContent = "";
 
     if (this.timer) {
       clearInterval(this.timer);
@@ -31,13 +31,13 @@ export class TimerManager {
       timeLeft -= 0.1;
       const percentage = (timeLeft / this.timeLimit) * 100;
       this.timerBar.style.width = `${percentage}%`;
-      this.timerBar.textContent = '';
+      this.timerBar.textContent = "";
 
       if (timeLeft <= 0) {
         clearInterval(this.timer);
-        this.timerBar.style.width = '100%';
-        this.timerBar.style.backgroundColor = '#ef4444';
-        this.timerBar.textContent = 'Süre Bitti';
+        this.timerBar.style.width = "100%";
+        this.timerBar.style.backgroundColor = "#ef4444";
+        this.timerBar.textContent = "Süre Bitti";
         if (!this.answerSelected && onTimeout) {
           onTimeout();
         }
@@ -59,10 +59,10 @@ export class TimerManager {
       clearInterval(this.timer);
       this.timer = null;
     }
-    
-    this.timerBar.style.width = '100%';
-    this.timerBar.style.backgroundColor = '';
-    this.timerBar.textContent = '';
+
+    this.timerBar.style.width = "100%";
+    this.timerBar.style.backgroundColor = "";
+    this.timerBar.textContent = "";
     this.timeoutHandled = false;
     this.answerSelected = false;
   }
@@ -102,9 +102,9 @@ export class TimerManager {
     this.timeoutHandled = true;
 
     // Add timeout-correct style if not exists
-    if (!document.getElementById('timeout-correct-style')) {
-      const style = document.createElement('style');
-      style.id = 'timeout-correct-style';
+    if (!document.getElementById("timeout-correct-style")) {
+      const style = document.createElement("style");
+      style.id = "timeout-correct-style";
       style.textContent = `
         .timeout-correct {
           background: repeating-linear-gradient(

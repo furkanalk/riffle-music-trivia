@@ -67,8 +67,7 @@ export function initAuthUI() {
   }
 
   // Close panel
-  if (elements.closeBtn)
-    elements.closeBtn.addEventListener("click", closePanel);
+  if (elements.closeBtn) elements.closeBtn.addEventListener("click", closePanel);
   if (elements.authPanel) {
     elements.authPanel.addEventListener("click", (e) => {
       if (e.target === elements.authPanel) closePanel();
@@ -76,12 +75,9 @@ export function initAuthUI() {
   }
 
   // Tab Switching
-  if (elements.tabLogin)
-    elements.tabLogin.addEventListener("click", () => switchAuthTab("login"));
+  if (elements.tabLogin) elements.tabLogin.addEventListener("click", () => switchAuthTab("login"));
   if (elements.tabRegister)
-    elements.tabRegister.addEventListener("click", () =>
-      switchAuthTab("register")
-    );
+    elements.tabRegister.addEventListener("click", () => switchAuthTab("register"));
 
   // --- SMART VALIDATION ---
 
@@ -96,8 +92,7 @@ export function initAuthUI() {
       msg: "Username must be between 3-20 characters.",
     },
     email: {
-      check: (val) =>
-        /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(val),
+      check: (val) => /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(val),
       msg: "Please enter a valid email address.",
     },
     password: {
@@ -107,7 +102,7 @@ export function initAuthUI() {
   };
 
   // Validation
-  function setupLiveFeedback(inputs, btn, formType) {
+  function setupLiveFeedback(inputs, btn, _formType) {
     const validateAll = () => {
       let isFormValid = true;
 
@@ -125,8 +120,7 @@ export function initAuthUI() {
             if (!rules.username.check(val)) {
               isValidField = false;
               errorMsg = rules.username.msg;
-            }
-            else if (!rules.usernameLength.check(val)) {
+            } else if (!rules.usernameLength.check(val)) {
               isValidField = false;
               errorMsg = rules.usernameLength.msg;
             }
@@ -184,7 +178,7 @@ export function initAuthUI() {
       btn.classList.remove("hover:shadow-lg", "hover:-translate-y-1");
     }
   };
-  
+
   // Login Form
   if (elements.formLogin) {
     const btn = document.getElementById("btn-login-submit");
@@ -193,7 +187,10 @@ export function initAuthUI() {
       { input: elements.loginPassword, type: "simple", errorEl: null },
     ];
 
-    inputs.forEach((i) => i.input.addEventListener("input", () => simpleCheck(btn, inputs)));
+    inputs.forEach((i) => {
+      i.input.addEventListener("input", () => simpleCheck(btn, inputs));
+    });
+
     simpleCheck(btn, inputs); // first run
   }
 
@@ -220,7 +217,9 @@ export function initAuthUI() {
 
     setupLiveFeedback(inputs, btn, "register");
 
-    inputs.forEach((i) => i.input.addEventListener("input", () => simpleCheck(btn, inputs)));
+    inputs.forEach((i) => {
+      i.input.addEventListener("input", () => simpleCheck(btn, inputs));
+    });
     simpleCheck(btn, inputs);
   }
 
@@ -327,17 +326,14 @@ export function initAuthUI() {
     if (elements.guestButtons) elements.guestButtons.classList.add("hidden");
 
     // Show profile button and set username
-    if (elements.userProfileBtn)
-      elements.userProfileBtn.classList.remove("hidden");
-    if (elements.userDisplayName)
-      elements.userDisplayName.textContent = user.username;
+    if (elements.userProfileBtn) elements.userProfileBtn.classList.remove("hidden");
+    if (elements.userDisplayName) elements.userDisplayName.textContent = user.username;
   }
 
   // Show guest mode
   function showGuestMode() {
     if (elements.guestButtons) elements.guestButtons.classList.remove("hidden");
-    if (elements.userProfileBtn)
-      elements.userProfileBtn.classList.add("hidden");
+    if (elements.userProfileBtn) elements.userProfileBtn.classList.add("hidden");
   }
 
   // Logout
@@ -380,10 +376,7 @@ export function initAuthUI() {
       elements.formRegister.classList.add("hidden");
     } else {
       elements.tabRegister.classList.add("text-white", "border-purple-500");
-      elements.tabRegister.classList.remove(
-        "text-gray-400",
-        "border-transparent"
-      );
+      elements.tabRegister.classList.remove("text-gray-400", "border-transparent");
       elements.tabLogin.classList.add("text-gray-400", "border-transparent");
       elements.tabLogin.classList.remove("text-white", "border-purple-500");
       elements.formRegister.classList.remove("hidden");
@@ -394,11 +387,7 @@ export function initAuthUI() {
   // Show message
   function showMessage(msg, type) {
     elements.authMessage.textContent = msg;
-    elements.authMessage.classList.remove(
-      "hidden",
-      "text-red-500",
-      "text-green-500"
-    );
+    elements.authMessage.classList.remove("hidden", "text-red-500", "text-green-500");
 
     if (type === "error") {
       elements.authMessage.classList.add("text-red-500");

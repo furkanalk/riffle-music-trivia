@@ -1,24 +1,24 @@
-import { defineConfig } from 'vite';
-import { resolve } from 'path';
+import { resolve } from "node:path";
+import { defineConfig } from "vite";
 
 export default defineConfig({
-  root: '.', 
+  root: ".",
   build: {
     rollupOptions: {
       input: {
-        main: resolve(__dirname, 'index.html'),
-        categories: resolve(__dirname, 'categories.html'),
-        game: resolve(__dirname, 'game.html'),
+        main: resolve(__dirname, "index.html"),
+        categories: resolve(__dirname, "categories.html"),
+        game: resolve(__dirname, "game.html"),
       },
     },
   },
   server: {
     proxy: {
-      '/api': {
-        target: 'http://localhost:1968',
+      "/api": {
+        target: "http://localhost:1968",
         changeOrigin: true,
         secure: false,
-      }
-    }
-  }
+      },
+    },
+  },
 });

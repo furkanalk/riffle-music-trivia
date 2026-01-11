@@ -1,7 +1,7 @@
 // audio-manager.js
 export class AudioManager {
   constructor() {
-    this.musicPlayer = document.getElementById('music-player');
+    this.musicPlayer = document.getElementById("music-player");
     this.musicProgressTimer = null;
     this.audioAnimationFrameId = null;
     this.currentTrack = null;
@@ -11,19 +11,19 @@ export class AudioManager {
   async initializeAudio() {
     try {
       const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-      
-      if (audioContext.state === 'suspended') {
+
+      if (audioContext.state === "suspended") {
         await audioContext.resume();
       }
-      
+
       const silentBuffer = audioContext.createBuffer(1, 1, 22050);
       const source = audioContext.createBufferSource();
       source.buffer = silentBuffer;
       source.connect(audioContext.destination);
       source.start(0);
-      
+
       return audioContext;
-    } catch (e) {
+    } catch (_e) {
       return null;
     }
   }
@@ -37,15 +37,15 @@ export class AudioManager {
 
   // Play music preview with enhanced effects
   async playMusic() {
-    const albumCover = document.querySelector('.album-cover');
+    const albumCover = document.querySelector(".album-cover");
     if (albumCover) {
-      albumCover.style.transition = 'all 0.5s ease-in-out';
-      albumCover.style.transform = 'scale(1.05)';
-      albumCover.style.boxShadow = '0 0 20px rgba(139, 92, 246, 0.7)';
-      
+      albumCover.style.transition = "all 0.5s ease-in-out";
+      albumCover.style.transform = "scale(1.05)";
+      albumCover.style.boxShadow = "0 0 20px rgba(139, 92, 246, 0.7)";
+
       setTimeout(() => {
-        albumCover.style.transform = 'scale(1)';
-        albumCover.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.5)';
+        albumCover.style.transform = "scale(1)";
+        albumCover.style.boxShadow = "0 8px 16px rgba(0, 0, 0, 0.5)";
       }, 500);
     }
 
@@ -59,21 +59,21 @@ export class AudioManager {
     try {
       this.musicPlayer.muted = true;
       await this.musicPlayer.play();
-      
+
       setTimeout(() => {
         this.musicPlayer.muted = false;
       }, 100);
-    } catch (e) {
+    } catch (_e) {
       const handlePageInteraction = () => {
         this.musicPlayer.muted = false;
         this.musicPlayer.play();
-        
-        document.removeEventListener('click', handlePageInteraction);
-        document.removeEventListener('keydown', handlePageInteraction);
+
+        document.removeEventListener("click", handlePageInteraction);
+        document.removeEventListener("keydown", handlePageInteraction);
       };
-      
-      document.addEventListener('click', handlePageInteraction);
-      document.addEventListener('keydown', handlePageInteraction);
+
+      document.addEventListener("click", handlePageInteraction);
+      document.addEventListener("keydown", handlePageInteraction);
     }
   }
 
@@ -97,103 +97,103 @@ export class AudioManager {
   resetMusicPlayer() {
     this.musicPlayer.pause();
     this.musicPlayer.currentTime = 0;
-    
-    const musicProgress = document.getElementById('music-progress');
+
+    const musicProgress = document.getElementById("music-progress");
     if (musicProgress) {
-      musicProgress.style.width = '100%';
+      musicProgress.style.width = "100%";
     }
-    
+
     if (this.musicProgressTimer) {
       clearInterval(this.musicProgressTimer);
       this.musicProgressTimer = null;
     }
-    
+
     this.stopMusicVisualizer();
   }
 
   // Start music duration bar
   startMusicDurationBar() {
-    const musicProgress = document.getElementById('music-progress');
-    musicProgress.style.width = '100%';
-    
+    const musicProgress = document.getElementById("music-progress");
+    musicProgress.style.width = "100%";
+
     const musicDuration = 10; // Default 10 seconds
     let timeElapsed = 0;
-    
+
     if (this.musicProgressTimer) {
       clearInterval(this.musicProgressTimer);
     }
-    
+
     this.musicProgressTimer = setInterval(() => {
       if (!this.musicPlayer.paused) {
         timeElapsed += 0.1;
-        const percentage = 100 - ((timeElapsed / musicDuration) * 100);
-        
+        const percentage = 100 - (timeElapsed / musicDuration) * 100;
+
         if (musicProgress) {
           musicProgress.style.width = `${percentage}%`;
         }
-        
+
         if (timeElapsed >= musicDuration) {
           clearInterval(this.musicProgressTimer);
           if (musicProgress) {
-            musicProgress.style.width = '100%';
+            musicProgress.style.width = "100%";
           }
         }
       }
     }, 100);
-    
+
     return this.musicProgressTimer;
   }
 
   // Create music visualizer
   createMusicVisualizer() {
-    const container = document.getElementById('music-visualizer');
+    const container = document.getElementById("music-visualizer");
     if (!container) return;
-    
-    let barsContainer = container.querySelector('.audio-bars-container');
+
+    let barsContainer = container.querySelector(".audio-bars-container");
     if (!barsContainer) {
-      barsContainer = document.createElement('div');
-      barsContainer.className = 'audio-bars-container flex items-center justify-center space-x-1';
+      barsContainer = document.createElement("div");
+      barsContainer.className = "audio-bars-container flex items-center justify-center space-x-1";
       container.appendChild(barsContainer);
     }
-    
-    barsContainer.innerHTML = '';
-    
+
+    barsContainer.innerHTML = "";
+
     const barCount = 7;
-    
+
     for (let i = 0; i < barCount; i++) {
-      const bar = document.createElement('div');
-      bar.className = 'audio-bar';
+      const bar = document.createElement("div");
+      bar.className = "audio-bar";
       barsContainer.appendChild(bar);
     }
   }
 
   // Start music visualizer animation
   startMusicVisualizer() {
-    const bars = document.querySelectorAll('.audio-bar');
+    const bars = document.querySelectorAll(".audio-bar");
     if (!bars.length) return;
-    
+
     bars.forEach((bar, index) => {
-      bar.classList.add('active');
+      bar.classList.add("active");
       bar.style.animationDelay = `${index * 0.1}s`;
     });
-    
+
     if (this.audioAnimationFrameId) {
       cancelAnimationFrame(this.audioAnimationFrameId);
     }
-    
+
     const animateBars = () => {
       if (this.musicPlayer.paused) return;
-      
-      bars.forEach(bar => {
+
+      bars.forEach((bar) => {
         if (Math.random() > 0.5) {
           const height = Math.random() * 10 + 5;
           bar.style.height = `${height}px`;
         }
       });
-      
+
       this.audioAnimationFrameId = requestAnimationFrame(animateBars);
     };
-    
+
     this.audioAnimationFrameId = requestAnimationFrame(animateBars);
   }
 
@@ -202,14 +202,14 @@ export class AudioManager {
     if (this.audioAnimationFrameId) {
       cancelAnimationFrame(this.audioAnimationFrameId);
     }
-    
-    const bars = document.querySelectorAll('.audio-bar');
+
+    const bars = document.querySelectorAll(".audio-bar");
     if (!bars.length) return;
-    
-    bars.forEach(bar => {
-      bar.classList.remove('active');
-      bar.style.animation = '';
-      bar.style.height = '5px';
+
+    bars.forEach((bar) => {
+      bar.classList.remove("active");
+      bar.style.animation = "";
+      bar.style.height = "5px";
     });
   }
 
@@ -218,16 +218,18 @@ export class AudioManager {
     const pageInteractionHandler = () => {
       if (this.musicPlayer.paused && this.musicPlayer.src) {
         this.musicPlayer.muted = false;
-        this.musicPlayer.play().catch(e => {/* Autoplay attempt error handled silently */});
+        this.musicPlayer.play().catch((_e) => {
+          /* Autoplay attempt error handled silently */
+        });
       }
-      
-      document.removeEventListener('click', pageInteractionHandler);
-      document.removeEventListener('touchstart', pageInteractionHandler);
-      document.removeEventListener('keydown', pageInteractionHandler);
+
+      document.removeEventListener("click", pageInteractionHandler);
+      document.removeEventListener("touchstart", pageInteractionHandler);
+      document.removeEventListener("keydown", pageInteractionHandler);
     };
-    
-    document.addEventListener('click', pageInteractionHandler);
-    document.addEventListener('touchstart', pageInteractionHandler);
-    document.addEventListener('keydown', pageInteractionHandler);
+
+    document.addEventListener("click", pageInteractionHandler);
+    document.addEventListener("touchstart", pageInteractionHandler);
+    document.addEventListener("keydown", pageInteractionHandler);
   }
 }

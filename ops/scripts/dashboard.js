@@ -1,5 +1,5 @@
-const fs = require("fs");
-const path = require("path");
+const fs = require("node:fs");
+const path = require("node:path");
 
 const env = process.env.ENV || "dev";
 
@@ -12,9 +12,7 @@ try {
 
   if (!data) {
     if (["stage", "prod"].includes(env)) {
-      console.log(
-        `\n ${env.toUpperCase()} ENVIRONMENT STARTED (Logs Hidden)\n`
-      );
+      console.log(`\n ${env.toUpperCase()} ENVIRONMENT STARTED (Logs Hidden)\n`);
     }
     process.exit(0);
   }

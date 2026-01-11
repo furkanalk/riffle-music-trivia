@@ -14,23 +14,23 @@ export class ScoreManager {
     this.score = 0;
     this.currentRound = 0;
     this.responseTimeHistory = [];
-    
-    if (settings.lives && gameMode === 'solo') {
-      this.lives = settings.lives === 'unlimited' ? Infinity : parseInt(settings.lives);
+
+    if (settings.lives && gameMode === "solo") {
+      this.lives = settings.lives === "unlimited" ? Infinity : parseInt(settings.lives, 10);
       this.remainingLives = this.lives;
     }
 
     // Update UI elements
-    document.getElementById('current-score').textContent = this.score;
-    
-    const livesDisplay = document.getElementById('lives-display');
-    const livesCount = document.getElementById('lives-count');
-    
-    if (gameMode === 'solo' && livesDisplay && livesCount) {
-      livesDisplay.classList.remove('hidden');
-      
+    document.getElementById("current-score").textContent = this.score;
+
+    const livesDisplay = document.getElementById("lives-display");
+    const livesCount = document.getElementById("lives-count");
+
+    if (gameMode === "solo" && livesDisplay && livesCount) {
+      livesDisplay.classList.remove("hidden");
+
       if (this.lives === Infinity) {
-        livesCount.textContent = '∞';
+        livesCount.textContent = "∞";
       } else {
         livesCount.textContent = this.remainingLives;
       }
@@ -40,7 +40,7 @@ export class ScoreManager {
   // Add score for correct answer
   addScore(points = 1) {
     this.score += points;
-    document.getElementById('current-score').textContent = this.score;
+    document.getElementById("current-score").textContent = this.score;
     return this.score;
   }
 
@@ -48,14 +48,14 @@ export class ScoreManager {
   reduceLives() {
     if (this.lives !== Infinity) {
       this.remainingLives--;
-      document.getElementById('lives-count').textContent = this.remainingLives;
-      
+      document.getElementById("lives-count").textContent = this.remainingLives;
+
       // Visual effect for losing a life
-      const livesDisplay = document.getElementById('lives-display');
+      const livesDisplay = document.getElementById("lives-display");
       if (livesDisplay) {
-        livesDisplay.classList.add('animate-pulse');
+        livesDisplay.classList.add("animate-pulse");
         setTimeout(() => {
-          livesDisplay.classList.remove('animate-pulse');
+          livesDisplay.classList.remove("animate-pulse");
         }, 1000);
       }
     }
@@ -96,7 +96,9 @@ export class ScoreManager {
   // Get average response time
   getAverageResponseTime() {
     if (this.responseTimeHistory.length === 0) return 0;
-    return this.responseTimeHistory.reduce((a, b) => a + b, 0) / this.responseTimeHistory.length / 1000;
+    return (
+      this.responseTimeHistory.reduce((a, b) => a + b, 0) / this.responseTimeHistory.length / 1000
+    );
   }
 
   // Calculate accuracy percentage
@@ -107,22 +109,23 @@ export class ScoreManager {
 
   // Generate mock players for multiplayer demo
   generateMockPlayers() {
-    const playerNames = ['Sen', 'Ahmet', 'Zeynep', 'Burak'];
-    const playerColors = ['purple-500', 'blue-500', 'green-500', 'yellow-500'];
-    const avatars = ['avatar1', 'avatar2', 'avatar3', 'avatar4'];
-    
+    const playerNames = ["Sen", "Ahmet", "Zeynep", "Burak"];
+    const playerColors = ["purple-500", "blue-500", "green-500", "yellow-500"];
+    const avatars = ["avatar1", "avatar2", "avatar3", "avatar4"];
+
     this.players = [];
-    
+
     playerNames.forEach((name, i) => {
-      const avatar = i === 0 ? 
-        (localStorage.getItem('selectedAvatar') || 'avatar1') : 
-        avatars[Math.floor(Math.random() * avatars.length)];
-      
+      const avatar =
+        i === 0
+          ? localStorage.getItem("selectedAvatar") || "avatar1"
+          : avatars[Math.floor(Math.random() * avatars.length)];
+
       this.players.push({
         name,
         score: 0,
         color: playerColors[i],
-        avatar: avatar
+        avatar: avatar,
       });
     });
 
@@ -133,10 +136,10 @@ export class ScoreManager {
   updatePlayerScore(playerIndex, points) {
     if (this.players[playerIndex]) {
       this.players[playerIndex].score += points;
-      
-      const playerElements = document.querySelectorAll('#players-list > div');
+
+      const playerElements = document.querySelectorAll("#players-list > div");
       if (playerElements[playerIndex]) {
-        const scoreElement = playerElements[playerIndex].querySelector('div:last-child');
+        const scoreElement = playerElements[playerIndex].querySelector("div:last-child");
         if (scoreElement) {
           scoreElement.textContent = this.players[playerIndex].score;
         }
@@ -156,13 +159,13 @@ export class ScoreManager {
     this.remainingLives = this.lives;
     this.responseTimeHistory = [];
     this.players = [];
-    
+
     // Update UI
-    document.getElementById('current-score').textContent = this.score;
-    const livesCount = document.getElementById('lives-count');
+    document.getElementById("current-score").textContent = this.score;
+    const livesCount = document.getElementById("lives-count");
     if (livesCount) {
       if (this.lives === Infinity) {
-        livesCount.textContent = '∞';
+        livesCount.textContent = "∞";
       } else {
         livesCount.textContent = this.remainingLives;
       }
@@ -177,7 +180,7 @@ export class ScoreManager {
       accuracy: this.getAccuracy(),
       averageResponseTime: this.getAverageResponseTime(),
       remainingLives: this.remainingLives,
-      totalLives: this.lives
+      totalLives: this.lives,
     };
   }
 }

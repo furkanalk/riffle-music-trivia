@@ -71,7 +71,13 @@ function selectAvatar(avatar) {
 }
 
 function initSettingsListeners() {
-  for (const id of ["round-count", "question-type", "time-limit", "answer-visibility", "lives-count"]) {
+  for (const id of [
+    "round-count",
+    "question-type",
+    "time-limit",
+    "answer-visibility",
+    "lives-count",
+  ]) {
     document.getElementById(id)?.addEventListener("change", updateSelectionsSummary);
   }
 }

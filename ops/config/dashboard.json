@@ -21,8 +21,6 @@
       { "name": "Client", "url": "http://localhost:80" },
       { "name": "Core API", "url": "http://localhost:1969" }
     ],
-    "tools": [
-      { "name": "MailHog", "url": "http://localhost:8025" }
-    ]
+    "tools": [{ "name": "MailHog", "url": "http://localhost:8025" }]
   }
 }

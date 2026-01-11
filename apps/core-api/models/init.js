@@ -1,4 +1,4 @@
-import { query } from '../config/db.js';
+import { query } from "../config/db.js";
 
 const createTablesSQL = `
   -- 1. USERS TABLE
@@ -35,8 +35,8 @@ const createTablesSQL = `
 export async function initDatabase() {
   try {
     await query(createTablesSQL);
-    console.log('✅ Database tables initialized successfully');
+    console.log("✅ Database tables initialized successfully");
   } catch (error) {
-    console.error('❌ Database initialization failed:', error);
+    console.error("❌ Database initialization failed:", error);
   }
 }

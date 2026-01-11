@@ -16,14 +16,12 @@ export const register = async (req, res) => {
     }
 
     // Does user already exist?
-    const checkUser = await query(
-      "SELECT * FROM users WHERE email = $1 OR username = $2",
-      [email, username]
-    );
+    const checkUser = await query("SELECT * FROM users WHERE email = $1 OR username = $2", [
+      email,
+      username,
+    ]);
     if (checkUser.rows.length > 0) {
-      return res
-        .status(409)
-        .json({ error: "Username or Email already exists." });
+      return res.status(409).json({ error: "Username or Email already exists." });
     }
 
     // 3. Hash the password
@@ -63,10 +61,9 @@ export const login = async (req, res) => {
 
   try {
     // Find user (by email or username)
-    const userResult = await query(
-      "SELECT * FROM users WHERE email = $1 OR username = $1",
-      [identifier]
-    );
+    const userResult = await query("SELECT * FROM users WHERE email = $1 OR username = $1", [
+      identifier,
+    ]);
 
     if (userResult.rows.length === 0) {
       return res.status(404).json({ error: "User not found." });
