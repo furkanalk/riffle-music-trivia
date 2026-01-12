@@ -277,20 +277,21 @@ openssl rand -hex 16
 Explore the **[Project Roadmap](./docs/ROADMAP.md)** for architecture decisions, security layers, and scaling strategy.
 
 ### Roadmap Status
-
 ```text
-Stage 1: PoC Foundation        ██████████ 100% (Completed)
-Stage 2: Identity & Data       ██████░░░░ 60%  (Auth Segregated. Profile pending)
-Stage 3: Modernization         ██████████ 100% (Monorepo & Splits DONE)
-Stage 4: Production Infra      █░░░░░░░░░ 10%  (Docker Done. K8s Migration Started)
-Stage 5: Expansion             ░░░░░░░░░░ 0%   (Mobile & Anti-Cheat planned)
+Stage 1: Proof of Concept (PoC)       ██████████ 100%  (Core gameplay validated)
+Stage 2: Gameplay Depth & UX          ██░░░░░░░░ 20%  (Advanced mechanics & polish pending)
+Stage 3: Platform Architecture        ████████░░ 80%  (Monorepo, services, tooling largely done)
+Stage 4: Infrastructure Foundation    ██░░░░░░░░ 20%  ← current
+Stage 5: Production Operations        ░░░░░░░░░░ 0%   (GitOps, secrets, observability planned)
+Stage 6: Expansion & Integrity        ░░░░░░░░░░ 0%   (Mobile & anti-cheat planned)
 ```
 
 ### Active Phase Breakdown (Stage 4: Phase 1)
 ```text
-- Local Lab (Kind)       ░░░░░░░░░░ 0%   (Defining Multi-Node Topology)
-- Network (Cilium)       ░░░░░░░░░░ 0%   (eBPF CNI Replacement pending)
-- Ingress (Kong)         ░░░░░░░░░░ 0%   (Migration from Docker to K8s Controller pending)
+- Local Lab (Docker)     ██████████ 100% (Compose modularization complete)
+- Local Lab (K8s / Kind) ██░░░░░░░░ 20%  (Cluster topology & base config)
+- Networking (Cilium)    ░░░░░░░░░░ 0%   (Planned)
+- Ingress (Kong K8s)     ░░░░░░░░░░ 0%   (Planned)
 ```
 
 Review the **[Changelog](./docs/CHANGELOG.md)** for a complete history of features, changes, and releases.
