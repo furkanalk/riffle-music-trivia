@@ -1,100 +1,107 @@
 # Riffle Roadmap
 
 - **Current Build:** `v0.5.0-alpha`
-- **Current Phase:** `Stage 4: Production Readiness`
+- **Current Stage:** `Stage 4: Infrastructure Foundation`
 
-## Stage 1: PoC Fundementals
-> *Setting up the baseline logic using standard technologies (Vanilla JS, Express).*
+This roadmap is organized by **capability maturity**, not linear feature completion.
+Stages may overlap intentionally as the platform evolves.
 
-- [x] **Phase 1: Structural Overhaul**
-  - [x] **Monorepo Init:** TurboRepo Setup complete (Apps/Ops split).
-  - [x] **Service Split:** Core API, Worker, and Engine separated.
-  - [x] **Environment Strategy:** 4-Env System (Dev/Test/Stage/Prod) implemented.
-  - [x] **Cross-Platform:** Windows support added via `cross-env`.
-  
-- [ ] **Phase 2: Core Gameplay & Mechanics**
-  - [ ] **Playlist Engine:** Unique song playback per session (No repeats).
-  - [x] **Audio:** Continuous playback during answering.
-  - [ ] **Visuals:** Timer bar & Audio Visualizer integration.
-  - [ ] **Modes:** Marathon Mode logic (Lives system).
-  - [x] **Feedback:** Score & streak display basics.
+---
 
-- [ ] **Phase 3: Smart Algorithms & Data Quality**
-  - [ ] **Smart Options:** Context-aware wrong answer generation (Don't show Pop answers in Metal quiz).
-  - [ ] **Sanitization:** Metadata validation (Filtering out "Remastered", "Live" tags).
-  - [ ] **Content Curation:** Playlist integrity checks.
+## Stage 1: Proof of Concept (PoC)
+> *Validating the core idea with minimal viable gameplay.*
 
-- [ ] **Phase 4: UI / UX Polish**
-  - [x] Animations & Transitions (Tailwind).
-  - [x] Category Filtering & Navigation.
-  - [ ] **Endgame:** Session summary screen & "Play Again" loop.
-  - [ ] **Landing:** Main menu polishing.
+- [x] **Phase 1: Core Gameplay Loop**
+  - [x] Music playback during active sessions.
+  - [x] Timed question answering.
+  - [x] Basic score calculation.
 
-## Stage 2: Identity & Data Layer
-> *Connecting the user to the data. Transitioning from "Guest" to "Player" on the current stack.*
+- [x] **Phase 2: Initial UI**
+  - [x] Question view & answer selection.
+  - [x] Timer bar & basic audio visualizer.
 
-- [ ] **Phase 1: Authentication Flow**
-  - [ ] **Soft Verification Strategy:** Allow playing immediately, require email for rank/saving.
-  - [ ] **Security:** BCrypt hashing & Salt.
-  - [ ] **Token Management:** JWT issuance & **Redis-backed Session Storage** (Blacklisting/Refresh).
-  - [ ] **UI:** Login / Register Modals.
-  - [ ] **Verification:** Email confirmation flow (SMTP Mocking for Dev).
-  - [ ] **Middleware (Legacy):** Basic Express middleware to validate JWTs and test Frontend error handling (401/403 flows).
+---
 
-- [ ] **Phase 2: Service Layer & Database**
-  - [ ] **Migration Tool:** Implementation of a DB migration tool (e.g., node-pg-migrate or Prisma) to replace `init.db.js`.
-  - [ ] **Service Pattern:** Abstracting logic (MockService vs RealService).
-  - [ ] **Music Service:** Full PostgreSQL integration for track fetching.
+## Stage 2: Gameplay Depth & UX
+> *Making the game engaging, replayable, and user-friendly.*
 
-- [ ] **Phase 3: User Profile & Meta**
-  - [ ] **Stats:** Persistent Win/Loss & High Score tracking.
-  - [ ] **History:** Match history logging.
-  - [ ] **Cosmetics:** Basic Avatar management system.
+- [ ] **Phase 1: Advanced Gameplay Mechanics**
+  - [ ] Playlist engine (unique tracks per session).
+  - [ ] Marathon / extended game modes.
+  - [ ] Smarter difficulty progression.
 
-## Stage 3: Architecture Modernization
-> *Refactoring into a Scalable Enterprise Microservices Architecture.*
+- [ ] **Phase 2: Smart Algorithms & Data Quality**
+  - [ ] Context-aware wrong answer generation.
+  - [ ] Metadata validation & sanitization.
+
+- [ ] **Phase 3: UI / UX Polish**
+  - [ ] Animations & transitions (Tailwind).
+  - [ ] Category filtering & navigation.
+  - [ ] Landing page & menu refinement.
+
+---
+
+## Stage 3: Platform Architecture & Tooling
+> *Refactoring into a scalable, maintainable platform.*
 
 - [x] **Phase 1: Structural Overhaul**
-  - [x] **Monorepo Init:** TurboRepo Setup complete (Apps/Ops split).
-  - [x] **Service Split:** Core API, Worker, and Engine separated.
-  - [x] **Environment Strategy:** 4-Env System (Dev/Test/Stage/Prod) implemented.
+  - [x] Monorepo setup (TurboRepo, Apps/Ops split).
+  - [x] Service separation (Core API, Worker, Engine).
+  - [x] Multi-environment strategy (Dev/Test/Stage/Prod).
 
-- [ ] **Phase 2: Game Engine Implementation**
-  - [ ] **Matchmaker:** Go-based logic implementation (Container ready).
-  - [ ] **Worker:** Implementing the Redis-to-Postgres sync logic.
+- [x] **Phase 2: Developer Tooling**
+  - [x] Biome (linting & formatting).
+  - [x] Commitlint & Husky.
+  - [x] Release-it.
+  - [x] Trapeze (mobile config).
 
-- [ ] **Phase 3: Communication**
-  - [ ] **Typed WebSocket:** Implementing Socket.io with Zod validation.
-  - [ ] **Inter-service:** Basic HTTP/gRPC communication between Node.js and Go.
+- [ ] **Phase 3: Runtime Communication**
+  - [ ] Typed WebSocket layer (Socket.io + Zod).
+  - [ ] Inter-service HTTP communication (Node ↔ Go).
 
-## Stage 4: Production Readiness & Cloud Native
-> *Transitioning from Docker Compose to Enterprise Kubernetes Architecture.*
+---
 
-- [ ] **Phase 1: Cluster & Orchestration**
-  - [ ] **Local Lab:** Kind Cluster setup with Multi-Node (1 Master, 2 Worker).
-  - [ ] **Network:** Cilium CNI integration (eBPF replacement for kube-proxy).
-  - [ ] **Ingress:** Migration from Nginx LB to **Kong Ingress Controller**.
+## Stage 4: Infrastructure Foundation
+> *Establishing a cloud-native, zero-trust baseline.*
 
-- [ ] **Phase 2: DevOps & GitOps**
-  - [ ] **CD:** ArgoCD implementation for GitOps-based deployment.
-  - [ ] **Secret Mgmt:** HashiCorp Vault integration (replacing .env files).
-  - [ ] **Disaster Recovery:** Automated S3 Backups (Postgres & Thanos).
+- [ ] **Phase 1: Local Orchestration**
+  - [x] Docker Compose modularization (Dev/Test).
+  - [ ] Kubernetes local lab (Kind, multi-node).
 
-- [ ] **Phase 3: Advanced Observability**
-  - [ ] **Stack:** Full LGTM (Loki, Grafana, Tempo, Mimir/Prometheus) setup.
-  - [ ] **Tracing:** Distributed Tracing for latency analysis.
+- [ ] **Phase 2: Networking**
+  - [ ] Cilium CNI integration (eBPF).
+  - [ ] Baseline NetworkPolicies.
 
-## Stage 5: Expansion & Competitive Integrity
-> *Scaling to mobile and ensuring fair play.*
+- [ ] **Phase 3: Ingress & Edge**
+  - [ ] Kong Ingress Controller.
+  - [ ] mTLS for service-to-service traffic.
 
-- [ ] **Phase 1: Platform Expansion**
-  - [ ] **Mobile:** Capacitor builds for iOS & Android.
-  - [ ] **Multiplayer:** Real-time VS Mode (WebSocket synchronization).
-  - [ ] **Social:** Sharing & Friend system.
-  - [ ] **Localization:** Multi-language support (i18n).
+---
 
-- [ ] **Phase 2: Competitive Integrity (Anti-Cheat)**
-  - [ ] **Core:** Developing the **Rust** security module.
-  - [ ] **Client:** Compiling Rust to **WebAssembly (WASM)**.
-  - [ ] **Protection:** Audio Watermark verification & Bot detection heuristics.
-  - [ ] **Events:** Tournament Mode infrastructure.
+## Stage 5: Production Operations
+> *Automation, delivery, and observability.*
+
+- [ ] **Phase 1: GitOps & Delivery**
+  - [ ] ArgoCD continuous deployment.
+  - [ ] Environment promotion strategy.
+
+- [ ] **Phase 2: Secrets & Configuration**
+  - [ ] HashiCorp Vault integration.
+  - [ ] Secret rotation & config externalization.
+
+- [ ] **Phase 3: Observability**
+  - [ ] Metrics & logs (Prometheus, Grafana, Loki).
+  - [ ] Distributed tracing (Tempo).
+
+---
+
+## Stage 6: Expansion & Competitive Integrity
+> *Scaling the platform and ensuring fair play.*
+
+- [ ] **Platform Expansion**
+  - [ ] Mobile builds (iOS & Android via Capacitor).
+  - [ ] Real-time multiplayer VS mode.
+
+- [ ] **Competitive Integrity**
+  - [ ] Rust-based security core.
+  - [ ] WebAssembly (WASM) client integration.
