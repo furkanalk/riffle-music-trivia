@@ -18,6 +18,8 @@
   <img src="https://img.shields.io/badge/frontend-React%20%7C%20TypeScript-blue">
   <img src="https://img.shields.io/badge/infra-Docker%20%7C%20Terraform-purple">
   <img src="https://img.shields.io/badge/license-Proprietary-lightgrey">
+  <img src="https://img.shields.io/badge/code_style-Biome-yellow?logo=biome">
+  <img src="https://img.shields.io/badge/versioning-SemVer-blue">
 </p>
 
 ```txt
@@ -92,11 +94,13 @@ Riffle utilizes a **Modular Monolith** architecture designed to evolve into Micr
 | **Frontend** | React 18 + Vite | User Interface & Global State (Zustand) |
 | **Core API** | Node.js v22 (Express) | Orchestrator, Auth & User Management |
 | **Engine** | Go (Golang) | High-Performance Matchmaking Service |
+| **Security (Core)** | Rust + WASM | Client Integrity & Anti-Cheat (Planned) |
 | **Edge** | Kong + SafeLine + mTLS | API Gateway, WAF & Zero Trust Security |
 | **Data (Active)**| Redis + Worker | Hot Data, Session & Write-Behind Sync |
 | **Data (Store)** | PostgreSQL | Cold Data, Persistence & Archival |
 | **Observability**| Prom / Grafana / Loki | System Metrics & Distributed Logging |
 | **Ops** | Docker Compose | Multi-Environment Containerization |
+| **Tooling** | Biome + Release-it + Trapeze | Linting, Versioning & Automation |
 
 ### Backend API Endpoints
 
