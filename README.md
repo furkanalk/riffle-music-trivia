@@ -271,8 +271,8 @@ openssl rand -hex 16
 
 ## Progress
 
-- **Current Phase:** `Stage 3 & 4 (Hybrid)`
-- **Focus:** Zero Trust Security, Kong Gateway Integration & Production Hardening
+- **Current Stage:** `Stage 4`
+- **Active Phase:** Phase 1: Cluster & Orchestration
 
 Explore the **[Project Roadmap](./docs/ROADMAP.md)** for architecture decisions, security layers, and scaling strategy.
 
@@ -280,18 +280,17 @@ Explore the **[Project Roadmap](./docs/ROADMAP.md)** for architecture decisions,
 
 ```text
 Stage 1: PoC Foundation        ██████████ 100% (Completed)
-Stage 2: Identity & Data       ██████░░░░ 60%  (Auth Service segregated. User Profile pending.)
-Stage 3: Modernization         ██████████ 100% (Monorepo, Node v22, Service Split DONE.)
-Stage 4: Production Infra      ████████░░ 80%  (mTLS, Kong, Docker Network ready. WAF Tuning pending.)
-Stage 5: Expansion             ░░░░░░░░░░ 0%   (Mobile & Anti-Cheat planned.)
+Stage 2: Identity & Data       ██████░░░░ 60%  (Auth Segregated. Profile pending)
+Stage 3: Modernization         ██████████ 100% (Monorepo & Splits DONE)
+Stage 4: Production Infra      █░░░░░░░░░ 10%  (Docker Done. K8s Migration Started)
+Stage 5: Expansion             ░░░░░░░░░░ 0%   (Mobile & Anti-Cheat planned)
 ```
 
-### Active Stage Breakdown (Stage 3 & 4)
+### Active Phase Breakdown (Stage 4: Phase 1)
 ```text
-- Infrastructure (S4)    ██████████ 100% (Docker, Redis, Postgres, Network isolation complete.)
-- Security (S4)          ████████░░ 80%  (mTLS/Zero Trust active. WAF integration in progress.)
-- Architecture (S3)      ██████████ 100% (TurboRepo, Centralized Config, Scripting complete.)
-- Gameplay Logic (S1)    ▓▓▓▓▓░░░░░ 50%  (Marathon mode ready. Engine Service isolated.)
+- Local Lab (Kind)       ░░░░░░░░░░ 0%   (Defining Multi-Node Topology)
+- Network (Cilium)       ░░░░░░░░░░ 0%   (eBPF CNI Replacement pending)
+- Ingress (Kong)         ░░░░░░░░░░ 0%   (Migration from Docker to K8s Controller pending)
 ```
 
 Review the **[Changelog](./docs/CHANGELOG.md)** for a complete history of features, changes, and releases.
