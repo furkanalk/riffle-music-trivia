@@ -6,9 +6,11 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "resources": "capacitor-assets generate"
   },
   "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
     "vite": "^7.2.4"
   }
 }
