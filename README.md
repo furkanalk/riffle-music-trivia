@@ -274,6 +274,8 @@ openssl rand -hex 16
 - **Current Phase:** `Stage 3 & 4 (Hybrid)`
 - **Focus:** Zero Trust Security, Kong Gateway Integration & Production Hardening
 
+Explore the **[Project Roadmap](./docs/ROADMAP.md)** for architecture decisions, security layers, and scaling strategy.
+
 ### Roadmap Status
 
 ```text
@@ -291,6 +293,8 @@ Stage 5: Expansion             ░░░░░░░░░░ 0%   (Mobile & Ant
 - Architecture (S3)      ██████████ 100% (TurboRepo, Centralized Config, Scripting complete.)
 - Gameplay Logic (S1)    ▓▓▓▓▓░░░░░ 50%  (Marathon mode ready. Engine Service isolated.)
 ```
+
+Review the **[Changelog](./docs/CHANGELOG.md)** for a complete history of features, changes, and releases.
 
 ## License
 
