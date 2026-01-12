@@ -1,0 +1,21 @@
+vars:
+  PACKAGE_VERSION: '0.0.0'
+  BUILD_NUMBER: '1'
+
+platforms:
+  android:
+    path: android
+    versionName: $PACKAGE_VERSION
+    versionCode: $BUILD_NUMBER
+    
+    manifest:
+      permissions:
+        - android.permission.INTERNET
+
+  ios:
+    path: ios/App
+    version: $PACKAGE_VERSION
+    build: $BUILD_NUMBER
+    
+    plist:
+      NSMicrophoneUsageDescription: "Riffle needs microphone access to detect your hums."
